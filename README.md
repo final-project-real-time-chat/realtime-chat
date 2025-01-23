@@ -100,6 +100,9 @@ npm run dev
 ### Directory Structure
 
 ```plaintext
+
+
+
 backend/
     node_modules/
     .env
@@ -107,13 +110,48 @@ backend/
     .gitignore
     .http
     .http.sample
+    middlewares/
+        authMiddleware.js
+    models/
+        userModel.js
+        messageModel.js
+    routes/
+        userRouter.js
+        messageRouter.js
+    schemas/
+        userSchema.js
+        messageSchema.js
+    services/
+        userService.js
+    utils/
+        logger.js
     package-lock.json
     package.json
+    server.js
 frontend/
     node_modules/
     public/
     src/
         assets/
+            images/
+            styles/
+        components/
+            Chat/
+                ChatBox.jsx
+                ChatInput.jsx
+            Auth/
+                Login.jsx
+                Register.jsx
+        contexts/
+            AuthContext.jsx
+        hooks/
+            useAuth.js
+            useChat.js
+        pages/
+            Home.jsx
+            ChatRoom.jsx
+        services/
+            api.js
         App.css
         App.jsx
         index.css
