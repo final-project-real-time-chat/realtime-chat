@@ -1,4 +1,4 @@
-# Realtime-Chat: MERN-Stack APP
+# Realtime-Chat: MERN-Stack APP.
 
 This project is a real-time chat application built with the MERN stack (MongoDB, Express, React, Node.js).
 
