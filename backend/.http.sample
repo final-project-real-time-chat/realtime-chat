@@ -1,0 +1,60 @@
+@BASE_URL=your_base_url
+@PORT=your_port
+@JWT_SECRET=your_jwt_secret
+@CLOUD_NAME=your_cloud_name
+@CLOUD_API_KEY=your_cloud_api_key
+@CLOUD_API_SECRET=your_cloud_api_secret
+@USER_ID=your_userID
+@MSG_ID=your_msgID
+
+#########################
+##### API FOR USERS #####
+#########################
+### GET ALL
+GET {{BASE_URL}}:{{PORT}}/users
+
+### GET ONE
+GET {{BASE_URL}}:{{PORT}}/users/{{USER_ID}}
+
+### CREATE USER
+POST {{BASE_URL}}:{{PORT}}/users/{{USER_ID}}
+
+{
+  "username": "user",
+  "password": "password"
+}
+
+### UPDATE USER
+PATCH {{BASE_URL}}:{{PORT}}/users/{{USER_ID}}
+{
+  "username": "new_username",
+  "password": "new_password"
+}
+
+### DELETE USER
+DELETE {{BASE_URL}}:{{PORT}}/users/{{USER_ID}}
+
+############################
+##### API FOR MESSAGES #####
+############################
+### ALL
+GET {{BASE_URL}}:{{PORT}}/messages
+
+### ONE
+GET {{BASE_URL}}:{{PORT}}/messages/{{MSG_ID}}
+
+### CREATE MESSAGE
+POST {{BASE_URL}}:{{PORT}}/messages
+{
+  "userId": "{{USER_ID}}",
+  "content": "This is a message"
+}
+
+### UPDATE MESSAGE
+PATCH {{BASE_URL}}:{{PORT}}/messages/{{MSG_ID}}
+{
+  "content": "This is an updated message"
+}
+
+### DELETE MESSAGE
+DELETE {{BASE_URL}}:{{PORT}}/messages/{{MSG_ID}}
