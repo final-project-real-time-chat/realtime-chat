@@ -2,11 +2,14 @@
 
 This project is a real-time chat application built with the MERN stack (MongoDB, Express, React, Node.js).
 
+###### Estimated read time: 3 minutes
+
 ---
 
 ### TOOLS
 
 - VSCODE: https://code.visualstudio.com
+  - **Team members: synchronize ALL extensions**
 - GITHUB: https://github.com
 - GOOGLE-MEET: https://meet.google.com
 - TRELLO: https://trello.com
@@ -21,10 +24,15 @@ This project is a real-time chat application built with the MERN stack (MongoDB,
 - VITE - react.js: https://vite.dev/guide
 
 ```bash
-  npm create vite@latest
+npm create vite@latest
+```
+
+```bash
+npm i zustand socket.io-client
 ```
 
 - zustand: https://zustand.docs.pmnd.rs/getting-started/introduction
+- socket.io-client: https://socket.io/docs/v4/client-installation/
 
 ##### CSS - STYLES
 
@@ -35,7 +43,7 @@ This project is a real-time chat application built with the MERN stack (MongoDB,
 ##### BACKEND - node.js:
 
 ```bash
-  npm i express cors dotenv mongoose bcrypt jsonwebtoken cookie-parser cloudinary socket.io && npm i -D nodemon
+npm i express cors dotenv mongoose bcrypt jsonwebtoken cookie-parser cloudinary socket.io && npm i -D nodemon
 ```
 
 - express: https://expressjs.com
@@ -101,10 +109,8 @@ npm run dev
 
 ```plaintext
 
-
-
 backend/
-    node_modules/
+    node_modules/...
     .env
     .env.sample
     .gitignore
@@ -128,6 +134,7 @@ backend/
     package-lock.json
     package.json
     server.js
+
 frontend/
     node_modules/
     public/
@@ -191,9 +198,30 @@ http://localhost:5000
 
 ---
 
-### Examples
+##### API Endpoints for Frontend
 
-##### API Endpoints
+**GET**
+`GET` `/messages`: Retrieves **_all messages_**
+`GET` `/messages/:id`: Retrieves a **_specific_** message by ID
+`GET` `/messages/unread`: Retrieves **_all unread_** messages
+`GET` `/messages/user/:userId`: Retrieves all messages from a **_specific user_**
+
+**POST**
+`POST` `/messages/:personId`: Sends a new message to a **_specific person_**
+`POST` `/messages/:groupChatId`: Sends a new message to a **_specific group-chat_**
+`POST` `/messages/:id/read`: Marks a specific message **_as read_**
+
+**UPDATE**
+`PUT` `/messages/:id`: **_Updates_** a message by ID
+`PATCH` `/messages/:id`: **_Partially updates_** a message by ID
+
+**DELETE**
+`DELETE` `/messages/:id`: Deletes a message **_by ID_**
+`DELETE` `/messages/user/:userId`: Deletes **_all messages from a specific user_**
+
+---
+
+##### API Endpoints for Backend
 
 **GET**
 `GET` `/api/messages`: Retrieves **_all messages_**
