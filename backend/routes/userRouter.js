@@ -1,9 +1,83 @@
 import express from "express";
 import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
+import session from "express-session";
 
 const router = express.Router();
+
+/** USER REGISTER AUTH */
+router.post("/auth-register", async (req, res) => {
+  const { email } = req.body;
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
+    return res.status(409).json({ errorMessage: "Email already taken" });
+  }
+  // TODO => SEND EMAIL with a link to "/register" (included user email)
+
+  req.body = email; // WE HAVE TO CHECK IF THIS IS CORRECT SYNTAX
+});
+
+/** USER REGISTER */
+router.post("/register", async (req, res) => {
+  try {
+    const { email, username, password } = req.body;
+    const existingUser = await User.findOne({ username });
+
+    if (existingUser) {
+      return res.status(409).json({ errorMessage: "Username already taken" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const newUser = new User({ email, username, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully", newUser });
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
+/** USER LOGIN */
+router.post("/login", async (req, res) => {
+  try {
+    // TODO => LOGIN: using username and password
+    const { email, username, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ errorMessage: "Invalid username or password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ errorMessage: "Invalid username or password" });
+    }
+
+    // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    //   expiresIn: "7d",
+    // });
+
+    // req.session.user = { email };
+    res.json({ message: "User logged in successfully", token, user });
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
+/** USER LOGOUT */
+router.post("/logout", async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      res.status(500).json({ message: "interner server error" });
+    } else {
+      res.json({ message: "Successfully logged out" });
+    }
+  });
+});
 
 /** GET ALL USERS */
 router.get("/", async (req, res) => {
@@ -25,64 +99,6 @@ router.get("/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-/** USER REGISTER */
-
-router.post("/register", async (req, res) => {
-  try {
-    const { email, username, password } = req.body;
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(409).json({ errorMessage: "Username already taken" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const newUser = new User({ email, username, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully", newUser });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
-
-/** USER LOGIN */
-router.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ errorMessage: "Invalid username or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res
-        .status(401)
-        .json({ errorMessage: "Invalid username or password" });
-    }
-
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-    res.json({ message: "User logged in successfully", token, user });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
-
-/** USER LOGOUT */
-router.post("/logout", async (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      res.status(500).json({ message: "interner server error" });
-    } else {
-      res.json({ message: "Successfully logged out" });
-    }
-  });
 });
 
 /** USER UPDATE */

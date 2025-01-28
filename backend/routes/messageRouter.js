@@ -1,13 +1,19 @@
 import express from "express";
 import Message from "../models/messageSchema.js";
+import Chatroom from "../models/chatroomSchema.js";
 
 const router = express.Router();
 
 /** SEND A MESSAGE */
 router.post("/send", async (req, res) => {
   try {
-    const { senderId, receiverIds, content } = req.body;
-    const newMessage = new Message({ senderId, receiverIds, content });
+    const { sender, content, chatroom } = req.body;
+    if(!chatroom) {
+      await Chatroom.create({
+        
+      })
+    }
+    const newMessage = new Message({ sender, content, chatroom });
     await newMessage.save();
 
     res.status(201).json({ message: "Message sent successfully", newMessage });
