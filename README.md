@@ -108,7 +108,6 @@ npm run dev
 ### Directory Structure
 
 ```plaintext
-
 backend/
     node_modules/...
     .env
@@ -136,12 +135,12 @@ backend/
     server.js
 
 frontend/
-    node_modules/
+    node_modules/...
     public/
+        favicon.ico
     src/
         assets/
-            images/
-            styles/
+            avatar.png
         components/
             Chat/
                 ChatBox.jsx
@@ -171,6 +170,7 @@ frontend/
     package-lock.json
     package.json
     vite.config.js
+
 README.md
 ```
 
@@ -225,20 +225,22 @@ http://localhost:5000
 
 **GET**
 `GET` `/api/messages`: Retrieves **_all messages_**
-`GET` `/api/messages/:id`: Retrieves a **_specific_** message by ID
-`GET` `/api/messages/unread`: Retrieves **_all unread_** messages
 `GET` `/api/messages/user/:userId`: Retrieves all messages from a **_specific user_**
+*** FEATURE ***
+`GET` `/api/messages/unread`: Retrieves **_all unread_** messages
 
 **POST**
-`POST` `/api/messages/:personId`: Sends a new message to a **_specific person_**
+`POST` `/api/messages/:chatId`: Sends a new message to a **_specific person_**
+*** FEATURE ***
 `POST` `/api/messages/:groupChatId`: Sends a new message to a **_specific group-chat_**
 `POST` `/api/messages/:id/read`: Marks a specific message **_as read_**
 
 **UPDATE**
-`PUT` `/api/messages/:id`: **_Updates_** a message by ID
 `PATCH` `/api/messages/:id`: **_Partially updates_** a message by ID
 
 **DELETE**
+`DELETE` `/api/users/:id`: Deletes user account **_by ID_**
+*** FEATURE ***
 `DELETE` `/api/messages/:id`: Deletes a message **_by ID_**
 `DELETE` `/api/messages/user/:userId`: Deletes **_all messages from a specific user_**
 
