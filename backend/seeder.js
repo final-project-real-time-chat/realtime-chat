@@ -26,22 +26,72 @@ const seedDatabase = async () => {
     password: hashedPassword,
   });
 
+  const user3 = new User({
+    email: "user3@mail.com",
+    username: "user3",
+    password: hashedPassword,
+  });
+
+  const user4 = new User({
+    email: "user4@mail.com",
+    username: "user4",
+    password: hashedPassword,
+  });
+
   await user1.save();
   await user2.save();
+  await user3.save();
+  await user4.save();
 
-  const chatroom = new Chatroom({
+  const chatroom1 = new Chatroom({
     users: [user1._id, user2._id],
   });
 
-  await chatroom.save();
-
-  const message = new Message({
-    sender: user1._id,
-    content: "Hello from user1 to user2!",
-    chatroom: chatroom._id,
+  const chatroom2 = new Chatroom({
+    users: [user1._id, user3._id],
   });
 
-  await message.save();
+  // const chatroom3 = new Chatroom({
+  //   users: [user2._id, user1._id],
+  // });
+
+  const chatroom4 = new Chatroom({
+    users: [user3._id, user4._id],
+  });
+
+  await chatroom1.save();
+  await chatroom2.save();
+  // await chatroom3.save();
+  await chatroom4.save();
+
+  const message1 = new Message({
+    sender: user1._id,
+    content: "Hello from user1 to user2!",
+    chatroom: chatroom1._id,
+  });
+
+  const message2 = new Message({
+    sender: user1._id,
+    content: "Hello from user1 to user3!",
+    chatroom: chatroom2._id,
+  });
+
+  const message3 = new Message({
+    sender: user2._id,
+    content: "Hello from user2 to user1!",
+    chatroom: chatroom1._id,
+  });
+
+  const message4 = new Message({
+    sender: user3._id,
+    content: "Hello from user3 to user4!",
+    chatroom: chatroom4._id,
+  });
+
+  await message1.save();
+  await message2.save();
+  await message3.save();
+  await message4.save();
 
   console.log("Database seeded!");
   mongoose.connection.close();

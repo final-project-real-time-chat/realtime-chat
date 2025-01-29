@@ -1,11 +1,5 @@
 @BASE_URL=your_base_url
 @PORT=your_port
-@JWT_SECRET=your_jwt_secret
-@CLOUD_NAME=your_cloud_name
-@CLOUD_API_KEY=your_cloud_api_key
-@CLOUD_API_SECRET=your_cloud_api_secret
-@USER_ID=your_userID
-@MSG_ID=your_msgID
 
 #########################
 ##### API FOR USERS #####

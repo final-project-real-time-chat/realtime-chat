@@ -25,7 +25,7 @@ app.use(
 
 app.use("/api/users", userRouter);
 app.use("/api/messages", messageRouter);
-app.use("/api/chatroom", chatroomRouter);
+app.use("/api/chatrooms", chatroomRouter);
 
 const baseUrl = process.env.BASE_URL;
 const port = parseInt(process.env.PORT) || 3000;

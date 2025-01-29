@@ -4,6 +4,21 @@ import Message from "../models/messageSchema.js";
 
 const router = express.Router();
 
+/** TODO: GET ALL CHATROOMS FOR SPECIFIC USER */
+
+router.get("/chats", async (req, res) => {
+  try {
+    const currentUser = req.session.user.id;
+
+    const allChats = await Chatroom.find({ users: currentUser }).populate(
+      "users"
+    );
+    res.json({allChats});
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
 /** GET CHATROOM MESSAGES */
 router.get("/:id", async (req, res) => {
   try {
