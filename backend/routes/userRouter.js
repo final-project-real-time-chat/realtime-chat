@@ -1,8 +1,6 @@
 import express from "express";
 import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
-// import jwt from "jsonwebtoken";
-import session from "express-session";
 
 const router = express.Router();
 
@@ -15,7 +13,7 @@ router.post("/auth-register", async (req, res) => {
   }
   // TODO => SEND EMAIL with a link to "/register" (included user email)
 
-  req.body = email; // WE HAVE TO CHECK IF THIS IS CORRECT SYNTAX
+  res.status(200).json({ message: "Email is available" });
 });
 
 /** USER REGISTER */
@@ -57,13 +55,10 @@ router.post("/login", async (req, res) => {
         .json({ errorMessage: "Invalid username or password" });
     }
 
-    // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    //   expiresIn: "7d",
-    // });
-
-    // req.session.user = { email };
-    res.json({ message: "User logged in successfully", token, user });
+    req.session.user = { id: user._id };
+    res.json({ message: "User logged in successfully", user });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ errorMessage: "Internal server error" });
   }
 });

@@ -224,13 +224,13 @@ http://localhost:5000
 ##### API Endpoints for Backend
 
 **GET**
+`GET` `/api/chatroom`: Retrieves **_all messages_**
 `GET` `/api/messages`: Retrieves **_all messages_**
-`GET` `/api/messages/user/:userId`: Retrieves all messages from a **_specific user_**
 *** FEATURE ***
 `GET` `/api/messages/unread`: Retrieves **_all unread_** messages
 
 **POST**
-`POST` `/api/messages/:chatId`: Sends a new message to a **_specific person_**
+`POST` `/api/messages/send`: Send a new message to a **_specific chatroom_**
 *** FEATURE ***
 `POST` `/api/messages/:groupChatId`: Sends a new message to a **_specific group-chat_**
 `POST` `/api/messages/:id/read`: Marks a specific message **_as read_**
