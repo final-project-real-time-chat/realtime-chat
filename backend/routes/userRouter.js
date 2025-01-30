@@ -55,11 +55,9 @@ router.post("/login", async (req, res) => {
         .json({ errorMessage: "Invalid username or password" });
     }
 
-    req.session.user = { id: user._id };
-    console.log(req.session.user);
+    req.session.user = { id: user._id, username: user.username };
     res.json({ message: "User logged in successfully", user });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ errorMessage: "Internal server error" });
   }
 });

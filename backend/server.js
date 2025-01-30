@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 
 import userRouter from "./routes/userRouter.js";
 import messageRouter from "./routes/messageRouter.js";
@@ -20,6 +21,9 @@ app.use(
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
   })
 );
 

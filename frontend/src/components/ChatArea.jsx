@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import robot from "../assets/robot.png";
+import { Link } from "react-router-dom";
 
 export const ChatArea = () => {
   const [chatrooms, setChatrooms] = useState([]);
@@ -12,7 +13,8 @@ export const ChatArea = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setChatrooms(data.allChats);
+        console.log({ data });
+        setChatrooms(data.outputChats);
       } else {
         console.error("Failed to fetch chatrooms");
       }
@@ -29,9 +31,15 @@ export const ChatArea = () => {
       </header>
       <main>
         <ul>
-          {chatrooms.map((chat) => (
-            <li key={chat._id}>{JSON.stringify(chat.users)}</li>
+          {chatrooms.map((chatroom) => (
+            <Link
+              key={chatroom.chatId}
+              to={`/chatarea/chats/${chatroom.chatId}`}
+            >
+              <li>{chatroom.usernames.join(", ")}</li>
+            </Link>
           ))}
+          {chatrooms.length === 0 && <button>Add new chat</button>}
         </ul>
       </main>
       <footer>Settings</footer>

@@ -1,5 +1,5 @@
 import mongoose, { Types } from "mongoose";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import User from "./models/userSchema.js";
 import Chatroom from "./models/chatroomSchema.js";
@@ -12,29 +12,29 @@ mongoose.connect(process.env.MONGODB_URI);
 const seedDatabase = async () => {
   await mongoose.connection.dropDatabase();
 
-  const hashedPassword = await bcrypt.hash("password", 12)
+  const hashedPassword = await bcrypt.hash("123", 12);
 
   const user1 = new User({
-    email: "user1@mail.com",
-    username: "user1",
+    email: "1@m.de",
+    username: "1",
     password: hashedPassword,
   });
 
   const user2 = new User({
-    email: "user2@mail.com",
-    username: "user2",
+    email: "2@m.de",
+    username: "2",
     password: hashedPassword,
   });
 
   const user3 = new User({
-    email: "user3@mail.com",
-    username: "user3",
+    email: "3@m.de",
+    username: "3",
     password: hashedPassword,
   });
 
   const user4 = new User({
-    email: "user4@mail.com",
-    username: "user4",
+    email: "4@m.de",
+    username: "4",
     password: hashedPassword,
   });
 

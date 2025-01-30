@@ -8,19 +8,30 @@ const router = express.Router();
 
 router.get("/chats", async (req, res) => {
   try {
-    const currentUser = req.session.user.id;
+    const currentUsername = req.session.user.username;
+    const currentUserId = req.session.user.id;
 
-    const allChats = await Chatroom.find({ users: currentUser }).populate(
+    const allChats = await Chatroom.find({ users: currentUserId }).populate(
       "users"
     );
-    res.json({allChats});
+
+    // TODO: IMPLEMENT AS MONGODB QUERY
+    const outputChats = allChats.map((chat) => {
+      const chatId = chat._id;
+      const usernames = chat.users
+        .map((user) => user.username)
+        .filter((username) => username !== currentUsername);
+      return { chatId, usernames };
+    });
+
+    res.json({ outputChats });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
 });
 
 /** GET CHATROOM MESSAGES */
-router.get("/:id", async (req, res) => {
+router.get("/chats/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const sender = req.session.user.id;
@@ -36,9 +47,9 @@ router.get("/:id", async (req, res) => {
     const chatroom = await Chatroom.findById(id);
     const chatroomAttendees = chatroom ? chatroom.users : [];
 
-    req.body.chatroomMessagesFromSender = chatroomMessagesFromSender;
-    req.body.chatroomMessagesToOthers = chatroomMessagesToOthers;
-    req.body.chatroomAttendees = chatroomAttendees;
+    // req.body.chatroomMessagesFromSender = chatroomMessagesFromSender;
+    // req.body.chatroomMessagesToOthers = chatroomMessagesToOthers;
+    // req.body.chatroomAttendees = chatroomAttendees;
 
     res.json({
       chatroomMessagesFromSender,
