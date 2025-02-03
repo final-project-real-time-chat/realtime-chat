@@ -4,7 +4,7 @@ const chatroomSchema = new Schema(
   {
     users: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 const Chatroom = model("Chatroom", chatroomSchema);
