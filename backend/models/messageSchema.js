@@ -7,7 +7,7 @@ const messageSchema = new Schema(
     content: { type: String, required: true },
     image: String,
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 const Message = model("Message", messageSchema);
