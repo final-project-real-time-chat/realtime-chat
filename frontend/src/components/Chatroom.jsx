@@ -1,0 +1,183 @@
+import { useEffect, useState, useRef } from "react";
+import robot from "../assets/robot.png";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { cn } from "../utils/cn.js";
+
+export const Chatroom = () => {
+  const { id } = useParams();
+  const [chatroomMessages, setChatroomMessages] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const textareaRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchChatrooms() {
+      try {
+        const response = await fetch(`/api/chatrooms/chats/${id}`, {
+          method: "GET",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setChatroomMessages(data.chatroomMessages);
+        } else {
+          console.error("Failed to fetch chatrooms");
+        }
+      } catch (error) {
+        console.error("Failed to fetch chatrooms", error);
+      }
+    }
+
+    if (id) {
+      fetchChatrooms();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchCurrentUser() {
+      try {
+        const response = await fetch("/api/users/current", {
+          method: "GET",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentUser(data.user);
+        } else {
+          console.error("Failed to fetch current user");
+        }
+      } catch (error) {
+        console.error("Failed to fetch current user", error);
+      }
+    }
+
+    fetchCurrentUser();
+  }, []);
+
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+
+    if (date.toDateString() === now.toDateString()) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return `Yesterday ${date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}`;
+    } else {
+      return new Intl.DateTimeFormat("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+        .format(date)
+        .replace(",", "");
+    }
+  }
+
+  async function handleSendMessage(e) {
+    const userInput = e.target.textarea.value;
+
+    try {
+      const response = await fetch(`/api/messages/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatroom: id, content: userInput }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setChatroomMessages(data.chatroomMessages);
+      } else {
+        console.error("Failed to fetch chatrooms");
+      }
+    } catch (error) {
+      console.error("Failed to fetch chatrooms", error);
+    }
+  }
+
+  function handleInput(event) {
+    const textarea = event.target;
+    const maxHeight = 150;
+    if (textarea.scrollHeight >= maxHeight) {
+      textarea.style.height = `${maxHeight}px`;
+    } else {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }
+
+  async function handleNavigateBack() {
+    navigate("/chatarea");
+  }
+
+  return (
+    <>
+      <header className={cn("flex justify-between pl-2")}>
+        <img src={robot} alt="robot" width={40} />
+        <button
+          onClick={handleNavigateBack}
+          className={cn("bg-[#f92f40] w-16 rounded-bl-2xl font-bold")}
+        >
+          Back
+        </button>
+      </header>
+      <div>
+        {Array.isArray(chatroomMessages) &&
+          chatroomMessages.map((message) => (
+            <div
+              className={cn(
+                "px-4 pt-2 mx-1 my-4 bg-amber-400 rounded-2xl rounded-bl-none w-fit max-w-[75%]",
+                message.sender.username === currentUser.username &&
+                  "bg-blue-400 ml-auto rounded-2xl rounded-br-none"
+              )}
+              key={message._id}
+            >
+              <p>{message.content}</p>
+              <span
+                className={cn(
+                  "pt-1 flex justify-end  text-[12px] text-gray-600"
+                )}
+              >
+                {formatTimestamp(message.createdAt)}
+              </span>
+            </div>
+          ))}
+      </div>
+      <form className={cn("grid ")} onSubmit={handleSendMessage}>
+        <textarea
+          className={cn("outline-none border-2")}
+          name="textarea"
+          id="textarea"
+          rows={1}
+          onInput={handleInput}
+          ref={textareaRef}
+        ></textarea>
+        <div className={cn("grid grid-cols-4")}>
+          <input
+            className={cn("bg-[#f92f40] font-bold border-r-2 appearance-none")}
+            type="file"
+          />
+          <button
+            className={cn("bg-[#f92f40] font-bold col-span-3")}
+            type="submit"
+          >
+            Send
+          </button>
+        </div>
+      </form>
+    </>
+  );
+};

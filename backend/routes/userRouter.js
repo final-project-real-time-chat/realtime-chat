@@ -56,21 +56,46 @@ router.post("/login", async (req, res) => {
     }
 
     req.session.user = { id: user._id, username: user.username };
-    res.json({ message: "User logged in successfully", user });
+    res.json({ message: "User logged in successfully", user: req.session.user });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
 });
 
-/** USER LOGOUT */
-router.post("/logout", async (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      res.status(500).json({ message: "interner server error" });
-    } else {
-      res.json({ message: "Successfully logged out" });
+/** GET CURRENT USER */
+router.get("/current", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ errorMessage: "Not authenticated" });
     }
-  });
+
+    const user = await User.findById(req.session.user.id);
+    if (!user) {
+      return res.status(404).json({ errorMessage: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
+/** USER LOGOUT */
+router.get("/logout", async (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).json({ errorMessage: "Internal server error" });
+      }
+      res.clearCookie("connect.sid");
+      res.json({ message: "Logout successful" });
+    });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
 });
 
 /** GET ALL USERS */

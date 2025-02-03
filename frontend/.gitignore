@@ -11,6 +11,8 @@ lerna-debug.log*
 node_modules
 .env*
 !.env.sample
+temp.md
+
 ###
 dist
 dist-ssr

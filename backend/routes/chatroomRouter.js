@@ -1,6 +1,7 @@
 import express from "express";
 import Chatroom from "../models/chatroomSchema.js";
 import Message from "../models/messageSchema.js";
+import User from "../models/userSchema.js";
 
 const router = express.Router();
 
@@ -16,13 +17,31 @@ router.get("/chats", async (req, res) => {
     );
 
     // TODO: IMPLEMENT AS MONGODB QUERY
-    const outputChats = allChats.map((chat) => {
-      const chatId = chat._id;
-      const usernames = chat.users
-        .map((user) => user.username)
-        .filter((username) => username !== currentUsername);
-      return { chatId, usernames };
-    });
+    const outputChats = await Promise.all(
+      allChats.map(async (chat) => {
+        const chatId = chat._id;
+        const usernames = chat.users
+          .map((user) => user.username)
+          .filter((username) => username !== currentUsername);
+
+        const lastMessage = await Message.findOne({ chatroom: chatId }).sort({
+          createdAt: -1,
+        });
+
+        const timestamps = await Message.find({ chatroom: chatId })
+          .sort({ createdAt: -1 })
+          .select("createdAt");
+
+        const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
+
+        return {
+          chatId,
+          usernames,
+          lastMessage,
+          timestamps: formattedTimestamps,
+        };
+      })
+    );
 
     res.json({ outputChats });
   } catch (error) {
@@ -34,28 +53,23 @@ router.get("/chats", async (req, res) => {
 router.get("/chats/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const sender = req.session.user.id;
+    const currentUsername = req.session.user.username;
 
-    const chatroomMessagesFromSender = await Message.find({
-      chatroom: id,
-      sender,
-    });
-    const chatroomMessagesToOthers = await Message.find({
-      chatroom: id,
-      sender: { $ne: sender },
-    });
-    const chatroom = await Chatroom.findById(id);
-    const chatroomAttendees = chatroom ? chatroom.users : [];
+    const chatroomMessages = await Message.find({ chatroom: id }).populate(
+      "sender"
+    );
 
-    // req.body.chatroomMessagesFromSender = chatroomMessagesFromSender;
-    // req.body.chatroomMessagesToOthers = chatroomMessagesToOthers;
-    // req.body.chatroomAttendees = chatroomAttendees;
+    if (!chatroomMessages) {
+      return res.status(404).json({ errorMessage: "Chatroom not found" });
+    }
 
-    res.json({
-      chatroomMessagesFromSender,
-      chatroomMessagesToOthers,
-      chatroomAttendees,
-    });
+    const timestamps = await Message.find({ chatroom: id })
+      .sort({ createdAt: -1 })
+      .select("createdAt");
+
+    const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
+
+    res.json({ chatroomMessages, currentUsername });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
