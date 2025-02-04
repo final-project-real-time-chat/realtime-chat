@@ -3,64 +3,26 @@ import robot from "../assets/robot.png";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../utils/cn.js";
-
+import { ErrorMessage } from "./ErrorMessage.jsx";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
-
-  const query = useQuery({ queryKey: ["chatroom", id], queryFn: getTodos });
-  
   const { id } = useParams();
-  const [chatroomMessages, setChatroomMessages] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [forceRefresh__bad, setForceRefresh__bad] = useState(0);
   const textareaRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchChatrooms() {
-      try {
-        const response = await fetch(`/api/chatrooms/chats/${id}`, {
-          method: "GET",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setChatroomMessages(data.chatroomMessages);
-        } else {
-          console.error("Failed to fetch chatrooms");
-        }
-      } catch (error) {
-        console.error("Failed to fetch chatrooms", error);
-      }
-    }
-
-    if (id) {
-      fetchChatrooms();
-    }
-  }, [id, forceRefresh__bad]);
-
-  useEffect(() => {
-    async function fetchCurrentUser() {
-      try {
-        const response = await fetch("/api/users/current", {
-          method: "GET",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setCurrentUser(data.user);
-        } else {
-          console.error("Failed to fetch current user");
-        }
-      } catch (error) {
-        console.error("Failed to fetch current user", error);
-      }
-    }
-
-    fetchCurrentUser();
-  }, []);
+  const { data, error } = useQuery({
+    queryKey: ["chatroom", id],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatrooms/chats/${id}`);
+      return response.json();
+    },
+    // refetchInterval: 2000,
+  });
+  console.log(data);
+  const chatroomMessages = data?.chatroomMessages;
+  const currentUsername = data?.currentUsername;
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -111,7 +73,6 @@ export const Chatroom = () => {
         //   ...prevMessages,
         //   data.newMessage,
         // ]);
-        setForceRefresh__bad((count) => count + 1);
         e.target.textarea.value = "";
       } else {
         console.error("Failed to send message");
@@ -148,19 +109,20 @@ export const Chatroom = () => {
         </button>
       </header>
       <div>
+        <ErrorMessage error={error} />
         {Array.isArray(chatroomMessages) &&
           chatroomMessages.map((message) => (
             <div
               className={cn(
                 "px-4 pt-2 mx-1 my-4  rounded-2xl  w-fit max-w-[75%]",
-                message.sender.username === currentUser.username
+                message.sender.username === currentUsername
                   ? "bg-blue-400 ml-auto rounded-br-none"
                   : "bg-amber-400 rounded-bl-none"
               )}
               key={message._id}
             >
-              <p>Sender: {message.sender.username}</p>
-              <p>Username: {currentUser.username}</p>
+              {/* <p>Sender: {message.sender.username}</p>
+              <p>Username: {currentUser.username}</p> */}
               <p>{message.content}</p>
               <span
                 className={cn(
