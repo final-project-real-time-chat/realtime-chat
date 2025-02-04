@@ -1,10 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 
-/**
- * user1@mail.com
- * password
- */
-
 export const Login = () => {
   const navigate = useNavigate();
 

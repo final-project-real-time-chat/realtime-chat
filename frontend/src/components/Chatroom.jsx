@@ -4,10 +4,17 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../utils/cn.js";
 
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 export const Chatroom = () => {
+  const queryClient = useQueryClient();
+
+  const query = useQuery({ queryKey: ["chatroom", id], queryFn: getTodos });
+  
   const { id } = useParams();
   const [chatroomMessages, setChatroomMessages] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [forceRefresh__bad, setForceRefresh__bad] = useState(0);
   const textareaRef = useRef(null);
   const navigate = useNavigate();
 
@@ -32,7 +39,7 @@ export const Chatroom = () => {
     if (id) {
       fetchChatrooms();
     }
-  }, [id]);
+  }, [id, forceRefresh__bad]);
 
   useEffect(() => {
     async function fetchCurrentUser() {
@@ -86,6 +93,7 @@ export const Chatroom = () => {
   }
 
   async function handleSendMessage(e) {
+    e.preventDefault();
     const userInput = e.target.textarea.value;
 
     try {
@@ -98,13 +106,18 @@ export const Chatroom = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setChatroomMessages(data.chatroomMessages);
+        // const data = await response.json();
+        // setChatroomMessages((prevMessages) => [
+        //   ...prevMessages,
+        //   data.newMessage,
+        // ]);
+        setForceRefresh__bad((count) => count + 1);
+        e.target.textarea.value = "";
       } else {
-        console.error("Failed to fetch chatrooms");
+        console.error("Failed to send message");
       }
     } catch (error) {
-      console.error("Failed to fetch chatrooms", error);
+      console.error("Failed to send message", error);
     }
   }
 
@@ -139,12 +152,15 @@ export const Chatroom = () => {
           chatroomMessages.map((message) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-1 my-4 bg-amber-400 rounded-2xl rounded-bl-none w-fit max-w-[75%]",
-                message.sender.username === currentUser.username &&
-                  "bg-blue-400 ml-auto rounded-2xl rounded-br-none"
+                "px-4 pt-2 mx-1 my-4  rounded-2xl  w-fit max-w-[75%]",
+                message.sender.username === currentUser.username
+                  ? "bg-blue-400 ml-auto rounded-br-none"
+                  : "bg-amber-400 rounded-bl-none"
               )}
               key={message._id}
             >
+              <p>Sender: {message.sender.username}</p>
+              <p>Username: {currentUser.username}</p>
               <p>{message.content}</p>
               <span
                 className={cn(

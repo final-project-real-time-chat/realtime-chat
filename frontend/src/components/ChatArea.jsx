@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import robot from "../assets/robot.png";
 import { Link } from "react-router-dom";
+
+import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
+import { NewChatroom } from "./NewChatroom.jsx";
 
 export const ChatArea = () => {
   const [chatrooms, setChatrooms] = useState([]);
+  const [showNewChatroom, setShowNewChatroom] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -113,6 +116,10 @@ export const ChatArea = () => {
     }
   }
 
+  function handleNewChatroom() {
+    setShowNewChatroom(true);
+  }
+
   return (
     <>
       <header
@@ -125,32 +132,36 @@ export const ChatArea = () => {
         <button onClick={handleLogout}>Logout</button>
       </header>
       <main>
-        <ul>
-          {chatrooms.map((chatroom) => (
-            <Link
-              key={chatroom.chatId}
-              to={`/chatarea/chats/${chatroom.chatId}`}
-            >
-              <li className={cn("flex px-2 border-b-2")}>
-                <img src={robot} alt="robot" width={28} />
-                <div className={cn("flex flex-col pl-2")}>
-                  <span>{chatroom.usernames.join(", ")}</span>
-                  {chatroom.lastMessage && (
-                    <span>
-                      {truncateText(chatroom.lastMessage.content, 20)}
+        {showNewChatroom ? (
+          <NewChatroom />
+        ) : (
+          <ul>
+            {chatrooms.map((chatroom) => (
+              <Link
+                key={chatroom.chatId}
+                to={`/chatarea/chats/${chatroom.chatId}`}
+              >
+                <li className={cn("flex px-2 border-b-2")}>
+                  <img src={robot} alt="robot" width={28} />
+                  <div className={cn("flex flex-col pl-2")}>
+                    <span>{chatroom.usernames.join(", ")}</span>
+                    {chatroom.lastMessage && (
+                      <span>
+                        {truncateText(chatroom.lastMessage.content, 20)}
+                      </span>
+                    )}
+                  </div>
+                  {chatroom.timestamps && chatroom.timestamps.length > 0 && (
+                    <span className={cn("flex items-end ml-auto")}>
+                      {formatTimestamp(chatroom.timestamps[0])}
                     </span>
                   )}
-                </div>
-                {chatroom.timestamps && chatroom.timestamps.length > 0 && (
-                  <span className={cn("flex items-end ml-auto")}>
-                    {formatTimestamp(chatroom.timestamps[0])}
-                  </span>
-                )}
-              </li>
-            </Link>
-          ))}
-          {chatrooms.length === 0 && <button>Add new chat</button>}
-        </ul>
+                </li>
+              </Link>
+            ))}
+            <button onClick={handleNewChatroom}>Add new chat</button>
+          </ul>
+        )}
       </main>
       {/* <footer>Settings</footer> */}
     </>
