@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import robot from "../assets/robot.png";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -18,11 +18,55 @@ export const Chatroom = () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
       return response.json();
     },
-    refetchInterval: 30_000,
+    // refetchInterval: 30_000,
   });
-  console.log(data);
+
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;
+
+  const mutation = useMutation({
+    mutationFn: async (userInput) => {
+      const response = await fetch(`/api/messages/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatroom: id, content: userInput }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["chatroom", id]);
+      textareaRef.current.value = "";
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
+  function handleSendMessage(e) {
+    e.preventDefault();
+    const userInput = e.target.textarea.value;
+    mutation.mutate(userInput);
+  }
+
+  function handleInput(event) {
+    const textarea = event.target;
+    const maxHeight = 150;
+    if (textarea.scrollHeight >= maxHeight) {
+      textarea.style.height = `${maxHeight}px`;
+    } else {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }
+
+  async function handleNavigateBack() {
+    navigate("/chatarea");
+  }
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -54,49 +98,6 @@ export const Chatroom = () => {
     }
   }
 
-  async function handleSendMessage(e) {
-    e.preventDefault();
-    const userInput = e.target.textarea.value;
-
-    try {
-      const response = await fetch(`/api/messages/send`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ chatroom: id, content: userInput }),
-      });
-
-      if (response.ok) {
-        // const data = await response.json();
-        // setChatroomMessages((prevMessages) => [
-        //   ...prevMessages,
-        //   data.newMessage,
-        // ]);
-        e.target.textarea.value = "";
-      } else {
-        console.error("Failed to send message");
-      }
-    } catch (error) {
-      console.error("Failed to send message", error);
-    }
-  }
-
-  function handleInput(event) {
-    const textarea = event.target;
-    const maxHeight = 150;
-    if (textarea.scrollHeight >= maxHeight) {
-      textarea.style.height = `${maxHeight}px`;
-    } else {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  }
-
-  async function handleNavigateBack() {
-    navigate("/chatarea");
-  }
-
   return (
     <>
       <header className={cn("flex justify-between pl-2")}>
@@ -121,8 +122,6 @@ export const Chatroom = () => {
               )}
               key={message._id}
             >
-              {/* <p>Sender: {message.sender.username}</p>
-              <p>Username: {currentUser.username}</p> */}
               <p>{message.content}</p>
               <span
                 className={cn(
