@@ -18,7 +18,7 @@ export const Chatroom = () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
       return response.json();
     },
-    refetchInterval: 2000,
+    refetchInterval: 30_000,
   });
   console.log(data);
   const chatroomMessages = data?.chatroomMessages;
