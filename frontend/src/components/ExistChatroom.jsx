@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const ExistChatroom = () => {
+export const ExistChatroom = (e) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -26,7 +26,9 @@ export const ExistChatroom = () => {
         navigate(`/chatarea/chats/${data.chatroom}`);
         return;
       } else {
-        navigate(`/chatarea/chats/new-chatroom`);
+        // console.log("sind im else");
+        // console.log("partner: ", data.partnerName, data.partnerId);
+        navigate(`/chatarea/chats/new-chatroom/${data.partnerName}`);
         return;
       }
     },
