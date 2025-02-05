@@ -17,12 +17,12 @@ router.post("/exist", async (req, res) => {
       return res.status(404).json({ errorMessage: "User not found" });
     }
 
-    const chatroomExists = await Chatroom.find({
+    const chatroomExists = await Chatroom.findOne({
       users: { $all: [user._id, currentUserId] },
     });
 
     if (chatroomExists) {
-      return res.json({ chatroom: chatroomExists[0]._id });
+      return res.json({ chatroom: chatroomExists._id });
     }
 
     /**
