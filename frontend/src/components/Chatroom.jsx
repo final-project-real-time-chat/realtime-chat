@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import robot from "../assets/robot.png";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ export const Chatroom = () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
       return response.json();
     },
-    // refetchInterval: 1_000,
+    refetchInterval: 1_000,
   });
 
   const chatroomMessages = data?.chatroomMessages;
@@ -98,9 +98,32 @@ export const Chatroom = () => {
     }
   }
 
+  const lastMessageRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const [nearBottom, setNearBottom] = useState(true);
+
+  useEffect(() => {
+    if (messagesEndRef.current && nearBottom) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatroomMessages, nearBottom]);
+
+  useEffect(() => {
+    function onscroll() {
+      const position = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const viewportHeight = window.innerHeight;
+
+      const bottomDistance = scrollHeight - (position + viewportHeight);
+      setNearBottom(bottomDistance < 50);
+    }
+    window.addEventListener("scroll", onscroll);
+    return () => window.removeEventListener("scroll", onscroll);
+  }, []);
+
   return (
     <>
-      <header className={cn("flex justify-between pl-2")}>
+      <header className={cn("flex justify-between pl-2 sticky top-0")}>
         <img src={robot} alt="robot" width={40} />
         <button
           onClick={handleNavigateBack}
@@ -109,10 +132,10 @@ export const Chatroom = () => {
           Back
         </button>
       </header>
-      <div>
+      <div className={cn("flex flex-col h-full overflow-y-auto")}>
         <ErrorMessage error={error} />
         {Array.isArray(chatroomMessages) &&
-          chatroomMessages.map((message) => (
+          chatroomMessages.map((message, index) => (
             <div
               className={cn(
                 "px-4 pt-2 mx-1 my-4  rounded-2xl  w-fit max-w-[75%]",
@@ -121,6 +144,9 @@ export const Chatroom = () => {
                   : "bg-amber-400 rounded-bl-none"
               )}
               key={message._id}
+              ref={
+                index === chatroomMessages.length - 1 ? lastMessageRef : null
+              }
             >
               <p>{message.content}</p>
               <span
@@ -132,8 +158,12 @@ export const Chatroom = () => {
               </span>
             </div>
           ))}
+        <div ref={messagesEndRef} />
       </div>
-      <form className={cn("grid ")} onSubmit={handleSendMessage}>
+      <form
+        className={cn("grid sticky bottom-0 p-2")}
+        onSubmit={handleSendMessage}
+      >
         <textarea
           className={cn("outline-none border-2")}
           name="textarea"
