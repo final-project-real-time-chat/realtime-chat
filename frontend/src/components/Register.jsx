@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Register = () => {
+  const navigate = useNavigate();
+
   async function handleRegister(e) {
     e.preventDefault();
     const email = e.target.email.value;
@@ -18,6 +20,7 @@ export const Register = () => {
     if (response.ok) {
       const data = await response.json();
       console.log("Register successful:", data);
+      navigate("/");
     } else {
       console.error("Register failed");
     }

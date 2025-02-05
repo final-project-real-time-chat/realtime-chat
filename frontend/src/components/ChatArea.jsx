@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
-import { NewChatroom } from "./NewChatroom.jsx";
+import { ExistChatroom } from "./ExistChatroom.jsx";
 
 export const ChatArea = () => {
   const [chatrooms, setChatrooms] = useState([]);
@@ -133,7 +133,7 @@ export const ChatArea = () => {
       </header>
       <main>
         {showNewChatroom ? (
-          <NewChatroom />
+          <ExistChatroom />
         ) : (
           <ul>
             {chatrooms.map((chatroom) => (

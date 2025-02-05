@@ -6,54 +6,67 @@ import User from "../models/userSchema.js";
 const router = express.Router();
 
 /** CREATE NEW CHATROOM */
-router.post("/", async (req, res) => {
+router.post("/exist", async (req, res) => {
   try {
-    const { username, email } = req.body;
-    const user = await User.findOne({ $or: [{ username }, { email }] });
+    const currentUserId = req.session.user.id;
+    const { username } = req.body;
+
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).json({ errorMessage: "User not found" });
     }
 
-    const newChatroom = new Chatroom({
-      users: [req.session.user.id, user._id],
+    const chatroomExists = await Chatroom.find({
+      users: { $all: [user._id, currentUserId] },
     });
+    console.log("Exists: ", chatroomExists);
 
-    await newChatroom.save();
-    res
-      .status(201)
-      .json({ message: "Chatroom created successfully", newChatroom });
+    if (chatroomExists) {
+      console.log("bin im if", chatroomExists)
+      return res.json({ chatroom: chatroomExists._id });
+    }
+
+    /**
+     const newChatroom = new Chatroom({
+       users: [currentUserId, user._id],
+       });
+
+       await newChatroom.save();
+*/
+
+    res.json({ chatroom: "new-chatroom" });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
 });
 
 /** INVITE USER TO CHATROOM */
-router.post("/:id/invite", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+// router.post("/:id/invite", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { email } = req.body;
+//     const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({ errorMessage: "User not found" });
-    }
+//     if (!user) {
+//       return res.status(404).json({ errorMessage: "User not found" });
+//     }
 
-    const chatroom = await Chatroom.findById(id);
-    if (!chatroom) {
-      return res.status(404).json({ errorMessage: "Chatroom not found" });
-    }
+//     const chatroom = await Chatroom.findById(id);
+//     if (!chatroom) {
+//       return res.status(404).json({ errorMessage: "Chatroom not found" });
+//     }
 
-    if (!chatroom.invitedUsers.includes(user._id)) {
-      chatroom.invitedUsers.push(user._id);
-      await chatroom.save();
-    }
+//     if (!chatroom.invitedUsers.includes(user._id)) {
+//       chatroom.invitedUsers.push(user._id);
+//       await chatroom.save();
+//     }
 
-    res.status(200).json({ message: "User invited successfully" });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
+//     res.status(200).json({ message: "User invited successfully" });
+//   } catch (error) {
+//     res.status(500).json({ errorMessage: "Internal server error" });
+//   }
+// });
 
 router.get("/chats", async (req, res) => {
   try {
