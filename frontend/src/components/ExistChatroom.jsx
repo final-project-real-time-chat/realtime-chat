@@ -18,12 +18,12 @@ export const ExistChatroom = () => {
       if (!response.ok) {
         throw new Error("Failed to create chatroom");
       }
-       return response.json();
+      const result = await response.json();
+      return result;
     },
     onSuccess: (data) => {
-      console.log("Chatroom data:", data);
       if (data.chatroom !== "new-chatroom") {
-        navigate(`/chatarea/chats/${data.chatroom}`); // ohne ._id
+        navigate(`/chatarea/chats/${data.chatroom}`);
         return;
       } else {
         navigate(`/chatarea/chats/new-chatroom`);

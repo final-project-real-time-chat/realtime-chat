@@ -20,11 +20,9 @@ router.post("/exist", async (req, res) => {
     const chatroomExists = await Chatroom.find({
       users: { $all: [user._id, currentUserId] },
     });
-    console.log("Exists: ", chatroomExists);
 
     if (chatroomExists) {
-      console.log("bin im if", chatroomExists)
-      return res.json({ chatroom: chatroomExists._id });
+      return res.json({ chatroom: chatroomExists[0]._id });
     }
 
     /**
