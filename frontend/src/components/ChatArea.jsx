@@ -1,119 +1,57 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
 import { ExistChatroom } from "./ExistChatroom.jsx";
 
 export const ChatArea = () => {
-  const [chatrooms, setChatrooms] = useState([]);
   const [showNewChatroom, setShowNewChatroom] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    async function fetchChatrooms() {
-      try {
-        const response = await fetch("/api/chatrooms/chats", {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setChatrooms(data.outputChats);
-        } else {
-          console.error(
-            "Failed to fetch chatrooms",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Failed to fetch chatrooms", error);
+  const {
+    data: chatroomsData,
+    error: chatroomsError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["chatrooms"],
+    queryFn: async () => {
+      const response = await fetch("/api/chatrooms/chats");
+      if (!response.ok) {
+        throw new Error("Failed to fetch chatrooms");
       }
-    }
+      return response.json();
+    },
+    refetchInterval: 3_000,
+  });
 
-    fetchChatrooms();
-  }, []);
+  const chatrooms = chatroomsData?.outputChats;
 
-  useEffect(() => {
-    function updateChatrooms() {
-      setChatrooms((prevChatrooms) => [...prevChatrooms]);
-    }
+  console.log(chatrooms);
 
-    const now = new Date();
-    const midnight = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1,
-      0,
-      0,
-      0
-    );
-    const timeUntilMidnight = midnight - now;
-
-    const timeout = setTimeout(() => {
-      updateChatrooms();
-      const interval = setInterval(updateChatrooms, 24 * 60 * 60 * 1000);
-      return () => clearInterval(interval);
-    }, timeUntilMidnight);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-
-    if (date.toDateString() === now.toDateString()) {
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return `Yesterday ${date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}`;
-    } else {
-      return new Intl.DateTimeFormat("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })
-        .format(date)
-        .replace(",", "");
-    }
-  }
-
-  function truncateText(text, maxLength) {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + "...";
-    }
-    return text;
-  }
-
-  async function handleLogout() {
-    try {
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
       const response = await fetch(`/api/users/logout`, {
         method: "GET",
       });
-      console.log(response);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Logout successful:", data);
-        navigate("/");
-      } else {
-        console.log("Failed to logout");
+      if (!response.ok) {
+        throw new Error("Failed to logout");
       }
-    } catch (error) {
-      console.error("Failed to fetch chatrooms", error);
-    }
+      return response.json();
+    },
+    onSuccess: () => {
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("Failed to logout", error);
+    },
+  });
+
+  function handleLogout() {
+    logoutMutation.mutate();
   }
 
   function handleNewChatroom() {
@@ -134,6 +72,10 @@ export const ChatArea = () => {
       <main>
         {showNewChatroom ? (
           <ExistChatroom />
+        ) : isLoading ? (
+          <p>Loading...</p>
+        ) : chatroomsError ? (
+          <p>Error loading chatrooms: {chatroomsError.message}</p>
         ) : (
           <ul>
             {chatrooms.map((chatroom) => (
@@ -146,6 +88,7 @@ export const ChatArea = () => {
                   <div className={cn("flex flex-col pl-2")}>
                     <span>{chatroom.usernames.join(", ")}</span>
                     {chatroom.lastMessage && (
+                      // <span className="text-ellipsis">
                       <span>
                         {truncateText(chatroom.lastMessage.content, 20)}
                       </span>
@@ -167,3 +110,40 @@ export const ChatArea = () => {
     </>
   );
 };
+
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  if (date.toDateString() === now.toDateString()) {
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } else if (date.toDateString() === yesterday.toDateString()) {
+    return `Yesterday ${date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+  } else {
+    return new Intl.DateTimeFormat("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+      .format(date)
+      .replace(",", "");
+  }
+}
+
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "…";
+  }
+  return text;
+}

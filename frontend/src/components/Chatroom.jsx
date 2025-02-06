@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import robot from "../assets/robot.png";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
@@ -104,7 +105,7 @@ export const Chatroom = () => {
 
   useEffect(() => {
     if (messagesEndRef.current && nearBottom) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
     }
   }, [chatroomMessages, nearBottom]);
 
@@ -148,7 +149,7 @@ export const Chatroom = () => {
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              <p>{message.content}</p>
+              <p className="break-words">{message.content}</p>
               <span
                 className={cn(
                   "pt-1 flex justify-end  text-[12px] text-gray-600"
