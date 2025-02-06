@@ -24,6 +24,7 @@ export const Chatroom = () => {
 
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;
+  const partnerName = data?.partnerName;
 
   const mutation = useMutation({
     mutationFn: async (userInput) => {
@@ -123,9 +124,16 @@ export const Chatroom = () => {
   }, []);
 
   return (
-    <>
-      <header className={cn("flex justify-between pl-2 sticky top-0")}>
-        <img src={robot} alt="robot" width={40} />
+    <div className="min-h-svh flex flex-col">
+      <header
+        className={cn("flex justify-between pl-2 sticky top-0 bg-gray-700")}
+      >
+        <img
+          className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
+          src={partnerName ? `https://robohash.org/${partnerName}` : robot}
+          alt="avatar"
+        />
+        <h1>{partnerName}</h1>
         <button
           onClick={handleNavigateBack}
           className={cn("bg-[#f92f40] w-16 rounded-bl-2xl font-bold")}
@@ -133,7 +141,7 @@ export const Chatroom = () => {
           Back
         </button>
       </header>
-      <div className={cn("flex flex-col h-full overflow-y-auto")}>
+      <div className={cn("flex flex-col h-full flex-grow")}>
         <ErrorMessage error={error} />
         {Array.isArray(chatroomMessages) &&
           chatroomMessages.map((message, index) => (
@@ -161,12 +169,9 @@ export const Chatroom = () => {
           ))}
         <div ref={messagesEndRef} />
       </div>
-      <form
-        className={cn("grid sticky bottom-0 p-2")}
-        onSubmit={handleSendMessage}
-      >
+      <form className={cn("grid sticky bottom-0")} onSubmit={handleSendMessage}>
         <textarea
-          className={cn("outline-none border-2")}
+          className={cn("outline-none border-2 bg-white text-black")}
           name="textarea"
           id="textarea"
           rows={1}
@@ -186,6 +191,6 @@ export const Chatroom = () => {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 };

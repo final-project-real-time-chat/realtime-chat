@@ -31,7 +31,7 @@ npm create vite@latest
 npm i zustand socket.io-client
 ```
 
-- zustand: https://zustand.docs.pmnd.rs/getting-started/introduction
+- TanStack Query: https://tanstack.com/query/latest/docs/framework/react/overview
 - socket.io-client: https://socket.io/docs/v4/client-installation/
 
 ##### CSS - STYLES

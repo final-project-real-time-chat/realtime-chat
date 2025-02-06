@@ -4,10 +4,11 @@ import dotenv from "dotenv";
 import User from "./models/userSchema.js";
 import Chatroom from "./models/chatroomSchema.js";
 import Message from "./models/messageSchema.js";
+import { connectDB } from "./db.js";
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGODB_URI);
+connectDB();
 
 const seedDatabase = async () => {
   await mongoose.connection.dropDatabase();

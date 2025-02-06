@@ -59,6 +59,8 @@ router.get("/chats", async (req, res) => {
     const currentUsername = req.session.user.username;
     const currentUserId = req.session.user.id;
 
+    // const avatar = await User.findOne({ avatar });
+
     const allChats = await Chatroom.find({ users: currentUserId }).populate(
       "users"
     );
@@ -101,6 +103,7 @@ router.get("/chats/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const currentUsername = req.session.user.username;
+    const currentUserId = req.session.user.id;
 
     const chatroomMessages = await Message.find({ chatroom: id }).populate(
       "sender"
@@ -116,7 +119,16 @@ router.get("/chats/:id", async (req, res) => {
 
     const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
 
-    res.json({ chatroomMessages, currentUsername });
+    const chatroom = await Chatroom.findOne({ _id: id });
+
+    const partnerId = chatroom.users.find(
+      (userId) => userId.toString() !== currentUserId.toString()
+    );
+
+    const partner = await User.findById(partnerId);
+    const partnerName = partner.username;
+
+    res.json({ chatroomMessages, currentUsername, partnerName });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }

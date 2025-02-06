@@ -30,8 +30,6 @@ export const ChatArea = () => {
 
   const chatrooms = chatroomsData?.outputChats;
 
-  console.log(chatrooms);
-
   const logoutMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(`/api/users/logout`, {
@@ -83,8 +81,12 @@ export const ChatArea = () => {
                 key={chatroom.chatId}
                 to={`/chatarea/chats/${chatroom.chatId}`}
               >
-                <li className={cn("flex px-2 border-b-2")}>
-                  <img src={robot} alt="robot" width={28} />
+                <li className={cn("flex p-2 border-b-2")}>
+                  <img
+                    className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
+                    src={`https://robohash.org/${chatroom.usernames.join(", ")}`}
+                    alt="avatar"
+                  />
                   <div className={cn("flex flex-col pl-2")}>
                     <span>{chatroom.usernames.join(", ")}</span>
                     {chatroom.lastMessage && (

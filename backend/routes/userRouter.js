@@ -26,11 +26,21 @@ router.post("/register", async (req, res) => {
       return res.status(409).json({ errorMessage: "Username already taken" });
     }
 
+    const existingEmail = await User.findOne({ email });
+
+    if (existingEmail) {
+      return res.status(409).json({ errorMessage: "Email already taken" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
-    const newUser = new User({ email, username, password: hashedPassword });
+    const newUser = new User({
+      email,
+      username,
+      password: hashedPassword,
+    });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully", newUser });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
