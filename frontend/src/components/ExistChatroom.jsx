@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import robot from "../assets/robot.png";
+
 export const ExistChatroom = (e) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -43,9 +45,25 @@ export const ExistChatroom = (e) => {
     existChatroomMutation.mutate(username);
   }
 
+  async function handleNavigateBack() {
+    navigate("/chatarea");
+  }
+
   return (
     <>
       <header>
+        <header
+          className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}
+        >
+          <h1 className="flex items-center tracking-widest font-bold">Hello, Word!</h1>
+          <img className="h-12" src={robot} alt="robot" />
+          <button
+            onClick={handleNavigateBack}
+            className={"bg-[#f92f40] w-16 rounded-bl-2xl font-bold"}
+          >
+            Back
+          </button>
+        </header>
         <h1>Create new chatroom</h1>
       </header>
       <form onSubmit={handleExistChatroom}>

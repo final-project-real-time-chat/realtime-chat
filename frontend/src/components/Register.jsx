@@ -20,7 +20,7 @@ export const Register = () => {
     if (response.ok) {
       const data = await response.json();
       console.log("Register successful:", data);
-      navigate("/");
+      navigate("/register-verificaton");
     } else {
       console.error("Register failed");
     }
@@ -53,8 +53,7 @@ export const Register = () => {
         placeholder="Enter your password"
         minLength={6}
       />
-      <button type="submit">Login</button>
-
+      <button type="submit">Register</button>
       <p>Are you already registered?</p>
       <Link to="/">Click here</Link>
     </form>

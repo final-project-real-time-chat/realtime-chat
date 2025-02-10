@@ -47,6 +47,8 @@ export const Login = () => {
 
       <p>Are you not registered yet?</p>
       <Link to="/register">Click here</Link>
+      <p>Do you need to verify your account?</p>
+      <Link to="/register-verification">Click here</Link>
     </form>
   );
 };

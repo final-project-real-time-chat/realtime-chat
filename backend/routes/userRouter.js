@@ -4,18 +4,6 @@ import bcrypt from "bcrypt";
 
 const router = express.Router();
 
-/** USER REGISTER AUTH */
-router.post("/auth-register", async (req, res) => {
-  const { email } = req.body;
-  const existingEmail = await User.findOne({ email });
-  if (existingEmail) {
-    return res.status(409).json({ errorMessage: "Email already taken" });
-  }
-  // TODO => SEND EMAIL with a link to "/register" (included user email)
-
-  res.status(200).json({ message: "Email is available" });
-});
-
 /** USER REGISTER */
 router.post("/register", async (req, res) => {
   try {
@@ -46,23 +34,65 @@ router.post("/register", async (req, res) => {
   }
 });
 
+/** USER REGISTER-VERIFICATION */
+router.patch("/register-verification", async (req, res) => {
+  try {
+    const { email, key } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(409).json({ errorMessage: "Email does not exist" });
+    }
+
+    if (user.isVerified){
+      return res.json({message: "Your email is already verified"})
+    }
+
+    if (user.verificationKey !== key) {
+      return res.json({
+        message: "Verification failed",
+        isVerified: user.isVerified,
+      });
+    }
+
+    await User.updateOne(
+      { email },
+      { $set: { isVerified: true }, $unset: { verificationKey: "" } }
+    );
+
+    res.json({
+      message: "User verified successfully",
+      isVerified: user.isVerified,
+    });
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
 /** USER LOGIN */
 router.post("/login", async (req, res) => {
   try {
     // TODO => LOGIN: using username and password
-    const { email, username, password } = req.body;
+    const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(404)
-        .json({ errorMessage: "Invalid username or password" });
+        .json({ errorMessage: "Invalid email or password" });
+    }
+
+    if (!user.isVerified) {
+      return res.json({
+        message: "Your email is not verified",
+        isVerified: false,
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
         .status(401)
-        .json({ errorMessage: "Invalid username or password" });
+        .json({ errorMessage: "Invalid email or password" });
     }
 
     req.session.user = { id: user._id, username: user.username };

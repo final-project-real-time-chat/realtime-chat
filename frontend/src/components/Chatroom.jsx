@@ -133,7 +133,9 @@ export const Chatroom = () => {
           src={partnerName ? `https://robohash.org/${partnerName}` : robot}
           alt="avatar"
         />
-        <h1>{partnerName}</h1>
+        <h1 className="flex items-center tracking-widest font-bold">
+          {partnerName}
+        </h1>
         <button
           onClick={handleNavigateBack}
           className={cn("bg-[#f92f40] w-16 rounded-bl-2xl font-bold")}
