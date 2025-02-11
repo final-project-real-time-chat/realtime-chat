@@ -1,14 +1,11 @@
-// import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
-// import { ExistChatroom } from "./ExistChatroom.jsx";
 
 export const ChatArea = () => {
-  // const [showNewChatroom, setShowNewChatroom] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -48,15 +45,6 @@ export const ChatArea = () => {
     },
   });
 
-  function handleLogout() {
-    logoutMutation.mutate();
-  }
-
-  function handleNewChatroom() {
-    // setShowNewChatroom(true);
-    navigate("/chatarea/exist");
-  }
-
   return (
     <>
       <header className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}>
@@ -66,66 +54,59 @@ export const ChatArea = () => {
         <img className="h-12" src={robot} alt="robot" />
         <button
           className="bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
-          onClick={handleLogout}
+          onClick={() => logoutMutation.mutate()}
         >
           Logout
         </button>
       </header>
       <main>
-        {
-          // showNewChatroom ? (
-          //   <ExistChatroom />
-          // ) :
-          isLoading ? (
-            <p>Loading...</p>
-          ) : chatroomsError ? (
-            <p>Error loading chatrooms: {chatroomsError.message}</p>
-          ) : (
-            <>
-              <div className="flex justify-center bg-blue-300 w-full text-black py-1">
-                <button
-                  onClick={handleNewChatroom}
-                  className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400"
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : chatroomsError ? (
+          <p>Error loading chatrooms: {chatroomsError.message}</p>
+        ) : (
+          <>
+            <div className="flex justify-center bg-blue-300 w-full text-black py-1">
+              <button
+                onClick={() => navigate("/chatarea/exist")}
+                className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400"
+              >
+                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
+                  Add new chat
+                </span>
+              </button>
+            </div>
+            <ul>
+              {chatrooms.map((chatroom) => (
+                <Link
+                  key={chatroom.chatId}
+                  to={`/chatarea/chats/${chatroom.chatId}`}
                 >
-                  <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
-                    Add new chat
-                  </span>
-                </button>
-              </div>
-              <ul>
-                {chatrooms.map((chatroom) => (
-                  <Link
-                    key={chatroom.chatId}
-                    to={`/chatarea/chats/${chatroom.chatId}`}
-                  >
-                    <li className={cn("flex p-2 border-b-2")}>
-                      <img
-                        className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
-                        src={`https://robohash.org/${chatroom.usernames.join(", ")}`}
-                        alt="avatar"
-                      />
-                      <div className={cn("flex flex-col pl-2")}>
-                        <span>{chatroom.usernames.join(", ")}</span>
-                        {chatroom.lastMessage && (
-                          // <span className="text-ellipsis">
-                          <span>
-                            {truncateText(chatroom.lastMessage.content, 20)}
-                          </span>
-                        )}
-                      </div>
-                      {chatroom.timestamps &&
-                        chatroom.timestamps.length > 0 && (
-                          <span className={cn("flex items-end ml-auto")}>
-                            {formatTimestamp(chatroom.timestamps[0])}
-                          </span>
-                        )}
-                    </li>
-                  </Link>
-                ))}
-              </ul>
-            </>
-          )
-        }
+                  <li className={cn("flex p-2 border-b-2")}>
+                    <img
+                      className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
+                      src={`https://robohash.org/${chatroom.usernames.join(", ")}`}
+                      alt="avatar"
+                    />
+                    <div className={cn("flex flex-col pl-2")}>
+                      <span>{chatroom.usernames.join(", ")}</span>
+                      {chatroom.lastMessage && (
+                        <span>
+                          {truncateText(chatroom.lastMessage.content, 20)}
+                        </span>
+                      )}
+                    </div>
+                    {chatroom.timestamps && chatroom.timestamps.length > 0 && (
+                      <span className={cn("flex items-end ml-auto")}>
+                        {formatTimestamp(chatroom.timestamps[0])}
+                      </span>
+                    )}
+                  </li>
+                </Link>
+              ))}
+            </ul>
+          </>
+        )}
       </main>
     </>
   );

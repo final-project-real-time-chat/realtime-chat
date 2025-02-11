@@ -138,7 +138,7 @@ export const Chatroom = () => {
         </h1>
         <button
           onClick={handleNavigateBack}
-          className={cn("bg-[#f92f40] w-16 rounded-bl-2xl font-bold")}
+          className={cn("bg-[#f92f40] w-36 rounded-bl-2xl font-bold")}
         >
           Back
         </button>

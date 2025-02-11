@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Register } from "./components/Register.jsx";
-import { RegisterVerification } from "./components/RegisterVerification.jsx";
+import { RegisterVerify } from "./components/RegisterVerify.jsx";
 import { Login } from "./components/Login.jsx";
 import { ChatArea } from "./components/ChatArea.jsx";
 import { ExistChatroom } from "./components/ExistChatroom.jsx";
@@ -14,8 +14,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/register-verification"
-          element={<RegisterVerification />}
+          path="/register/verify"
+          element={<RegisterVerify />}
         />
         <Route path="/chatarea" element={<ChatArea />} />
         <Route path="/chatarea/exist" element={<ExistChatroom />} />

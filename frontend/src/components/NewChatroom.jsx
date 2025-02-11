@@ -2,16 +2,12 @@ import robot from "../assets/robot.png";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../utils/cn.js";
-// import { ErrorMessage } from "./ErrorMessage.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const NewChatroom = () => {
   const navigate = useNavigate();
   const partnerName = useParams();
   const queryClient = useQueryClient();
-  async function handleNavigateBack() {
-    navigate("/chatarea");
-  }
 
   const mutation = useMutation({
     mutationFn: async (userInput) => {
@@ -61,8 +57,8 @@ export const NewChatroom = () => {
       <header className={cn("flex justify-between pl-2")}>
         <img src={robot} alt="robot" width={40} />
         <button
-          onClick={handleNavigateBack}
-          className={cn("bg-[#f92f40] w-16 rounded-bl-2xl font-bold")}
+          onClick={() => navigate("/chatarea")}
+          className={cn("bg-[#f92f40] w-36 rounded-bl-2xl font-bold")}
         >
           Back
         </button>

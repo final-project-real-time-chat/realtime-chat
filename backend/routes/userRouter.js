@@ -1,8 +1,37 @@
 import express from "express";
-import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import nodemailer from "nodemailer";
+
+import User from "../models/userSchema.js";
+
+dotenv.config();
 
 const router = express.Router();
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+const sendVerificationEmail = async (userEmail, verificationKey) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: userEmail,
+    subject: "Email Verification",
+    text: `Please verify your email by using the following key: ${verificationKey}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Verification email sent successfully");
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+  }
+};
 
 /** USER REGISTER */
 router.post("/register", async (req, res) => {
@@ -21,12 +50,19 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
+
     const newUser = new User({
       email,
       username,
       password: hashedPassword,
     });
     await newUser.save();
+
+    const user = await User.findOne({ email });
+
+    const verificationKey = user.verificationKey;
+
+    await sendVerificationEmail(email, verificationKey);
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
@@ -35,7 +71,7 @@ router.post("/register", async (req, res) => {
 });
 
 /** USER REGISTER-VERIFICATION */
-router.patch("/register-verification", async (req, res) => {
+router.post("/register/verify", async (req, res) => {
   try {
     const { email, key } = req.body;
     const user = await User.findOne({ email });
@@ -44,25 +80,32 @@ router.patch("/register-verification", async (req, res) => {
       return res.status(409).json({ errorMessage: "Email does not exist" });
     }
 
-    if (user.isVerified){
-      return res.json({message: "Your email is already verified"})
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Your email is already verified" });
     }
 
     if (user.verificationKey !== key) {
-      return res.json({
+      return res.status(409).json({
         message: "Verification failed",
         isVerified: user.isVerified,
       });
     }
 
-    await User.updateOne(
+    const updated = await User.updateOne(
       { email },
       { $set: { isVerified: true }, $unset: { verificationKey: "" } }
     );
 
+    console.log({ updated });
+
+    const updatedUser = await User.findOne({ email });
+
+    console.log({ updatedUser });
+    console.log("isVerified: ", updatedUser.isVerified);
+
     res.json({
       message: "User verified successfully",
-      isVerified: user.isVerified,
+      isVerified: updatedUser.isVerified,
     });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
@@ -72,7 +115,6 @@ router.patch("/register-verification", async (req, res) => {
 /** USER LOGIN */
 router.post("/login", async (req, res) => {
   try {
-    // TODO => LOGIN: using username and password
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
@@ -84,7 +126,7 @@ router.post("/login", async (req, res) => {
     if (!user.isVerified) {
       return res.json({
         message: "Your email is not verified",
-        isVerified: false,
+        isVerified: user.isVerified,
       });
     }
 
@@ -99,6 +141,7 @@ router.post("/login", async (req, res) => {
     res.json({
       message: "User logged in successfully",
       user: req.session.user,
+      isVerified: user.isVerified
     });
   } catch (error) {
     console.error("Login error:", error);

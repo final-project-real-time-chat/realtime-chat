@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import robot from "../assets/robot.png";
 
 export const ExistChatroom = (e) => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const existChatroomMutation = useMutation({
     mutationFn: async (username) => {
@@ -28,8 +27,6 @@ export const ExistChatroom = (e) => {
         navigate(`/chatarea/chats/${data.chatroom}`);
         return;
       } else {
-        // console.log("sind im else");
-        // console.log("partner: ", data.partnerName, data.partnerId);
         navigate(`/chatarea/chats/new-chatroom/${data.partnerName}`);
         return;
       }
@@ -45,21 +42,19 @@ export const ExistChatroom = (e) => {
     existChatroomMutation.mutate(username);
   }
 
-  async function handleNavigateBack() {
-    navigate("/chatarea");
-  }
-
   return (
     <>
       <header>
         <header
           className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}
         >
-          <h1 className="flex items-center tracking-widest font-bold">Hello, Word!</h1>
+          <h1 className="flex items-center tracking-widest font-bold">
+            Hello, Word!
+          </h1>
           <img className="h-12" src={robot} alt="robot" />
           <button
-            onClick={handleNavigateBack}
-            className={"bg-[#f92f40] w-16 rounded-bl-2xl font-bold"}
+            onClick={() => navigate("/chatarea")}
+            className={"bg-[#f92f40] w-36 rounded-bl-2xl font-bold"}
           >
             Back
           </button>
