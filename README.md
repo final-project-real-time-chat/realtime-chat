@@ -170,7 +170,6 @@ frontend/
     package-lock.json
     package.json
     vite.config.js
-
 README.md
 ```
 
@@ -179,69 +178,5 @@ README.md
 ### Environment Variables
 
 Create a `.env` file in both the **backend** and **frontend** directories based on the `.env.sample` files and add the necessary environment variables.
-
----
-
-### Usage
-
-After installing and starting the application, you can access the chat application in your browser **(Frontend)** at
-
-```bash
-http://localhost:3000
-```
-
-and **(Backend)** at
-
-```bash
-http://localhost:5000
-```
-
----
-
-##### API Endpoints for Frontend
-
-**GET**
-`GET` `/messages`: Retrieves **_all messages_**
-`GET` `/messages/:id`: Retrieves a **_specific_** message by ID
-`GET` `/messages/unread`: Retrieves **_all unread_** messages
-`GET` `/messages/user/:userId`: Retrieves all messages from a **_specific user_**
-
-**POST**
-`POST` `/messages/:personId`: Sends a new message to a **_specific person_**
-`POST` `/messages/:groupChatId`: Sends a new message to a **_specific group-chat_**
-`POST` `/messages/:id/read`: Marks a specific message **_as read_**
-
-**UPDATE**
-`PUT` `/messages/:id`: **_Updates_** a message by ID
-`PATCH` `/messages/:id`: **_Partially updates_** a message by ID
-
-**DELETE**
-`DELETE` `/messages/:id`: Deletes a message **_by ID_**
-`DELETE` `/messages/user/:userId`: Deletes **_all messages from a specific user_**
-
----
-
-##### API Endpoints for Backend
-
-**GET**
-`GET` `/api/chatroom`: Retrieves **_all messages_**
-`GET` `/api/messages`: Retrieves **_all messages_**
-*** FEATURE ***
-`GET` `/api/messages/unread`: Retrieves **_all unread_** messages
-
-**POST**
-`POST` `/api/messages/send`: Send a new message to a **_specific chatroom_**
-*** FEATURE ***
-`POST` `/api/messages/:groupChatId`: Sends a new message to a **_specific group-chat_**
-`POST` `/api/messages/:id/read`: Marks a specific message **_as read_**
-
-**UPDATE**
-`PATCH` `/api/messages/:id`: **_Partially updates_** a message by ID
-
-**DELETE**
-`DELETE` `/api/users/:id`: Deletes user account **_by ID_**
-*** FEATURE ***
-`DELETE` `/api/messages/:id`: Deletes a message **_by ID_**
-`DELETE` `/api/messages/user/:userId`: Deletes **_all messages from a specific user_**
 
 ---

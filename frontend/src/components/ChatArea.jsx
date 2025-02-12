@@ -22,7 +22,7 @@ export const ChatArea = () => {
       }
       return response.json();
     },
-    refetchInterval: 3_000,
+    // refetchInterval: 3_000,
   });
 
   const chatrooms = chatroomsData?.outputChats;
