@@ -96,12 +96,7 @@ router.post("/register/verify", async (req, res) => {
       { $set: { isVerified: true }, $unset: { verificationKey: "" } }
     );
 
-    console.log({ updated });
-
     const updatedUser = await User.findOne({ email });
-
-    console.log({ updatedUser });
-    console.log("isVerified: ", updatedUser.isVerified);
 
     res.json({
       message: "User verified successfully",

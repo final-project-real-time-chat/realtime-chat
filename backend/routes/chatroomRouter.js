@@ -6,132 +6,139 @@ import User from "../models/userSchema.js";
 const router = express.Router();
 
 /** CREATE NEW CHATROOM */
-router.post("/exist", async (req, res) => {
-  try {
-    const currentUserId = req.session.user.id;
-    const { username } = req.body;
+export default (io) => {
+  router.post("/exist", async (req, res) => {
+    try {
+      const currentUserId = req.session.user.id;
+      const { username } = req.body;
 
-    const user = await User.findOne({ username });
+      const user = await User.findOne({ username });
 
-    if (!user) {
-      return res.status(404).json({ errorMessage: "User not found" });
+      if (!user) {
+        return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      const chatroomExists = await Chatroom.findOne({
+        users: { $all: [user._id, currentUserId] },
+      });
+
+      if (chatroomExists) {
+        return res.json({ chatroom: chatroomExists._id });
+      }
+
+      res.json({
+        chatroom: "new-chatroom",
+        partnerName: user.username,
+        partnerId: user._id,
+      });
+    } catch (error) {
+      res.status(500).json({ errorMessage: "Internal server error" });
     }
+  });
 
-    const chatroomExists = await Chatroom.findOne({
-      users: { $all: [user._id, currentUserId] },
-    });
+  router.post("/create", async (req, res) => {
+    try {
+      const { partnerName, content } = req.body;
+      const currentUserId = req.session.user.id;
+      const partner = await User.findOne({ username: partnerName });
+      const newChatroom = await Chatroom.create({
+        users: [partner._id, currentUserId],
+      });
 
-    if (chatroomExists) {
-      return res.json({ chatroom: chatroomExists._id });
+      const newMessage = await Message.create({
+        content,
+        chatroom: newChatroom._id,
+        sender: currentUserId,
+      });
+
+      // io.emit("chatroom", { chatroom: newChatroom, message: newMessage });
+      io.emit("message", newMessage);
+
+      res.status(201).json({ chatroomId: newChatroom._id });
+    } catch (error) {
+      res.status(500).json({ errorMessage: "Internal server error" });
     }
+  });
 
-    res.json({
-      chatroom: "new-chatroom",
-      partnerName: user.username,
-      partnerId: user._id,
-    });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
+  router.get("/chats", async (req, res) => {
+    try {
+      const currentUsername = req.session.user.username;
+      const currentUserId = req.session.user.id;
 
-router.post("/create", async (req, res) => {
-  try {
-    const { partnerName, content } = req.body;
-    const currentUserId = req.session.user.id;
-    const partner = await User.findOne({ username: partnerName });
-    const newChatroom = await Chatroom.create({
-      users: [partner._id, currentUserId],
-    });
-    await Message.create({
-      content,
-      chatroom: newChatroom._id,
-      sender: currentUserId,
-    });
-    res.status(201).json({ chatroomId: newChatroom._id });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
+      // const avatar = await User.findOne({ avatar });
 
-router.get("/chats", async (req, res) => {
-  try {
-    const currentUsername = req.session.user.username;
-    const currentUserId = req.session.user.id;
+      const allChats = await Chatroom.find({ users: currentUserId }).populate(
+        "users"
+      );
 
-    // const avatar = await User.findOne({ avatar });
+      // TODO: IMPLEMENT AS MONGODB QUERY
+      const outputChats = await Promise.all(
+        allChats.map(async (chat) => {
+          const chatId = chat._id;
+          const usernames = chat.users
+            .map((user) => user.username)
+            .filter((username) => username !== currentUsername);
 
-    const allChats = await Chatroom.find({ users: currentUserId }).populate(
-      "users"
-    );
+          const lastMessage = await Message.findOne({ chatroom: chatId }).sort({
+            createdAt: -1,
+          });
 
-    // TODO: IMPLEMENT AS MONGODB QUERY
-    const outputChats = await Promise.all(
-      allChats.map(async (chat) => {
-        const chatId = chat._id;
-        const usernames = chat.users
-          .map((user) => user.username)
-          .filter((username) => username !== currentUsername);
+          const timestamps = await Message.find({ chatroom: chatId })
+            .sort({ createdAt: -1 })
+            .select("createdAt");
 
-        const lastMessage = await Message.findOne({ chatroom: chatId }).sort({
-          createdAt: -1,
-        });
+          const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
 
-        const timestamps = await Message.find({ chatroom: chatId })
-          .sort({ createdAt: -1 })
-          .select("createdAt");
+          return {
+            chatId,
+            usernames,
+            lastMessage,
+            timestamps: formattedTimestamps,
+          };
+        })
+      );
 
-        const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
-
-        return {
-          chatId,
-          usernames,
-          lastMessage,
-          timestamps: formattedTimestamps,
-        };
-      })
-    );
-
-    res.json({ outputChats });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
-
-/** GET CHATROOM MESSAGES */
-router.get("/chats/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const currentUsername = req.session.user.username;
-    const currentUserId = req.session.user.id;
-
-    const chatroomMessages = await Message.find({ chatroom: id }).populate(
-      "sender"
-    );
-
-    if (!chatroomMessages) {
-      return res.status(404).json({ errorMessage: "Chatroom not found" });
+      res.json({ outputChats });
+    } catch (error) {
+      res.status(500).json({ errorMessage: "Internal server error" });
     }
+  });
 
-    const timestamps = await Message.find({ chatroom: id })
-      .sort({ createdAt: -1 })
-      .select("createdAt");
+  /** GET CHATROOM MESSAGES */
+  router.get("/chats/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const currentUsername = req.session.user.username;
+      const currentUserId = req.session.user.id;
 
-    const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
+      const chatroomMessages = await Message.find({ chatroom: id }).populate(
+        "sender"
+      );
 
-    const chatroom = await Chatroom.findOne({ _id: id });
+      if (!chatroomMessages) {
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
 
-    const partnerId = chatroom.users.find(
-      (userId) => userId.toString() !== currentUserId.toString()
-    );
+      const timestamps = await Message.find({ chatroom: id })
+        .sort({ createdAt: -1 })
+        .select("createdAt");
 
-    const partner = await User.findById(partnerId);
-    const partnerName = partner.username;
+      const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
 
-    res.json({ chatroomMessages, currentUsername, partnerName });
-  } catch (error) {
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
+      const chatroom = await Chatroom.findOne({ _id: id });
 
-export default router;
+      const partnerId = chatroom.users.find(
+        (userId) => userId.toString() !== currentUserId.toString()
+      );
+
+      const partner = await User.findById(partnerId);
+      const partnerName = partner.username;
+
+      res.json({ chatroomMessages, currentUsername, partnerName });
+    } catch (error) {
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  return router;
+};

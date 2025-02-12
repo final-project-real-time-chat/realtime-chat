@@ -2,10 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { io } from "socket.io-client";
 
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
+
+const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
+  transports: ["websocket"],
+  withCredentials: true,
+});
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
@@ -25,7 +31,7 @@ export const Chatroom = () => {
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;
   const partnerName = data?.partnerName;
-
+  
   const mutation = useMutation({
     mutationFn: async (userInput) => {
       const response = await fetch(`/api/messages/send`, {
@@ -64,10 +70,6 @@ export const Chatroom = () => {
       textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  }
-
-  async function handleNavigateBack() {
-    navigate("/chatarea");
   }
 
   function formatTimestamp(timestamp) {
@@ -123,6 +125,25 @@ export const Chatroom = () => {
     return () => window.removeEventListener("scroll", onscroll);
   }, []);
 
+ useEffect(() => {
+   socket.on("message", (message) => {
+     queryClient.setQueryData(["chatroom", id], (prevData) => {
+       if (!prevData) {
+         return { chatroomMessages: [message] };
+       }
+       const updatedData = {
+         ...prevData,
+         chatroomMessages: [...prevData.chatroomMessages, message],
+       };
+       return updatedData;
+     });
+   });
+
+   return () => {
+     socket.off("message");
+   };
+ }, [id, queryClient]);
+
   return (
     <div className="min-h-svh flex flex-col">
       <header
@@ -137,7 +158,7 @@ export const Chatroom = () => {
           {partnerName}
         </h1>
         <button
-          onClick={handleNavigateBack}
+          onClick={() => navigate("/chatarea")}
           className={cn("bg-[#f92f40] w-36 rounded-bl-2xl font-bold")}
         >
           Back
@@ -149,7 +170,7 @@ export const Chatroom = () => {
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-1 my-4  rounded-2xl  w-fit max-w-[75%]",
+                "px-4 pt-2 mx-1 my-4 rounded-2xl w-fit max-w-[75%]",
                 message.sender.username === currentUsername
                   ? "bg-blue-400 ml-auto rounded-br-none"
                   : "bg-amber-400 rounded-bl-none"
@@ -162,7 +183,7 @@ export const Chatroom = () => {
               <p className="break-words">{message.content}</p>
               <span
                 className={cn(
-                  "pt-1 flex justify-end  text-[12px] text-gray-600"
+                  "pt-1 flex justify-end text-[12px] text-gray-600"
                 )}
               >
                 {formatTimestamp(message.createdAt)}

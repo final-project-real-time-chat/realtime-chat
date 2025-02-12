@@ -16,10 +16,20 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: process.env.CORS_ORIGIN,
+    allowedHeaders: ["cors-header"],
+    credentials: true,
   },
 });
 
@@ -52,9 +62,9 @@ app.use(
 );
 
 app.use("/api/users", userRouter);
-app.use("/api/messages", messageRouter);
-app.use("/api/chatrooms", chatroomRouter);
+app.use("/api/messages", messageRouter(io));
+app.use("/api/chatrooms", chatroomRouter(io));
 
 const baseUrl = process.env.BASE_URL;
-const port = parseInt(process.env.PORT) || 3000;
+const port = parseInt(process.env.PORT) || 3030;
 httpServer.listen(port, () => console.log(`PORT ON: ${baseUrl}:${port}`));
