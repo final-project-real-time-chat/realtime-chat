@@ -57,7 +57,11 @@ export const Chatroom = () => {
 
   function handleSendMessage(e) {
     e.preventDefault();
-    const userInput = e.target.textarea.value;
+    const userInput = e.target.textarea.value
+      .split("\n")
+      .filter((line) => line.trim() !== "")
+      .join("\n");
+    if (userInput.trim() === "") return null;
     mutation.mutate(userInput);
   }
 
@@ -125,24 +129,24 @@ export const Chatroom = () => {
     return () => window.removeEventListener("scroll", onscroll);
   }, []);
 
- useEffect(() => {
-   socket.on("message", (message) => {
-     queryClient.setQueryData(["chatroom", id], (prevData) => {
-       if (!prevData) {
-         return { chatroomMessages: [message] };
-       }
-       const updatedData = {
-         ...prevData,
-         chatroomMessages: [...prevData.chatroomMessages, message],
-       };
-       return updatedData;
-     });
-   });
+  useEffect(() => {
+    socket.on("message", (message) => {
+      queryClient.setQueryData(["chatroom", id], (prevData) => {
+        if (!prevData) {
+          return { chatroomMessages: [message] };
+        }
+        const updatedData = {
+          ...prevData,
+          chatroomMessages: [...prevData.chatroomMessages, message],
+        };
+        return updatedData;
+      });
+    });
 
-   return () => {
-     socket.off("message");
-   };
- }, [id, queryClient]);
+    return () => {
+      socket.off("message");
+    };
+  }, [id, queryClient]);
 
   return (
     <div className="min-h-svh flex flex-col">
@@ -180,7 +184,10 @@ export const Chatroom = () => {
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              <p className="break-words">{message.content}</p>
+              {/* <p className="break-words whitespace-pre-wrap"> */}
+              <p className="break-words whitespace-pre-line">
+                {message.content}
+              </p>
               <span
                 className={cn(
                   "pt-1 flex justify-end text-[12px] text-gray-600"
