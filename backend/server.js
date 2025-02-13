@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: [process.env.CORS_ORIGIN, process.env.CORS_ORIGIN2],
     credentials: true,
   })
 );
@@ -27,7 +27,7 @@ app.use(
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN,
+    origin: [process.env.CORS_ORIGIN, process.env.CORS_ORIGIN2],
     allowedHeaders: ["cors-header"],
     credentials: true,
   },
