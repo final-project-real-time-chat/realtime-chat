@@ -7,11 +7,6 @@ import { io } from "socket.io-client";
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
 
-const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
-  transports: ["websocket"],
-  withCredentials: true,
-});
-
 export const ChatArea = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -56,12 +51,17 @@ export const ChatArea = () => {
   });
 
   useEffect(() => {
+    const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
+      transports: ["websocket"],
+      withCredentials: true,
+    });
+
     socket.on("message", () => {
       queryClient.invalidateQueries(["chatrooms"]);
     });
 
     return () => {
-      socket.off("message");
+      socket.disconnect();
     };
   }, [queryClient]);
 

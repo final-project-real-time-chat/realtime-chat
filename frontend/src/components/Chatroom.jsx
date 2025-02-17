@@ -139,6 +139,7 @@ export const Chatroom = () => {
           ...prevData,
           chatroomMessages: [...prevData.chatroomMessages, message],
         };
+        console.log({updatedData});
         return updatedData;
       });
     });

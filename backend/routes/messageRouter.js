@@ -19,7 +19,7 @@ export default (io) => {
       const newMessage = new Message({ chatroom, content, sender });
       await newMessage.save();
 
-      io.emit("message", newMessage);
+      io.to(chatroom).emit("message", newMessage);
 
       res
         .status(201)
