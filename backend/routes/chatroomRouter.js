@@ -98,7 +98,7 @@ export default (io) => {
         })
       );
 
-      res.json({ outputChats });
+      res.json({ chatrooms: outputChats });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });
     }

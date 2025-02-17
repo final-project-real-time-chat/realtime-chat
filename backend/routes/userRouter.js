@@ -91,7 +91,7 @@ router.post("/register/verify", async (req, res) => {
       });
     }
 
-    const updated = await User.updateOne(
+    await User.updateOne(
       { email },
       { $set: { isVerified: true }, $unset: { verificationKey: "" } }
     );

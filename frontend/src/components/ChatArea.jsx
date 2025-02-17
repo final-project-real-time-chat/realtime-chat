@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { io } from "socket.io-client";
 
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
+
+const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
+  transports: ["websocket"],
+  withCredentials: true,
+});
 
 export const ChatArea = () => {
   const navigate = useNavigate();
@@ -22,10 +29,13 @@ export const ChatArea = () => {
       }
       return response.json();
     },
-    // refetchInterval: 3_000,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["chatrooms"], data);
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
   });
-
-  const chatrooms = chatroomsData?.outputChats;
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -44,6 +54,16 @@ export const ChatArea = () => {
       console.error("Failed to logout", error);
     },
   });
+
+  useEffect(() => {
+    socket.on("message", () => {
+      queryClient.invalidateQueries(["chatrooms"]);
+    });
+
+    return () => {
+      socket.off("message");
+    };
+  }, [queryClient]);
 
   return (
     <>
@@ -77,7 +97,7 @@ export const ChatArea = () => {
               </button>
             </div>
             <ul>
-              {chatrooms.map((chatroom) => (
+              {chatroomsData?.chatrooms.map((chatroom) => (
                 <Link
                   key={chatroom.chatId}
                   to={`/chatarea/chats/${chatroom.chatId}`}
