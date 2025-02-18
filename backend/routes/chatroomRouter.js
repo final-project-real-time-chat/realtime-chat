@@ -98,7 +98,12 @@ export default (io) => {
         })
       );
 
-      res.json({ chatrooms: outputChats });
+      const sortedChatrooms = outputChats.sort((a, b) => {
+        if (!a.lastMessage || !b.lastMessage) return 0;
+        return b.lastMessage.createdAt - a.lastMessage.createdAt;
+      });
+
+      res.json({ chatrooms: sortedChatrooms });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
