@@ -122,7 +122,12 @@ export default (io) => {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
+  router.post("/chats/:id/mark-as-read", async (req, res) => {
+    const currentUsername = req.session.user.username;
+    const currentUserId = req.session.user.id;
 
+    const { id } = req.params;
+  });
   /** GET CHATROOM MESSAGES */
   router.get("/chats/:id", async (req, res) => {
     try {
