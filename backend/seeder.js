@@ -39,10 +39,18 @@ const seedDatabase = async () => {
 
   const chatroom1 = new Chatroom({
     users: [user1._id, user2._id],
+    lastSeen: new Map([
+      [user1._id.toString(), new Date(0)],
+      [user2._id.toString(), new Date(0)],
+    ]),
   });
 
   const chatroom2 = new Chatroom({
     users: [user1._id, user3._id],
+    lastSeen: new Map([
+      [user1._id.toString(), new Date(0)],
+      [user3._id.toString(), new Date(0)],
+    ]),
   });
 
   await chatroom1.save();

@@ -43,6 +43,10 @@ export default (io) => {
       const partner = await User.findOne({ username: partnerName });
       const newChatroom = await Chatroom.create({
         users: [partner._id, currentUserId],
+        lastSeen: new Map([
+          [partner._id.toString(), new Date(0)],
+          [currentUserId.toString(), new Date(0)],
+        ]),
       });
 
       const newMessage = await Message.create({
@@ -51,8 +55,12 @@ export default (io) => {
         sender: currentUserId,
       });
 
+      newChatroom.lastSeen.set(currentUserId.toString(), newMessage.createdAt);
+      await newChatroom.save();
       // io.emit("chatroom", { chatroom: newChatroom, message: newMessage });
       io.emit("message", newMessage);
+
+      console.log(newChatroom);
 
       res.status(201).json({ chatroomId: newChatroom._id });
     } catch (error) {
@@ -83,6 +91,11 @@ export default (io) => {
             createdAt: -1,
           });
 
+          // const unreadMessagesCount = await Message.countDocuments({
+          //   chatroom: chatId,
+          //   readBy: { $ne: currentUserId },
+          // });
+
           const timestamps = await Message.find({ chatroom: chatId })
             .sort({ createdAt: -1 })
             .select("createdAt");
@@ -94,6 +107,7 @@ export default (io) => {
             usernames,
             lastMessage,
             timestamps: formattedTimestamps,
+            // unreadMessagesCount,
           };
         })
       );
@@ -139,7 +153,11 @@ export default (io) => {
       const partner = await User.findById(partnerId);
       const partnerName = partner.username;
 
-      res.json({ chatroomMessages, currentUsername, partnerName });
+      res.json({
+        chatroomMessages,
+        currentUsername,
+        partnerName,
+      });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
