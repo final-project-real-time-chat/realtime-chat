@@ -63,6 +63,11 @@ io.on("connection", async (socket) => {
     });
   });
 
+  if (!session || !session.user) {
+    socket.disconnect(true);
+    return;
+  }
+
   const userId = session.user.id;
 
   const allChats = await Chatroom.find({ users: userId });
@@ -70,7 +75,7 @@ io.on("connection", async (socket) => {
   const chatroomIds = allChats.map((chat) => chat._id.toString());
 
   chatroomIds.forEach((id) => socket.join(id));
-  socket.join(userId)
+  socket.join(userId);
 
   console.log(`Client connected: ${socket.id}`);
 });
