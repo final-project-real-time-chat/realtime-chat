@@ -81,6 +81,7 @@ export const Chatroom = () => {
       .join("\n");
     if (userInput.trim() === "") return null;
     mutation.mutate(userInput);
+    messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   }
 
   function handleInput(event) {
@@ -135,41 +136,6 @@ export const Chatroom = () => {
       markAsRead();
     }
   }, [nearBottom, latestMessageId, markAsRead]);
-
-  // useQuery({
-  //   queryKey: ["mark-as-read", id, latestMessageId],
-  //   queryFn: async () => {
-  //     const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
-  //       method: "POST",
-  //     });
-
-  //     return response.json();
-  //   },
-  //   enabled: nearBottom && !!latestMessageId,
-  // });
-
-  // useEffect(() => {
-  //   socket.on("message", (message) => {
-  //     queryClient.setQueryData(
-  //       ["mark-as-read", id, latestMessageId],
-  //       (prevData) => {
-  //         if (!prevData) {
-  //           return { chatroomMessages: [message] };
-  //         }
-  //         const updatedData = {
-  //           ...prevData,
-  //           chatroomMessages: [...prevData.chatroomMessages, message],
-  //         };
-  //         console.log({ updatedData });
-  //         return updatedData;
-  //       }
-  //     );
-  //   });
-
-  //   return () => {
-  //     socket.off("message");
-  //   };
-  // }, [id, queryClient, latestMessageId]);
 
   useEffect(() => {
     socket.on("message", (message) => {
