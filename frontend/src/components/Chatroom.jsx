@@ -31,7 +31,7 @@ export const Chatroom = () => {
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;
   const partnerName = data?.partnerName;
-  
+
   const mutation = useMutation({
     mutationFn: async (userInput) => {
       const response = await fetch(`/api/messages/send`, {
@@ -110,6 +110,20 @@ export const Chatroom = () => {
   const messagesEndRef = useRef(null);
   const [nearBottom, setNearBottom] = useState(true);
 
+  const latestMessageId = chatroomMessages?.at(-1)._id;
+
+  useQuery({
+    queryKey: ["mark-as-read", id, latestMessageId],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
+        method: "POST",
+      });
+
+      return response.json();
+    },
+    enabled: nearBottom && !!latestMessageId,
+  });
+
   useEffect(() => {
     if (messagesEndRef.current && nearBottom) {
       messagesEndRef.current.scrollIntoView({ behavior: "auto" });
@@ -139,7 +153,7 @@ export const Chatroom = () => {
           ...prevData,
           chatroomMessages: [...prevData.chatroomMessages, message],
         };
-        console.log({updatedData});
+        console.log({ updatedData });
         return updatedData;
       });
     });

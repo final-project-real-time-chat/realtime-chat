@@ -115,11 +115,11 @@ export const ChatArea = () => {
                           {truncateText(chatroom.lastMessage.content, 20)}
                         </span>
                       )}
-                      {/* {chatroom.unreadMessagesCount > 0 && (
+                      {chatroom.unreadMessagesCount > 0 && (
                         <span className="text-red-500">
                           {chatroom.unreadMessagesCount} unread messages
                         </span>
-                      )} */}
+                      )}
                     </div>
                     {chatroom.timestamps && chatroom.timestamps.length > 0 && (
                       <span className={cn("flex items-end ml-auto")}>

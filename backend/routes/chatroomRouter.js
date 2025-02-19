@@ -91,10 +91,10 @@ export default (io) => {
             createdAt: -1,
           });
 
-          // const unreadMessagesCount = await Message.countDocuments({
-          //   chatroom: chatId,
-          //   readBy: { $ne: currentUserId },
-          // });
+          const unreadMessagesCount = await Message.countDocuments({
+            chatroom: chatId,
+            createdAt: { $gt: chat.lastSeen.get(currentUserId) },
+          });
 
           const timestamps = await Message.find({ chatroom: chatId })
             .sort({ createdAt: -1 })
@@ -107,7 +107,7 @@ export default (io) => {
             usernames,
             lastMessage,
             timestamps: formattedTimestamps,
-            // unreadMessagesCount,
+            unreadMessagesCount,
           };
         })
       );
@@ -122,12 +122,21 @@ export default (io) => {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
-  router.post("/chats/:id/mark-as-read", async (req, res) => {
-    const currentUsername = req.session.user.username;
-    const currentUserId = req.session.user.id;
 
+  router.post("/chats/:id/mark-as-read", async (req, res) => {
+    const currentUserId = req.session.user.id;
     const { id } = req.params;
+
+    const chatroom = await Chatroom.findById(id);
+
+    const now = new Date();
+
+    chatroom.lastSeen.set(currentUserId, now);
+    await chatroom.save();
+
+    res.status(200).json({ message: "Successfully updated", now });
   });
+
   /** GET CHATROOM MESSAGES */
   router.get("/chats/:id", async (req, res) => {
     try {
