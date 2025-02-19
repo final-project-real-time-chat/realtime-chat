@@ -94,6 +94,7 @@ export default (io) => {
           const unreadMessagesCount = await Message.countDocuments({
             chatroom: chatId,
             createdAt: { $gt: chat.lastSeen.get(currentUserId) },
+            sender: { $ne: currentUserId },
           });
 
           const timestamps = await Message.find({ chatroom: chatId })
@@ -117,7 +118,7 @@ export default (io) => {
         return b.lastMessage.createdAt - a.lastMessage.createdAt;
       });
 
-      res.json({ chatrooms: sortedChatrooms });
+      res.json({ chatrooms: sortedChatrooms, currentUsername });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
@@ -160,6 +161,14 @@ export default (io) => {
 
       const chatroom = await Chatroom.findOne({ _id: id });
 
+      const lastSeen = chatroom.lastSeen.get(currentUserId);
+
+      const unreadMessagesCount = await Message.countDocuments({
+        chatroom: id,
+        createdAt: { $gt: lastSeen },
+        sender: { $ne: currentUserId },
+      });
+
       const partnerId = chatroom.users.find(
         (userId) => userId.toString() !== currentUserId.toString()
       );
@@ -171,6 +180,7 @@ export default (io) => {
         chatroomMessages,
         currentUsername,
         partnerName,
+        unreadMessagesCount,
       });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
+import toast, { Toaster } from "react-hot-toast";
 
 import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
@@ -31,6 +32,23 @@ export const Chatroom = () => {
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;
   const partnerName = data?.partnerName;
+  const unreadMessagesCount = data?.unreadMessagesCount;
+
+  const { mutate: markAsRead } = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to mark messages as read");
+      }
+      return response.json();
+    },
+    onError: (error) => {
+      toast.error("Internal Server Error.");
+      console.error(error.message);
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: async (userInput) => {
@@ -112,17 +130,70 @@ export const Chatroom = () => {
 
   const latestMessageId = chatroomMessages?.at(-1)._id;
 
-  useQuery({
-    queryKey: ["mark-as-read", id, latestMessageId],
-    queryFn: async () => {
-      const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
-        method: "POST",
-      });
+  useEffect(() => {
+    if (nearBottom && latestMessageId) {
+      markAsRead();
+    }
+  }, [nearBottom, latestMessageId, markAsRead]);
 
-      return response.json();
-    },
-    enabled: nearBottom && !!latestMessageId,
-  });
+  // useQuery({
+  //   queryKey: ["mark-as-read", id, latestMessageId],
+  //   queryFn: async () => {
+  //     const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
+  //       method: "POST",
+  //     });
+
+  //     return response.json();
+  //   },
+  //   enabled: nearBottom && !!latestMessageId,
+  // });
+
+  // useEffect(() => {
+  //   socket.on("message", (message) => {
+  //     queryClient.setQueryData(
+  //       ["mark-as-read", id, latestMessageId],
+  //       (prevData) => {
+  //         if (!prevData) {
+  //           return { chatroomMessages: [message] };
+  //         }
+  //         const updatedData = {
+  //           ...prevData,
+  //           chatroomMessages: [...prevData.chatroomMessages, message],
+  //         };
+  //         console.log({ updatedData });
+  //         return updatedData;
+  //       }
+  //     );
+  //   });
+
+  //   return () => {
+  //     socket.off("message");
+  //   };
+  // }, [id, queryClient, latestMessageId]);
+
+  useEffect(() => {
+    socket.on("message", (message) => {
+      queryClient.setQueryData(["chatroom", id], (prevData) => {
+        if (!prevData) {
+          return { chatroomMessages: [message] };
+        }
+
+        const updatedData = {
+          ...prevData,
+          unreadMessagesCount: nearBottom
+            ? 0
+            : prevData.unreadMessagesCount + 1,
+          chatroomMessages: [...prevData.chatroomMessages, message],
+        };
+        console.log({ updatedData });
+        return updatedData;
+      });
+    });
+
+    return () => {
+      socket.off("message");
+    };
+  }, [id, queryClient, nearBottom]);
 
   useEffect(() => {
     if (messagesEndRef.current && nearBottom) {
@@ -143,26 +214,6 @@ export const Chatroom = () => {
     return () => window.removeEventListener("scroll", onscroll);
   }, []);
 
-  useEffect(() => {
-    socket.on("message", (message) => {
-      queryClient.setQueryData(["chatroom", id], (prevData) => {
-        if (!prevData) {
-          return { chatroomMessages: [message] };
-        }
-        const updatedData = {
-          ...prevData,
-          chatroomMessages: [...prevData.chatroomMessages, message],
-        };
-        console.log({ updatedData });
-        return updatedData;
-      });
-    });
-
-    return () => {
-      socket.off("message");
-    };
-  }, [id, queryClient]);
-
   return (
     <div className="min-h-svh flex flex-col">
       <header
@@ -174,7 +225,10 @@ export const Chatroom = () => {
           alt="avatar"
         />
         <h1 className="flex items-center tracking-widest font-bold">
-          {partnerName}
+          {`CurrentUser: ${currentUsername}`}
+        </h1>
+        <h1 className="flex items-center tracking-widest font-bold">
+          {`Partner: ${partnerName}`}
         </h1>
         <button
           onClick={() => navigate("/chatarea")}
@@ -185,27 +239,31 @@ export const Chatroom = () => {
       </header>
       <div className={cn("flex flex-col h-full flex-grow")}>
         <ErrorMessage error={error} />
+        {unreadMessagesCount > 0 && (
+          <span className="text-red-500 sticky top-[50%] border-2 pl-[50%]">
+            {unreadMessagesCount} unread messages
+          </span>
+        )}
         {Array.isArray(chatroomMessages) &&
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
                 "px-4 pt-2 mx-1 my-4 rounded-2xl w-fit max-w-[75%]",
                 message.sender.username === currentUsername
-                  ? "bg-blue-400 ml-auto rounded-br-none"
-                  : "bg-amber-400 rounded-bl-none"
+                  ? "border-blue-400 border-2 ml-auto rounded-br-none"
+                  : "border-amber-400 border-2 rounded-bl-none"
               )}
               key={message._id}
               ref={
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              {/* <p className="break-words whitespace-pre-wrap"> */}
               <p className="break-words whitespace-pre-line">
                 {message.content}
               </p>
               <span
                 className={cn(
-                  "pt-1 flex justify-end text-[12px] text-gray-600"
+                  "pt-1 flex justify-end text-[12px] text-gray-400"
                 )}
               >
                 {formatTimestamp(message.createdAt)}

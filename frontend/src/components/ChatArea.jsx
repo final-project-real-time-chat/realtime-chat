@@ -71,6 +71,7 @@ export const ChatArea = () => {
         <h1 className="w-32 flex items-center tracking-widest font-bold">
           Hello, Word!
         </h1>
+        <span>{chatroomsData?.currentUsername}</span>
         <img className="h-12" src={robot} alt="robot" />
         <button
           className="bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
