@@ -118,7 +118,9 @@ export const ChatArea = () => {
                       )}
                       {chatroom.unreadMessagesCount > 0 && (
                         <span className="text-red-500">
-                          {chatroom.unreadMessagesCount} unread messages
+                          {chatroom.unreadMessagesCount === 1
+                            ? `${chatroom.unreadMessagesCount} unread message`
+                            : `${chatroom.unreadMessagesCount} unread messages`}
                         </span>
                       )}
                     </div>

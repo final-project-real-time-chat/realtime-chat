@@ -132,12 +132,6 @@ export const Chatroom = () => {
   const latestMessageId = chatroomMessages?.at(-1)._id;
 
   useEffect(() => {
-    if (nearBottom && latestMessageId) {
-      markAsRead();
-    }
-  }, [nearBottom, latestMessageId, markAsRead]);
-
-  useEffect(() => {
     socket.on("message", (message) => {
       queryClient.setQueryData(["chatroom", id], (prevData) => {
         if (!prevData) {
@@ -176,9 +170,24 @@ export const Chatroom = () => {
       const bottomDistance = scrollHeight - (position + viewportHeight);
       setNearBottom(bottomDistance < 50);
     }
+
     window.addEventListener("scroll", onscroll);
+
     return () => window.removeEventListener("scroll", onscroll);
   }, []);
+
+  useEffect(() => {
+    if (nearBottom && latestMessageId) {
+      markAsRead();
+      queryClient.setQueryData(["chatroom", id], (prevData) => {
+        if (!prevData) return prevData;
+        return {
+          ...prevData,
+          unreadMessagesCount: 0,
+        };
+      });
+    }
+  }, [nearBottom, latestMessageId, markAsRead, queryClient, id]);
 
   return (
     <div className="min-h-svh flex flex-col">
@@ -205,9 +214,16 @@ export const Chatroom = () => {
       </header>
       <div className={cn("flex flex-col h-full flex-grow")}>
         <ErrorMessage error={error} />
-        {unreadMessagesCount > 0 && (
+        {/* {unreadMessagesCount > 0 && (
           <span className="text-red-500 sticky top-[50%] border-2 pl-[50%]">
             {unreadMessagesCount} unread messages
+          </span>
+        )} */}
+        {unreadMessagesCount > 0 && (
+          <span className="text-red-500 sticky top-[50%] border-2 pl-[50%]">
+            {unreadMessagesCount === 1
+              ? `${unreadMessagesCount} unread message`
+              : `${unreadMessagesCount} unread messages`}
           </span>
         )}
         {Array.isArray(chatroomMessages) &&
