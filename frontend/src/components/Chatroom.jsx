@@ -207,24 +207,26 @@ export const Chatroom = () => {
         </h1>
         <button
           onClick={() => navigate("/chatarea")}
-          className={cn("bg-[#f92f40] w-36 rounded-bl-2xl font-bold")}
+          className={cn(
+            "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
+          )}
         >
           Back
         </button>
       </header>
       <div className={cn("flex flex-col h-full flex-grow")}>
         <ErrorMessage error={error} />
-        {/* {unreadMessagesCount > 0 && (
-          <span className="text-red-500 sticky top-[50%] border-2 pl-[50%]">
-            {unreadMessagesCount} unread messages
-          </span>
-        )} */}
         {unreadMessagesCount > 0 && (
-          <span className="text-red-500 sticky top-[50%] border-2 pl-[50%]">
+          <button
+            onClick={() =>
+              messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+            }
+            className="cursor-pointer bg-white/10 shadow-lg shadow-blue-900/30 backdrop-blur-[5.5px] text-xl rounded-[10px] border border-white/20 text-amber-400 sticky top-[50%] mx-auto px-8 py-1 font-bold hover:bg-white/20 transition-colors animate-bounce"
+          >
             {unreadMessagesCount === 1
-              ? `${unreadMessagesCount} unread message`
-              : `${unreadMessagesCount} unread messages`}
-          </span>
+              ? `↓ ${unreadMessagesCount} unread message ↓`
+              : `↓ ${unreadMessagesCount} unread messages ↓`}
+          </button>
         )}
         {Array.isArray(chatroomMessages) &&
           chatroomMessages.map((message, index) => (
@@ -265,11 +267,13 @@ export const Chatroom = () => {
         ></textarea>
         <div className={cn("grid grid-cols-4")}>
           <input
-            className={cn("bg-[#f92f40] font-bold border-r-2 appearance-none")}
+            className={cn(
+              "cursor-pointer bg-[#f92f40] font-bold border-r-2 appearance-none"
+            )}
             type="file"
           />
           <button
-            className={cn("bg-[#f92f40] font-bold col-span-3")}
+            className={cn("cursor-pointer bg-[#f92f40] font-bold col-span-3")}
             type="submit"
           >
             Send

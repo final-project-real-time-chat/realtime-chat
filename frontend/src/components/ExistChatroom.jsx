@@ -54,7 +54,9 @@ export const ExistChatroom = (e) => {
           <img className="h-12" src={robot} alt="robot" />
           <button
             onClick={() => navigate("/chatarea")}
-            className={"bg-[#f92f40] w-36 rounded-bl-2xl font-bold"}
+            className={
+              "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
+            }
           >
             Back
           </button>
@@ -69,7 +71,12 @@ export const ExistChatroom = (e) => {
           id="username"
           placeholder="Enter your username"
         />
-        <button type="submit">Create new chatroom</button>
+        <button
+          type="submit"
+          className="cursor-pointer bg-blue-600 text-white ml-4 px-2 py-1 rounded-lg font-bold hover:bg-blue-700"
+        >
+          Create new chatroom
+        </button>
       </form>
     </>
   );

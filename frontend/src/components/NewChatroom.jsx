@@ -58,7 +58,9 @@ export const NewChatroom = () => {
         <img src={robot} alt="robot" width={40} />
         <button
           onClick={() => navigate("/chatarea")}
-          className={cn("bg-[#f92f40] w-36 rounded-bl-2xl font-bold")}
+          className={cn(
+            "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
+          )}
         >
           Back
         </button>

@@ -42,9 +42,16 @@ export const Login = () => {
         <img className="h-12" src={robot} alt="robot" />
       </header>
 
-      <form onSubmit={handleLogin} className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-6">
-        <h1 className="text-2xl font-bold text-center mb-4 text-black">Login</h1>
-        <label htmlFor="email" className="block text-gray-700 font-semibold">Email</label>
+      <form
+        onSubmit={handleLogin}
+        className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-6"
+      >
+        <h1 className="text-2xl font-bold text-center mb-4 text-black">
+          Login
+        </h1>
+        <label htmlFor="email" className="block text-gray-700 font-semibold">
+          Email
+        </label>
         <input
           type="email"
           name="email"
@@ -54,8 +61,10 @@ export const Login = () => {
           required
           autoFocus
         />
-        
-        <label htmlFor="password" className="block text-gray-700 font-semibold">Password</label>
+
+        <label htmlFor="password" className="block text-gray-700 font-semibold">
+          Password
+        </label>
         <input
           type="password"
           name="password"
@@ -65,23 +74,28 @@ export const Login = () => {
           required
         />
 
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700">Login</button>
+        <button
+          type="submit"
+          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
+        >
+          Login
+        </button>
         <Toaster />
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
         <p className="text-black">Are you not registered yet?</p>
         <button
-          className="bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
+          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
           onClick={() => navigate("/register")}
         >
           Click here
         </button>
       </div>
-      
+
       <div className="flex justify-end items-center gap-2 mt-4">
         <p className="text-black">Do you need to verify your account?</p>
         <button
-          className="bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
+          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
           onClick={() => navigate("/register/verify")}
         >
           Click here

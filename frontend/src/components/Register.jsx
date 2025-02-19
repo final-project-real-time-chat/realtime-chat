@@ -41,9 +41,16 @@ export const Register = () => {
         <img className="h-12" src={robot} alt="robot" />
       </header>
 
-      <form onSubmit={handleRegister} className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-6">
-        <h1 className="text-2xl font-bold text-center mb-4 text-black" >Register</h1>
-        <label htmlFor="email" className="block text-gray-700 font-semibold">Email</label>
+      <form
+        onSubmit={handleRegister}
+        className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-6"
+      >
+        <h1 className="text-2xl font-bold text-center mb-4 text-black">
+          Register
+        </h1>
+        <label htmlFor="email" className="block text-gray-700 font-semibold">
+          Email
+        </label>
         <input
           type="email"
           name="email"
@@ -54,7 +61,9 @@ export const Register = () => {
           autoFocus
         />
 
-        <label htmlFor="username" className="block text-gray-700 font-semibold">Username</label>
+        <label htmlFor="username" className="block text-gray-700 font-semibold">
+          Username
+        </label>
         <input
           type="text"
           name="username"
@@ -65,7 +74,9 @@ export const Register = () => {
           required
         />
 
-        <label htmlFor="password" className="block text-gray-700 font-semibold">Password</label>
+        <label htmlFor="password" className="block text-gray-700 font-semibold">
+          Password
+        </label>
         <input
           type="password"
           name="password"
@@ -76,14 +87,19 @@ export const Register = () => {
           required
         />
 
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700">Register</button>
+        <button
+          type="submit"
+          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
+        >
+          Register
+        </button>
         <Toaster />
       </form>
 
       <div className="flex items-center gap-2 mt-4">
         <p className="text-black">Are you already registered?</p>
         <button
-          className="bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
+          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
           onClick={() => navigate("/")}
         >
           Click here

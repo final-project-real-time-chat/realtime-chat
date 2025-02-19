@@ -74,7 +74,7 @@ export const ChatArea = () => {
         <span>{chatroomsData?.currentUsername}</span>
         <img className="h-12" src={robot} alt="robot" />
         <button
-          className="bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
+          className="cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
           onClick={() => logoutMutation.mutate()}
         >
           Logout
@@ -90,7 +90,7 @@ export const ChatArea = () => {
             <div className="flex justify-center bg-blue-300 w-full text-black py-1">
               <button
                 onClick={() => navigate("/chatarea/exist")}
-                className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400"
+                className="cursor-pointer relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400"
               >
                 <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
                   Add new chat
@@ -116,19 +116,22 @@ export const ChatArea = () => {
                           {truncateText(chatroom.lastMessage.content, 20)}
                         </span>
                       )}
+                    </div>
+                    <div className="text-amber-400 ml-auto">
                       {chatroom.unreadMessagesCount > 0 && (
-                        <span className="text-red-500">
+                        <span className="text-amber-400 animate-pulse">
                           {chatroom.unreadMessagesCount === 1
                             ? `${chatroom.unreadMessagesCount} unread message`
                             : `${chatroom.unreadMessagesCount} unread messages`}
                         </span>
                       )}
+                      {chatroom.timestamps &&
+                        chatroom.timestamps.length > 0 && (
+                          <span className={cn("flex justify-end")}>
+                            {formatTimestamp(chatroom.timestamps[0])}
+                          </span>
+                        )}
                     </div>
-                    {chatroom.timestamps && chatroom.timestamps.length > 0 && (
-                      <span className={cn("flex items-end ml-auto")}>
-                        {formatTimestamp(chatroom.timestamps[0])}
-                      </span>
-                    )}
                   </li>
                 </Link>
               ))}
