@@ -1,4 +1,4 @@
-import {useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -72,7 +72,11 @@ export const ChatArea = () => {
         <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-2xl">
           Hello, Word!
         </h1>
-        <img className="h-12 absolute left-1/2 transform -translate-x-1/2" src={robot} alt="robot" />
+        <img
+          className="h-12 absolute left-1/2 transform -translate-x-1/2"
+          src={robot}
+          alt="robot"
+        />
         <div className="relative mr-2">
           <div
             className="cursor-pointer flex flex-col items-center"
@@ -90,10 +94,11 @@ export const ChatArea = () => {
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
               <ul className="py-2 text-gray-700">
-                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                onClick={() => navigate("/settings")}>
+                <li
+                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => navigate(`/settings`)}
+                >
                   Settings
-                  
                 </li>
                 <li
                   className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-red-600"

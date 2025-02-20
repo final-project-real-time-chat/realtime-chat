@@ -81,7 +81,9 @@ router.post("/register/verify", async (req, res) => {
     }
 
     if (user.isVerified) {
-      return res.status(400).json({ message: "Your email is already verified" });
+      return res
+        .status(400)
+        .json({ message: "Your email is already verified" });
     }
 
     if (user.verificationKey !== key) {
@@ -136,7 +138,7 @@ router.post("/login", async (req, res) => {
     res.json({
       message: "User logged in successfully",
       user: req.session.user,
-      isVerified: user.isVerified
+      isVerified: user.isVerified,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -231,24 +233,17 @@ router.patch("/update/:id", async (req, res) => {
 });
 
 /** USER DELETE */
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
+router.delete("/delete", async (req, res) => {
+  const userId = req.session.user.id;
 
   try {
-    const foundUser = await User.findById(id);
-    if (!foundUser) {
-      return res.status(404).json({ errorMessage: "User not found" });
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ errorMessage: `user not found` });
     }
 
-    await User.findByIdAndDelete(id);
-    req.session.destroy((err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ errorMessage: "Failed to delete user session" });
-      }
-      res.json({ message: "User deleted successfully" });
-    });
+    res.json({ message: `user has been deleted successfully` });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
