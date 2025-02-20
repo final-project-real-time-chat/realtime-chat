@@ -205,23 +205,40 @@ router.get("/:id", async (req, res) => {
 });
 
 /** USER UPDATE */
-router.patch("/update/:id", async (req, res) => {
-  const { id } = req.params;
-  const { username, password } = req.body;
+router.patch("/update", async (req, res) => {
+  const userId = req.session.user.id;
+  const { oldPassword, newPassword } = req.body;
 
   try {
-    const foundUser = await User.findById(id);
+    const foundUser = await User.findById(userId);
     if (!foundUser) {
-      return res.status(404).json({ errorMessage: "User not found" });
+      return res.status(404).json({ errorMessage: "User not found!" });
     }
 
-    if (username) {
-      foundUser.username = username;
+    if (!oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Enter your old password and new password!" });
     }
 
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 12);
-      foundUser.password = hashedPassword;
+    const isMatchPassword = await bcrypt.compare(
+      oldPassword,
+      foundUser.password
+    );
+
+    if (!isMatchPassword) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Something went wrong, please try again!" });
+    }
+
+    if (isMatchPassword && newPassword) {
+      const hashedPassword = await bcrypt.hash(newPassword, 12)
+      
+      await User.updateOne(
+        { _id: userId },
+        { $set: { password: hashedPassword } }
+      );
     }
 
     await foundUser.save();

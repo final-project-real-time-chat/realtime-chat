@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import robot from "../assets/robot.png";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -7,8 +7,33 @@ import toast, { Toaster } from "react-hot-toast";
 export const Settings = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const { username } = useParams();
-  console.log(username);
+
+  function changePassword(e) {
+    e.preventDefault();
+    const oldPassword = e.target.oldPassword.value.trim();
+    const newPassword = e.target.newPassword.value.trim();
+    newPasswordMutation.mutate({ oldPassword, newPassword });
+  }
+
+  const newPasswordMutation = useMutation({
+    mutationFn: async ({ oldPassword, newPassword }) => {
+      const response = await fetch(`/api/users/update`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ oldPassword, newPassword }),
+      });
+      if (!response.ok) throw new Error("Failed to change password.");
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Password changed seccessfully!");
+    },
+    onError: () => {
+      toast.error("Failed to change password. Please try again.");
+    },
+  });
 
   const handleDeleteAcc = () => {
     setShow(true);
@@ -46,23 +71,25 @@ export const Settings = () => {
         <button onClick={() => navigate("/chatarea")}>Back</button>
       </header>
       <main>
-        <form>
+        <form onSubmit={changePassword}>
           <h1>Settings</h1>
           <div>
             <h1>Change Password:</h1>
-            <label htmlFor="oldPw">
+            <label htmlFor="oldPassword">
               Type in your old Password:
               <input
                 type="password"
-                id="oldPw"
+                name="oldPassword"
+                id="oldPassword"
                 placeholder="Your old password"
               />
             </label>
-            <label htmlFor="newPw">
+            <label htmlFor="newPassword">
               Type in your new Password:
               <input
                 type="password"
-                id="newPw"
+                name="newPassword"
+                id="newPassword"
                 placeholder="Your new password"
               />
             </label>
