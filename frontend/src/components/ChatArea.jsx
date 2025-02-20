@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import {useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import { cn } from "../utils/cn.js";
 export const ChatArea = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const {
     data: chatroomsData,
@@ -67,18 +68,43 @@ export const ChatArea = () => {
 
   return (
     <>
-      <header className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}>
-        <h1 className="w-32 flex items-center tracking-widest font-bold">
+      <header className="flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
+        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-2xl">
           Hello, Word!
         </h1>
-        <span>{chatroomsData?.currentUsername}</span>
-        <img className="h-12" src={robot} alt="robot" />
-        <button
-          className="cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
-          onClick={() => logoutMutation.mutate()}
-        >
-          Logout
-        </button>
+        <img className="h-12 absolute left-1/2 transform -translate-x-1/2" src={robot} alt="robot" />
+        <div className="relative mr-2">
+          <div
+            className="cursor-pointer flex flex-col items-center"
+            onClick={() => setMenuOpen((prev) => !prev)}
+          >
+            <img
+              className="aspect-square h-8 border-2 bg-gray-400 rounded-full mt-2"
+              src={`https://robohash.org/${chatroomsData?.currentUsername}`}
+              alt="avatar"
+            />
+            <span>{chatroomsData?.currentUsername}</span>
+          </div>
+
+          {/* Settings Menu */}
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+              <ul className="py-2 text-gray-700">
+                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                onClick={() => navigate("/settings")}>
+                  Settings
+                  
+                </li>
+                <li
+                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-red-600"
+                  onClick={() => logoutMutation.mutate()}
+                >
+                  Logout
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </header>
       <main>
         {isLoading ? (

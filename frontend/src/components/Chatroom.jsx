@@ -191,25 +191,23 @@ export const Chatroom = () => {
 
   return (
     <div className="min-h-svh flex flex-col">
-      <header
-        className={cn("flex justify-between pl-2 sticky top-0 bg-gray-700")}
-      >
+      <header className="flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
         <img
           className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
           src={partnerName ? `https://robohash.org/${partnerName}` : robot}
           alt="avatar"
         />
-        <h1 className="flex items-center tracking-widest font-bold">
+        {/* <h1 className="flex items-center tracking-widest font-bold">
           {`CurrentUser: ${currentUsername}`}
-        </h1>
-        <h1 className="flex items-center tracking-widest font-bold">
+        </h1> */}
+        <h1 className="tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
           {`Partner: ${partnerName}`}
         </h1>
+
+        {/* TODO: change style */}
         <button
           onClick={() => navigate("/chatarea")}
-          className={cn(
-            "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
-          )}
+          className="cursor-pointer bg-[#f92f40] w-28 rounded-bl-2xl"
         >
           Back
         </button>
@@ -256,29 +254,45 @@ export const Chatroom = () => {
           ))}
         <div ref={messagesEndRef} />
       </div>
-      <form className={cn("grid sticky bottom-0")} onSubmit={handleSendMessage}>
+      <form
+        className="grid grid-cols-[2rem_1fr_4rem] sticky bottom-0 gap-2 mx-2"
+        onSubmit={handleSendMessage}
+      >
+        <label className="flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl cursor-pointer hover:bg-blue-600">
+          <input type="file" className="hidden" />+
+        </label>
         <textarea
-          className={cn("outline-none border-2 bg-white text-black")}
+          className="min-h-8 outline-none border-2 bg-white text-black w-full px-1"
           name="textarea"
           id="textarea"
           rows={1}
           onInput={handleInput}
           ref={textareaRef}
         ></textarea>
-        <div className={cn("grid grid-cols-4")}>
-          <input
-            className={cn(
-              "cursor-pointer bg-[#f92f40] font-bold border-r-2 appearance-none"
-            )}
-            type="file"
-          />
-          <button
-            className={cn("cursor-pointer bg-[#f92f40] font-bold col-span-3")}
-            type="submit"
-          >
-            Send
-          </button>
-        </div>
+        {/* <button
+          className="cursor-pointer bg-[#f92f40] font-bold w-full"
+          type="submit"
+        >
+          Send
+        </button> */}
+        <button className="relative flex items-center justify-center w-full h-full bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
+          <div className="svg-wrapper-1 flex items-center justify-center">
+            <div className="svg-wrapper">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path
+                  fill="currentColor"
+                  d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </button>
       </form>
     </div>
   );

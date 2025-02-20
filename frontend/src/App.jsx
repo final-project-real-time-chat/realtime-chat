@@ -6,6 +6,7 @@ import { ChatArea } from "./components/ChatArea.jsx";
 import { ExistChatroom } from "./components/ExistChatroom.jsx";
 import { NewChatroom } from "./components/NewChatroom.jsx";
 import { Chatroom } from "./components/Chatroom.jsx";
+import { Settings } from "./components/Settings.jsx";
 
 function App() {
   return (
@@ -13,10 +14,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/register/verify"
-          element={<RegisterVerify />}
-        />
+        <Route path="/register/verify" element={<RegisterVerify />} />
+        <Route path="/settings" element={<Settings />} />
+
         <Route path="/chatarea" element={<ChatArea />} />
         <Route path="/chatarea/exist" element={<ExistChatroom />} />
         <Route path="/chatarea/chats/:id" element={<Chatroom />} />
