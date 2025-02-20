@@ -21,7 +21,7 @@ function App() {
         <Route path="/chatarea/exist" element={<ExistChatroom />} />
         <Route path="/chatarea/chats/:id" element={<Chatroom />} />
         <Route
-          path="/chatarea/chats/new-chatroom/:id"
+          path="/chatarea/chats/new-chatroom/:username"
           element={<NewChatroom />}
         />
       </Routes>

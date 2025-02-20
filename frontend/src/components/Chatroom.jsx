@@ -26,7 +26,6 @@ export const Chatroom = () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
       return response.json();
     },
-    // refetchInterval: 1_000,
   });
 
   const chatroomMessages = data?.chatroomMessages;
@@ -191,25 +190,21 @@ export const Chatroom = () => {
 
   return (
     <div className="min-h-svh flex flex-col">
-      <header className="flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
+      <header className="h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <img
           className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
           src={partnerName ? `https://robohash.org/${partnerName}` : robot}
           alt="avatar"
         />
-        {/* <h1 className="flex items-center tracking-widest font-bold">
-          {`CurrentUser: ${currentUsername}`}
-        </h1> */}
         <h1 className="tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
-          {`Partner: ${partnerName}`}
+          {partnerName}
         </h1>
 
-        {/* TODO: change style */}
         <button
           onClick={() => navigate("/chatarea")}
-          className="cursor-pointer bg-[#f92f40] w-28 rounded-bl-2xl"
+          className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-bl-2xl font-bold shadow-md hover:from-red-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300"
         >
-          Back
+          ← Back
         </button>
       </header>
       <div className={cn("flex flex-col h-full flex-grow")}>
@@ -269,12 +264,6 @@ export const Chatroom = () => {
           onInput={handleInput}
           ref={textareaRef}
         ></textarea>
-        {/* <button
-          className="cursor-pointer bg-[#f92f40] font-bold w-full"
-          type="submit"
-        >
-          Send
-        </button> */}
         <button className="relative flex items-center justify-center w-full h-full bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
           <div className="svg-wrapper-1 flex items-center justify-center">
             <div className="svg-wrapper">

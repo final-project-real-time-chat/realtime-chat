@@ -18,6 +18,7 @@ export const ExistChatroom = (e) => {
       });
 
       if (!response.ok) {
+        toast.dismiss();
         toast.error("username not found.");
 
         throw new Error("Failed to create chatroom");
@@ -44,6 +45,7 @@ export const ExistChatroom = (e) => {
     e.preventDefault();
     const username = e.target.username.value.trim();
     if (username === "") {
+      toast.dismiss();
       toast.error("you have to type a username.");
       return;
     }
@@ -52,18 +54,24 @@ export const ExistChatroom = (e) => {
 
   return (
     <>
-      <header className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}>
+      <header
+        className={
+          "h-16 flex items-center justify-between pl-2 sticky top-0 bg-gray-700"
+        }
+      >
         <h1 className="flex items-center tracking-widest font-bold">
           Hello, Word!
         </h1>
-        <img className="h-12" src={robot} alt="robot" />
+        <img
+          className="h-12 absolute left-1/2 transform -translate-x-1/2"
+          src={robot}
+          alt="robot"
+        />
         <button
           onClick={() => navigate("/chatarea")}
-          className={
-            "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
-          }
+          className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-bl-2xl font-bold shadow-md hover:from-red-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300"
         >
-          Back
+          ← Back
         </button>
       </header>
       <form
