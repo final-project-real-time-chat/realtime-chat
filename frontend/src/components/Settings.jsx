@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import robot from "../assets/robot.png";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import toast, { Toaster } from "react-hot-toast";
 
 export const Settings = () => {
   const navigate = useNavigate();
@@ -22,12 +23,12 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      alert("Account deleted!");
+      toast.success("Account deleted!");
       setShow(false);
       navigate("/"); // Redirect after deletion
     },
     onError: () => {
-      alert("Failed to delete account. Please try again.");
+      toast.error("Failed to delete account. Please try again.");
     },
   });
 
@@ -74,6 +75,7 @@ export const Settings = () => {
             </button>
           </div>
         </form>
+        <Toaster />
       </main>
 
       {show && (

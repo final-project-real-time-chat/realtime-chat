@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import toast, { Toaster } from "react-hot-toast";
 
 import robot from "../assets/robot.png";
 
@@ -17,9 +18,12 @@ export const ExistChatroom = (e) => {
       });
 
       if (!response.ok) {
+        toast.error("username not found.");
+
         throw new Error("Failed to create chatroom");
       }
       const result = await response.json();
+
       return result;
     },
     onSuccess: (data) => {
@@ -38,45 +42,54 @@ export const ExistChatroom = (e) => {
 
   function handleExistChatroom(e) {
     e.preventDefault();
-    const username = e.target.username.value;
+    const username = e.target.username.value.trim();
+    if (username === "") {
+      toast.error("you have to type a username.");
+      return;
+    }
     existChatroomMutation.mutate(username);
   }
 
   return (
     <>
-      <header>
-        <header
-          className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}
+      <header className={"flex justify-between pl-2 sticky top-0 bg-gray-700"}>
+        <h1 className="flex items-center tracking-widest font-bold">
+          Hello, Word!
+        </h1>
+        <img className="h-12" src={robot} alt="robot" />
+        <button
+          onClick={() => navigate("/chatarea")}
+          className={
+            "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
+          }
         >
-          <h1 className="flex items-center tracking-widest font-bold">
-            Hello, Word!
-          </h1>
-          <img className="h-12" src={robot} alt="robot" />
-          <button
-            onClick={() => navigate("/chatarea")}
-            className={
-              "cursor-pointer bg-[#f92f40] w-36 rounded-bl-2xl font-bold"
-            }
-          >
-            Back
-          </button>
-        </header>
-        <h1>Create new chatroom</h1>
+          Back
+        </button>
       </header>
-      <form onSubmit={handleExistChatroom}>
-        <label htmlFor="username">Username</label>
+      <form
+        onSubmit={handleExistChatroom}
+        className="mt-[10%] mx-auto w-full max-w-md bg-white p-6 rounded-lg shadow-lg"
+      >
+        <h1 className="text-2xl font-bold text-center mb-4 text-black">
+          Search for a User
+        </h1>
+        <label htmlFor="username" className="block text-gray-700 font-semibold">
+          Username
+        </label>
         <input
+          className="text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="text"
           name="username"
           id="username"
-          placeholder="Enter your username"
+          placeholder="Enter username"
         />
         <button
           type="submit"
-          className="cursor-pointer bg-blue-600 text-white ml-4 px-2 py-1 rounded-lg font-bold hover:bg-blue-700"
+          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
         >
           Create new chatroom
         </button>
+        <Toaster />
       </form>
     </>
   );
