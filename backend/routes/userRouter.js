@@ -135,6 +135,7 @@ router.post("/login", async (req, res) => {
     }
 
     req.session.user = { id: user._id, username: user.username };
+    console.log("User is succesfully authenticated: ", req.session.user);
     res.json({
       message: "User logged in successfully",
       user: req.session.user,
@@ -233,8 +234,8 @@ router.patch("/update", async (req, res) => {
     }
 
     if (isMatchPassword && newPassword) {
-      const hashedPassword = await bcrypt.hash(newPassword, 12)
-      
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+
       await User.updateOne(
         { _id: userId },
         { $set: { password: hashedPassword } }
