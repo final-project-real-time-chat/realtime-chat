@@ -10,7 +10,7 @@ function isAuth(req, res, next) {
   const currentUserId = req.session.user?.id;
 
   if (currentUsername === undefined || currentUserId === undefined) {
-    console.log("Unauthenticated access", req.route.path, req.route.method);
+    console.log("Unauthenticated access", req.route);
     res.status(401).json({ errorMessage: "User is not Authenticated" });
     return;
   }
