@@ -19,6 +19,7 @@ export const Chatroom = () => {
   const { id } = useParams();
   const textareaRef = useRef(null);
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { data, error } = useQuery({
     queryKey: ["chatroom", id],
@@ -191,12 +192,45 @@ export const Chatroom = () => {
   return (
     <div className="min-h-svh flex flex-col">
       <header className="h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <img
-          className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
-          src={partnerName ? `https://robohash.org/${partnerName}` : robot}
-          alt="avatar"
-        />
-        <h1 className="tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
+        <div
+          className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50"
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
+          <img
+            className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-170 z-50"
+            src={partnerName ? `https://robohash.org/${partnerName}` : robot}
+            alt="avatar"
+          />
+        </div>
+        {menuOpen && (
+          <ul className="border-gray-300 border-r-2 border-b-2 bg-gray-700 absolute left-0 mt-50 backdrop-blur-xs rounded-br-2xl shadow-lg duration-1000">
+            <li
+              className="hover:bg-gray-600 cursor-pointer  text-white font-extrabold duration-300  px-3 pb-1 pt-3 md:px-8 overflow-hidden"
+              // onClick={() => navigate(`/`)}
+            >
+              Profile
+            </li>
+            <li
+              className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8"
+              // onClick={() => navigate(`/`)}
+            >
+              Settings
+            </li>
+            <li
+              className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
+              // onClick={() => navigate(`/`)}
+            >
+              Delete Message
+            </li>
+            <li
+              className="hover:bg-gray-600 rounded-br-2xl cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
+              // onClick={() => navigate(`/`)}
+            >
+              Delete Chat
+            </li>
+          </ul>
+        )}
+        <h1 className="tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
           {partnerName}
         </h1>
 
@@ -217,8 +251,8 @@ export const Chatroom = () => {
             className="cursor-pointer bg-white/10 shadow-lg shadow-blue-900/30 backdrop-blur-[5.5px] text-xl rounded-[10px] border border-white/20 text-amber-400 sticky top-[50%] mx-auto px-8 py-1 font-bold hover:bg-white/20 transition-colors animate-bounce"
           >
             {unreadMessagesCount === 1
-              ? `↓ ${unreadMessagesCount} unread message ↓`
-              : `↓ ${unreadMessagesCount} unread messages ↓`}
+              ? `↓ ${unreadMessagesCount} message. Tap to see. ↓`
+              : `↓ ${unreadMessagesCount} messages. Tap to see. ↓`}
           </button>
         )}
         {Array.isArray(chatroomMessages) &&
