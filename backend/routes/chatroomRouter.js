@@ -32,6 +32,8 @@ export default (io) => {
         partnerId: user._id,
       });
     } catch (error) {
+      console.log("ERROR IN /EXIST")
+      console.log(error)
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
@@ -64,6 +66,8 @@ export default (io) => {
 
       res.status(201).json({ chatroomId: newChatroom._id });
     } catch (error) {
+      console.log("ERROR IN /CREATE")
+      console.log(error)
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
@@ -120,6 +124,8 @@ export default (io) => {
 
       res.json({ chatrooms: sortedChatrooms, currentUsername });
     } catch (error) {
+      console.log("ERROR IN /CHATS")
+      console.log(error)
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
@@ -183,6 +189,8 @@ export default (io) => {
         unreadMessagesCount,
       });
     } catch (error) {
+      console.log("ERROR IN /CHAT:ID")
+      console.log(error)
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
