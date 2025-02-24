@@ -59,8 +59,8 @@ export const Settings = () => {
 
   return (
     <>
-      <header className="flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
-        <h1 className="flex items-center tracking-widest text-sm md:text-base xl:text-2xl">
+      <header className="h-16 flex items-center justify-between pl-2 sticky top-0 bg-gray-700">
+        <h1 className="flex items-center tracking-widest font-bold">
           Hello, Word!
         </h1>
         <img
@@ -68,14 +68,27 @@ export const Settings = () => {
           src={robot}
           alt="robot"
         />
-        <button onClick={() => navigate("/chatarea")}>Back</button>
+        <button
+          onClick={() => navigate("/chatarea")}
+          className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-bl-2xl font-bold shadow-md hover:from-red-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300"
+        >
+          ← Back
+        </button>
       </header>
       <main>
-        <form onSubmit={changePassword}>
-          <h1>Settings</h1>
-          <div>
-            <h1>Change Password:</h1>
-            <label htmlFor="oldPassword">
+        <h1 className="text-center text-4xl mt-5">Settings</h1>
+        <form
+          onSubmit={changePassword}
+          className="text-center mt-[5%] mx-auto w-full max-w-md bg-white p-6 rounded-lg shadow-lg"
+        >
+          <h1 className="text-2xl font-bold text-center mb-4 text-black">
+            Change Password:
+          </h1>
+          <div className="">
+            <label
+              htmlFor="oldPassword"
+              className="block text-gray-700 font-semibold"
+            >
               Type in your old Password:
               <input
                 type="password"
@@ -84,7 +97,10 @@ export const Settings = () => {
                 placeholder="Your old password"
               />
             </label>
-            <label htmlFor="newPassword">
+            <label
+              htmlFor="newPassword"
+              className="block text-gray-700 font-semibold mt-5"
+            >
               Type in your new Password:
               <input
                 type="password"
@@ -93,11 +109,24 @@ export const Settings = () => {
                 placeholder="Your new password"
               />
             </label>
-            <button type="submit">Change Password</button>
+            <button
+              type="submit"
+              className="mt-5 cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
+            >
+              Change Password
+            </button>
           </div>
+        </form>
+        <form className="mt-[10%] mx-auto w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
           <div>
-            Delete your Account
-            <button type="button" onClick={handleDeleteAcc}>
+            <h1 className="text-2xl font-bold text-center mb-4 text-red-600">
+              Delete your Account
+            </h1>
+            <button
+              type="button"
+              onClick={handleDeleteAcc}
+              className="cursor-pointer w-full bg-red-600 text-white p-2 rounded-lg font-bold hover:bg-red-700"
+            >
               Delete
             </button>
           </div>
