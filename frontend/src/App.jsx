@@ -7,12 +7,17 @@ import { ExistChatroom } from "./components/ExistChatroom.jsx";
 import { NewChatroom } from "./components/NewChatroom.jsx";
 import { Chatroom } from "./components/Chatroom.jsx";
 import { Settings } from "./components/Settings.jsx";
+import { ForgotPw } from "./components/ForgotPw.jsx";
+import { NewPassword } from "./components/NewPassword.jsx";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/forgot-pw" element={<ForgotPw />} />
+        <Route path="/new-pw" element={<NewPassword />} />
+
         <Route path="/register" element={<Register />} />
         <Route path="/register/verify" element={<RegisterVerify />} />
         <Route path="/settings" element={<Settings />} />

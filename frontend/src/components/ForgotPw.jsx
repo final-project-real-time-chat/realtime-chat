@@ -2,36 +2,34 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import robot from "../assets/robot.png";
 
-export const Login = () => {
+export const ForgotPw = () => {
   const navigate = useNavigate();
 
-  async function handleLogin(e) {
+  async function handleResetPw(e) {
     e.preventDefault();
     const email = e.target.email.value.toLowerCase();
-    const password = e.target.password.value;
 
     toast.loading("Waiting...");
 
-    const response = await fetch("/api/users/login", {
-      method: "POST",
+    const response = await fetch("/api/users/forgot-pw", {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email }),
     });
-    const data = await response.json();
+    // const data = await response.json();
 
     toast.dismiss();
+    console.log(response);
 
-    if (response.ok && data.isVerified === true) {
-      toast.success("Logged in Successfully.");
-      setTimeout(() => navigate("/chatarea"), 2000);
-    } else if (data.isVerified === false) {
-      toast.error("Login failed. You need to verify your email.");
+    if (response.ok) {
+      toast.success("email sent with new password");
+      setTimeout(() => navigate("/"), 2000);
     } else if (response.status === 404) {
-      toast.error("Login failed. Username or password is wrong.");
+      toast.error("no user found with this email");
     } else {
-      toast.error("Login Failed.");
+      toast.error("progress failed.");
     }
   }
 
@@ -43,11 +41,11 @@ export const Login = () => {
       </header>
 
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleResetPw}
         className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 text-black">
-          Login
+          Reset your Password
         </h1>
         <label htmlFor="email" className="block text-gray-700 font-semibold">
           Email
@@ -61,48 +59,19 @@ export const Login = () => {
           required
           autoFocus
         />
-        <label htmlFor="password" className="block text-gray-700 font-semibold">
-          Password
-        </label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Enter your password"
-          className=" text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-        <button
-          type="button"
-          onClick={() => navigate("/forgot-pw")}
-          className="text-black text-sm cursor-pointer mb-3"
-        >
-          Forgot Password?
-        </button>
-
         <button
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
         >
-          Login
+          Send Email
         </button>
         <Toaster />
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-black">Are you not registered yet?</p>
+        <p className="text-black">Back to Login</p>
         <button
           className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
-          onClick={() => navigate("/register")}
-        >
-          Click here
-        </button>
-      </div>
-
-      <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-black">Do you need to verify your account?</p>
-        <button
-          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
-          onClick={() => navigate("/register/verify")}
+          onClick={() => navigate("/")}
         >
           Click here
         </button>
