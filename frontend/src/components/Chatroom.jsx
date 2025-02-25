@@ -84,10 +84,19 @@ export const Chatroom = () => {
     e.target.textarea.style.height = "auto";
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   }
+  function handleKeyDown(event) {
+    if (window.innerWidth >= 1024 && event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage({
+        preventDefault: () => {},
+        target: { textarea: textareaRef.current },
+      });
+    }
+  }
 
   function handleInput(event) {
     const textarea = event.target;
-    textarea.style.height = "auto"; // Reset height first to get correct scrollHeight
+    textarea.style.height = "auto";
     const maxHeight = 150;
     const newHeight = Math.min(textarea.scrollHeight, maxHeight);
     textarea.style.height = `${newHeight}px`;
@@ -295,6 +304,8 @@ export const Chatroom = () => {
           rows={1}
           onInput={handleInput}
           ref={textareaRef}
+          onKeyDown={handleKeyDown}
+          autoFocus={window.innerWidth >= 1024}
         ></textarea>
         <button className="relative flex items-center justify-center w-full h-full bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
           <div className="svg-wrapper-1 flex items-center justify-center">
