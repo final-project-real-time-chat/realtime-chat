@@ -9,10 +9,10 @@ import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
 
-const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
-  transports: ["websocket"],
-  withCredentials: true,
-});
+// const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
+//   transports: ["websocket"],
+//   withCredentials: true,
+// });
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
@@ -139,6 +139,11 @@ export const Chatroom = () => {
   const latestMessageId = chatroomMessages?.at(-1)._id;
 
   useEffect(() => {
+    const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
+      transports: ["websocket"],
+      withCredentials: true,
+    });
+
     socket.on("message", (message) => {
       queryClient.setQueryData(["chatroom", id], (prevData) => {
         if (!prevData) {
