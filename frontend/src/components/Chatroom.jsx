@@ -145,6 +145,8 @@ export const Chatroom = () => {
     });
 
     socket.on("message", (message) => {
+      if (message.chatroom !== id) return;
+
       queryClient.setQueryData(["chatroom", id], (prevData) => {
         if (!prevData) {
           return { chatroomMessages: [message] };
@@ -157,7 +159,6 @@ export const Chatroom = () => {
             : prevData.unreadMessagesCount + 1,
           chatroomMessages: [...prevData.chatroomMessages, message],
         };
-        console.log({ updatedData });
         return updatedData;
       });
     });
