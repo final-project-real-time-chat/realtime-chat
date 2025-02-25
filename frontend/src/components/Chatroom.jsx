@@ -81,18 +81,16 @@ export const Chatroom = () => {
       .join("\n");
     if (userInput.trim() === "") return null;
     mutation.mutate(userInput);
+    e.target.textarea.style.height = "auto";
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   }
 
   function handleInput(event) {
     const textarea = event.target;
+    textarea.style.height = "auto"; // Reset height first to get correct scrollHeight
     const maxHeight = 150;
-    if (textarea.scrollHeight >= maxHeight) {
-      textarea.style.height = `${maxHeight}px`;
-    } else {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    textarea.style.height = `${newHeight}px`;
   }
 
   function formatTimestamp(timestamp) {
