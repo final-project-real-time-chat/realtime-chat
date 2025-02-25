@@ -19,11 +19,15 @@ export default (io) => {
       const newMessage = new Message({ chatroom, content, sender });
       await newMessage.save();
 
-      io.to(chatroom).emit("message", newMessage);
+      const messageWithUser = await Message.populate(newMessage, {
+        path: "sender",
+      });
+
+      io.to(chatroom).emit("message", messageWithUser);
 
       res
         .status(201)
-        .json({ message: "Message sent successfully", newMessage });
+        .json({ message: "Message sent successfully", messageWithUser });
     } catch (error) {
       console.error("Error sending message:", error);
       res.status(500).json({ errorMessage: "Internal server error" });
