@@ -267,4 +267,81 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
+const sendNewPw = async (email, key) => {
+  const baseUrl = process.env.NEW_PW;
+
+  const resetPw = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Set new Password",
+    text: `Please give this key to verifcate: ${key}.
+    You can click this Link to change your Password. 
+    ${baseUrl}/new-pw`,
+  };
+
+  try {
+    await transporter.sendMail(resetPw);
+    console.log("new password sent successfully");
+  } catch (error) {
+    console.error("Error sending new password:", error);
+  }
+};
+
+/** FORGOT PW */
+router.patch("/forgot-pw", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const foundUser = await User.findOne({ email });
+    console.log(foundUser);
+    if (!foundUser) {
+      return res.status(404).json({ message: "no user found with this email" });
+    }
+
+    function generatePassword(length = 8) {
+      const charset =
+        "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+      }
+      return password;
+    }
+
+    const key = generatePassword();
+    console.log("Generated Key:", key);
+
+    await User.findOneAndUpdate({ email }, { $set: { key } }, { new: true });
+
+    await sendNewPw(email, key);
+
+    res.json({ message: `email with new passwort send` });
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
+/** CHANGE NEW PASSWORD */
+router.patch("/new-pw", async (req, res) => {
+  try {
+    const { email, key, newPw } = req.body;
+    const foundUser = await User.findOne({ email });
+    if (!foundUser) {
+      return res.status(404).json({ message: "no user found" });
+    }
+
+    if (key !== foundUser.key) {
+      return res.status(401).json({ message: "key is not correct" });
+    }
+    const hashedPassword = await bcrypt.hash(newPw, 12);
+
+    await findOneAndUpdate({ email }, { $set: { password: hashedPassword } });
+
+    res.status(200).json({ message: "password successfully changed" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;

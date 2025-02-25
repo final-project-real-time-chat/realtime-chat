@@ -13,6 +13,7 @@ const userSchema = new Schema(
           .toString()
           .padStart(6, "0"),
     },
+    key: { type: String },
     // status: {
     //   type: String,
     //   required: true,
