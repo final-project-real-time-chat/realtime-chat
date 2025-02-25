@@ -20,12 +20,11 @@ export const NewPassword = () => {
       },
       body: JSON.stringify({ email, key, newPw }),
     });
-    // const data = await response.json();
 
     toast.dismiss();
 
     if (response.ok) {
-      toast.success("email sent with new password");
+      toast.success("Password successfully changed");
       setTimeout(() => navigate("/"), 2000);
     } else if (response.status === 404) {
       toast.error("no user found with this email");
@@ -81,6 +80,7 @@ export const NewPassword = () => {
           placeholder="Enter your new Password"
           className="text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
+          minLength={6}
         />
         <button
           type="submit"

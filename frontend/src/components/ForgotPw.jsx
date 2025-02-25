@@ -25,9 +25,11 @@ export const ForgotPw = () => {
 
     if (response.ok) {
       toast.success("email sent with new password");
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/new-pw"), 2000);
     } else if (response.status === 404) {
       toast.error("no user found with this email");
+    } else if (response.status === 401) {
+      toast.error("Key is not correct, please try again");
     } else {
       toast.error("progress failed.");
     }

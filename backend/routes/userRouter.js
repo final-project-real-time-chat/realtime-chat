@@ -328,17 +328,22 @@ router.patch("/new-pw", async (req, res) => {
     const { email, key, newPw } = req.body;
     const foundUser = await User.findOne({ email });
     if (!foundUser) {
-      return res.status(404).json({ message: "no user found" });
+      return res.status(404).json({ message: "No user found" });
     }
 
     if (key !== foundUser.key) {
-      return res.status(401).json({ message: "key is not correct" });
+      return res.status(401).json({ message: "Key is not correct" });
     }
+    
     const hashedPassword = await bcrypt.hash(newPw, 12);
 
-    await findOneAndUpdate({ email }, { $set: { password: hashedPassword } });
+    await User.findOneAndUpdate(
+      { email },
+      { $set: { password: hashedPassword }, $unset: { key: "" } },
+      { new: true }
+    );
 
-    res.status(200).json({ message: "password successfully changed" });
+    res.status(200).json({ message: "Password successfully changed" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
