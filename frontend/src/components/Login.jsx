@@ -7,7 +7,7 @@ export const Login = () => {
 
   async function handleLogin(e) {
     e.preventDefault();
-    const email = e.target.email.value;
+    const email = e.target.email.value.toLowerCase();
     const password = e.target.password.value;
 
     toast.loading("Waiting...");
