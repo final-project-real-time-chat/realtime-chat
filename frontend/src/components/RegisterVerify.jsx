@@ -70,7 +70,7 @@ export const RegisterVerify = () => {
           Verification Key
         </label>
         <input
-          type="text"
+          type="tel"
           name="key"
           id="key"
           placeholder="XXXXXX"
