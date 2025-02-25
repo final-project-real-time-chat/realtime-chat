@@ -300,7 +300,7 @@ export const Chatroom = () => {
         className="grid grid-cols-[2rem_1fr_4rem] sticky bottom-0 gap-2 mx-2"
         onSubmit={handleSendMessage}
       >
-        <label className="flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl cursor-pointer hover:bg-blue-600">
+        <label className="flex items-center justify-center rounded-full h-8 mt-auto bg-blue-500 text-white text-2xl cursor-pointer hover:bg-blue-600">
           <input type="file" className="hidden" />+
         </label>
         <textarea
@@ -313,7 +313,7 @@ export const Chatroom = () => {
           onKeyDown={handleKeyDown}
           autoFocus={window.innerWidth >= 1024}
         ></textarea>
-        <button className="relative flex items-center justify-center w-full h-full bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
+        <button className="relative flex items-center justify-center w-full h-8 mt-auto bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
           <div className="svg-wrapper-1 flex items-center justify-center">
             <div className="svg-wrapper">
               <svg
