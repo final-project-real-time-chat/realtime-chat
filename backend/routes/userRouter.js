@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 
 import User from "../models/userSchema.js";
+import Message from "../models/messageSchema.js";
 
 dotenv.config();
 
@@ -250,18 +251,34 @@ router.patch("/update", async (req, res) => {
   }
 });
 
-/** USER DELETE */
+/** DELETE USER & ALL MESSAGES */
 router.delete("/delete", async (req, res) => {
-  const userId = req.session.user.id;
-
   try {
-    const deletedUser = await User.findByIdAndDelete(userId);
+    const userId = req.session.user.id;
+    const foundUser = await User.findById(userId);
 
-    if (!deletedUser) {
-      return res.status(404).json({ errorMessage: `user not found` });
+    if (!foundUser) {
+      return res.status(404).json({ errorMessage: `User not found` });
     }
 
-    res.json({ message: `user has been deleted successfully` });
+    await Message.deleteMany({ sender: userId });
+
+    await Message.updateMany(
+      { lastMessage: userId },
+      { $unset: { lastMessage: "" } }
+    );
+
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).json({ errorMessage: "Internal server error" });
+      }
+      res.clearCookie("connect.sid");
+    });
+
+    await User.findByIdAndDelete(userId);
+
+    res.json({ message: `User has been deleted successfully` });
   } catch (error) {
     res.status(500).json({ errorMessage: "Internal server error" });
   }
@@ -334,7 +351,6 @@ router.patch("/new-pw", async (req, res) => {
     if (key !== foundUser.key) {
       return res.status(401).json({ message: "Key is not correct" });
     }
-    
     const hashedPassword = await bcrypt.hash(newPw, 12);
 
     await User.findOneAndUpdate(
