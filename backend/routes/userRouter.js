@@ -149,23 +149,23 @@ router.post("/login", async (req, res) => {
 });
 
 /** GET CURRENT USER */
-router.get("/current", async (req, res) => {
-  try {
-    if (!req.session.user) {
-      return res.status(401).json({ errorMessage: "Not authenticated" });
-    }
+// router.get("/current", async (req, res) => {
+//   try {
+//     if (!req.session.user) {
+//       return res.status(401).json({ errorMessage: "Not authenticated" });
+//     }
 
-    const user = await User.findById(req.session.user.id);
-    if (!user) {
-      return res.status(404).json({ errorMessage: "User not found" });
-    }
+//     const user = await User.findById(req.session.user.id);
+//     if (!user) {
+//       return res.status(404).json({ errorMessage: "User not found" });
+//     }
 
-    res.json({ user });
-  } catch (error) {
-    console.error("Error fetching current user:", error);
-    res.status(500).json({ errorMessage: "Internal server error" });
-  }
-});
+//     res.json({ user });
+//   } catch (error) {
+//     console.error("Error fetching current user:", error);
+//     res.status(500).json({ errorMessage: "Internal server error" });
+//   }
+// });
 
 /** USER LOGOUT */
 router.get("/logout", async (req, res) => {
@@ -185,26 +185,26 @@ router.get("/logout", async (req, res) => {
 });
 
 /** GET ALL USERS */
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const users = await User.find({});
+//     res.json(users);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.id);
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 /** USER UPDATE */
 router.patch("/update", async (req, res) => {

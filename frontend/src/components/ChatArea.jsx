@@ -184,11 +184,13 @@ export const ChatArea = () => {
                       <span>
                         {chatroom.usernames.join(", ") ?? "No Username"}
                       </span>
-                      {chatroom.lastMessage && (
-                        <span>
-                          {truncateText(chatroom.lastMessage.content, 20)}
-                        </span>
-                      )}
+                      {chatroom.usernames.join(", ")
+                        ? chatroom.lastMessage && (
+                            <span>
+                              {truncateText(chatroom.lastMessage.content, 20)}
+                            </span>
+                          )
+                        : "Deleted account"}
                     </div>
                     <div className="text-amber-400 ml-auto">
                       {chatroom.unreadMessagesCount > 0 && (

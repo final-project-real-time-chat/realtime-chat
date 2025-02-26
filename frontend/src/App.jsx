@@ -9,6 +9,7 @@ import { Chatroom } from "./components/Chatroom.jsx";
 import { Settings } from "./components/Settings.jsx";
 import { ForgotPw } from "./components/ForgotPw.jsx";
 import { NewPassword } from "./components/NewPassword.jsx";
+import { PageNotFound } from "./components/PageNotFound.jsx";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           path="/chatarea/chats/new-chatroom/:username"
           element={<NewChatroom />}
         />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   );
