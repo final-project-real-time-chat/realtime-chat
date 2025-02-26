@@ -94,7 +94,7 @@ app.use(
   })
 );
 
-app.use("/api/users", userRouter);
+app.use("/api/users", userRouter(io));
 app.use("/api/messages", messageRouter(io));
 app.use("/api/chatrooms", chatroomRouter(io));
 

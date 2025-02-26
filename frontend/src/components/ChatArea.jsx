@@ -68,7 +68,7 @@ export const ChatArea = () => {
 
   return (
     <>
-      <header className="flex justify-between items-center sticky top-0 bg-gray-700">
+      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700">
         <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-2xl ml-2">
           Hello, Word!
         </h1>
@@ -148,16 +148,14 @@ export const ChatArea = () => {
           <p>Error loading chatrooms: {chatroomsError.message}</p>
         ) : (
           <>
-            <div className="flex justify-start pl-2 md:justify-center md:pl-0 bg-blue-300 w-full text-black py-1">
-              <button
-                onClick={() => navigate("/chatarea/exist")}
-                className="cursor-pointer relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400"
-              >
+            {/* <div className="flex justify-start pl-2 md:justify-center md:pl-0 bg-blue-300 w-full text-black py-1"> */}
+            {/* <button className="cursor-pointer relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400">
                 <span className="relative px-5 py-2.5 transition-all ease-in duration-300 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
                   Add new chat
                 </span>
-              </button>
-            </div>
+              </button> */}
+
+            {/* </div> */}
             <ul>
               {chatroomsData?.chatrooms.map((chatroom) => (
                 <Link
@@ -166,10 +164,10 @@ export const ChatArea = () => {
                 >
                   <li
                     className={cn(
-                      "flex p-2 border-b-2 hover:bg-gray-700 duration-300"
+                      "flex p-2 border-t-1 hover:bg-gray-600 duration-300"
                     )}
                   >
-                    <div className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full overflow-hidden">
+                    <div className="relative aspect-square h-12 border-2 bg-gray-700 rounded-full overflow-hidden">
                       <img
                         className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-150"
                         src={
@@ -181,36 +179,51 @@ export const ChatArea = () => {
                       />
                     </div>
                     <div className={cn("flex flex-col pl-2")}>
-                      <span>
+                      <span className="font-bold">
                         {chatroom.usernames.join(", ") ?? "No Username"}
                       </span>
                       {chatroom.usernames.join(", ")
                         ? chatroom.lastMessage && (
-                            <span>
+                            <span className="text-xs">
                               {truncateText(chatroom.lastMessage.content, 20)}
                             </span>
                           )
                         : "Deleted account"}
                     </div>
-                    <div className="text-amber-400 ml-auto">
-                      {chatroom.unreadMessagesCount > 0 && (
-                        <span className="text-amber-400 animate-pulse">
-                          {chatroom.unreadMessagesCount === 1
-                            ? `${chatroom.unreadMessagesCount} unread message`
-                            : `${chatroom.unreadMessagesCount} unread messages`}
-                        </span>
-                      )}
+                    <div className="ml-auto">
                       {chatroom.timestamps &&
                         chatroom.timestamps.length > 0 && (
-                          <span className={cn("flex justify-end")}>
+                          <span
+                            className={cn(
+                              "flex justify-end text-gray-400 text-xs"
+                            )}
+                          >
                             {formatTimestamp(chatroom.timestamps[0])}
                           </span>
                         )}
+                      {chatroom.unreadMessagesCount > 0 && (
+                        <div className="text-amber-400 border-2 rounded-full px-2 flex items-center justify-center w-8 h-8 mt-1">
+                          <span className="animate-pulse">
+                            {chatroom.unreadMessagesCount}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </li>
                 </Link>
               ))}
             </ul>
+            <button
+              className="cursor-pointer sticky bottom-2 left-full mr-2 flex items-center px-6 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              onClick={() => navigate("/chatarea/exist")}
+            >
+              <span
+                className="material-symbols-outlined text-gray-200"
+                style={{ fontSize: "36px" }}
+              >
+                person_add
+              </span>
+            </button>
           </>
         )}
       </main>
