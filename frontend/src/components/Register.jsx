@@ -126,7 +126,7 @@ export const Register = () => {
             type={showPassword ? "text" : "password"}
             name="password"
             id="password"
-            placeholder="e.g.    a-z + A-Z + 0-9 + $&#-_@"
+            placeholder="e.g. $&@ a-z  A-Z  0-9"
             minLength={6}
             className="bg-gray-50 focus:border-blue-500 block ps-10 pe-10 text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 tracking-widest"
             required
