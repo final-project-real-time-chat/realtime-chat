@@ -21,7 +21,7 @@ export const Chatroom = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
     queryFn: async () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
@@ -203,7 +203,7 @@ export const Chatroom = () => {
   }, [nearBottom, latestMessageId, markAsRead, queryClient, id]);
 
   function userImg(partnerName) {
-    if (partnerName === "deletedUser") {
+    if (partnerName === "deletedUser" || !partnerName) {
       return robot;
     } else {
       return `https://robohash.org/${partnerName}`;
@@ -218,7 +218,10 @@ export const Chatroom = () => {
           onClick={() => setMenuOpen((prev) => !prev)}
         >
           <img
-            className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-170 z-50"
+            className={cn(
+              "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
+              isLoading && "opacity-0"
+            )}
             src={userImg(partnerName)}
             alt="avatar"
           />
