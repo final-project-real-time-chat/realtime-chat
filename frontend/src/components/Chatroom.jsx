@@ -202,6 +202,14 @@ export const Chatroom = () => {
     }
   }, [nearBottom, latestMessageId, markAsRead, queryClient, id]);
 
+  function userImg(partnerName) {
+    if (partnerName === "deletedUser") {
+      return robot;
+    } else {
+      return `https://robohash.org/${partnerName}`;
+    }
+  }
+
   return (
     <div className="min-h-svh flex flex-col">
       <header className="h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
@@ -211,7 +219,7 @@ export const Chatroom = () => {
         >
           <img
             className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-170 z-50"
-            src={partnerName ? `https://robohash.org/${partnerName}` : robot}
+            src={userImg(partnerName)}
             alt="avatar"
           />
         </div>
@@ -352,14 +360,13 @@ export const Chatroom = () => {
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
-        
+
         <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
           <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
             <input type="file" className="hidden" />
             <span className="material-symbols-outlined p-1">add</span>
           </label>
 
-        
           <textarea
             name="textarea"
             id="textarea"
