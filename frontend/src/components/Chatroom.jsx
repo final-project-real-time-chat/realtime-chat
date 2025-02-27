@@ -9,17 +9,13 @@ import robot from "../assets/robot.png";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
 
-// const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
-//   transports: ["websocket"],
-//   withCredentials: true,
-// });
-
 export const Chatroom = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const textareaRef = useRef(null);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [editingMessage, setEditingMessage] = useState(null);
 
   const { data, error } = useQuery({
     queryKey: ["chatroom", id],
@@ -50,7 +46,7 @@ export const Chatroom = () => {
     },
   });
 
-  const mutation = useMutation({
+  const sendMessageMutation = useMutation({
     mutationFn: async (userInput) => {
       const response = await fetch(`/api/messages/send`, {
         method: "POST",
@@ -73,6 +69,30 @@ export const Chatroom = () => {
     },
   });
 
+  const editMessageMutation = useMutation({
+    mutationFn: async ({ messageId, content }) => {
+      const response = await fetch(`/api/messages/edit`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messageId, content }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to edit message");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["chatroom", id]);
+      setEditingMessage(null);
+      textareaRef.current.value = "";
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
   function handleSendMessage(e) {
     e.preventDefault();
     const userInput = e.target.textarea.value
@@ -80,7 +100,16 @@ export const Chatroom = () => {
       .filter((line) => line.trim() !== "")
       .join("\n");
     if (userInput.trim() === "") return null;
-    mutation.mutate(userInput);
+
+    if (editingMessage) {
+      editMessageMutation.mutate({
+        messageId: editingMessage._id,
+        content: userInput,
+      });
+    } else {
+      sendMessageMutation.mutate(userInput);
+    }
+
     e.target.textarea.style.height = "auto";
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   }
@@ -163,8 +192,26 @@ export const Chatroom = () => {
       });
     });
 
+    socket.on("message-updated", (updatedMessage) => {
+      if (updatedMessage.chatroom !== id) return;
+
+      queryClient.setQueryData(["chatroom", id], (prevData) => {
+        if (!prevData) return prevData;
+
+        const updatedMessages = prevData.chatroomMessages.map((message) =>
+          message._id === updatedMessage._id ? updatedMessage : message
+        );
+
+        return {
+          ...prevData,
+          chatroomMessages: updatedMessages,
+        };
+      });
+    });
+
     return () => {
       socket.off("message");
+      socket.off("message-updated");
     };
   }, [id, queryClient, nearBottom]);
 
@@ -210,6 +257,12 @@ export const Chatroom = () => {
     }
   }
 
+  function handleEditMessage(message) {
+    setEditingMessage(message);
+    textareaRef.current.value = message.content;
+    textareaRef.current.focus();
+  }
+
   return (
     <div className="min-h-svh flex flex-col">
       <header className="h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
@@ -236,6 +289,12 @@ export const Chatroom = () => {
               // onClick={() => navigate(`/`)}
             >
               Settings
+            </li>
+            <li
+              className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
+              // onClick={() => navigate(`/`)}
+            >
+              Edit Message
             </li>
             <li
               className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
@@ -312,49 +371,22 @@ export const Chatroom = () => {
                   "pt-1 flex justify-end text-[12px] text-gray-400"
                 )}
               >
-                {formatTimestamp(message.createdAt)}
+                {message.createdAt !== message.updatedAt
+                  ? `( Updated ) ${formatTimestamp(message.createdAt)}`
+                  : `${formatTimestamp(message.createdAt)}`}
               </span>
+              {message.sender.username === currentUsername && (
+                <button
+                  onClick={() => handleEditMessage(message)}
+                  className="text-blue-500 hover:underline"
+                >
+                  Edit
+                </button>
+              )}
             </div>
           ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* <form
-        className="grid grid-cols-[2rem_1fr_4rem] sticky bottom-0 gap-2 mx-2"
-        onSubmit={handleSendMessage}
-      >
-        <label className="flex items-center justify-center rounded-full h-8 mt-auto bg-blue-500 text-white text-2xl cursor-pointer hover:bg-blue-600">
-          <input type="file" className="hidden" />+
-        </label>
-        <textarea
-          className="min-h-8 outline-none border-2 bg-white text-black w-full px-1"
-          name="textarea"
-          id="textarea"
-          rows={1}
-          onInput={handleInput}
-          ref={textareaRef}
-          onKeyDown={handleKeyDown}
-          autoFocus={window.innerWidth >= 1024}
-        ></textarea>
-        <button className="relative flex items-center justify-center w-full h-8 mt-auto bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
-          <div className="svg-wrapper-1 flex items-center justify-center">
-            <div className="svg-wrapper">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-              >
-                <path fill="none" d="M0 0h24v24H0z"></path>
-                <path
-                  fill="currentColor"
-                  d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-                ></path>
-              </svg>
-            </div>
-          </div>
-        </button>
-        <Toaster />
-      </form> */}
 
       <form onSubmit={handleSendMessage} className="sticky bottom-0">
         <label htmlFor="chat" className="sr-only">

@@ -34,5 +34,41 @@ export default (io) => {
     }
   });
 
+  router.patch("/edit", async (req, res) => {
+    try {
+      const { messageId, content } = req.body;
+      const sender = req.session.user.id;
+
+      const message = await Message.findById(messageId);
+
+      if (!message) {
+        return res.status(404).json({ errorMessage: "Message not found" });
+      }
+
+      if (message.sender.toString() !== sender) {
+        return res
+          .status(403)
+          .json({ errorMessage: "You can only edit your own messages" });
+      }
+
+      message.content = content;
+      await message.save();
+
+      io.to(message.chatroom).emit("message-updated", {
+        updatedMessage: message,
+      });
+
+      res
+        .status(200)
+        .json({
+          message: "Message edited successfully",
+          updatedMessage: message,
+        });
+    } catch (error) {
+      console.error("Error editing messages:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
   return router;
 };
