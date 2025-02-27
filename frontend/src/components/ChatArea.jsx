@@ -11,6 +11,20 @@ export const ChatArea = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [maxLength, setMaxLength] = useState(20);
+
+  useEffect(() => {
+    const updateMaxLength = () => {
+      setMaxLength(window.innerWidth >= 1280 ? 80 : 20);
+    };
+
+    updateMaxLength();
+    window.addEventListener("resize", updateMaxLength);
+
+    return () => {
+      window.removeEventListener("resize", updateMaxLength);
+    };
+  }, []);
 
   const {
     data: chatroomsData,
@@ -67,13 +81,13 @@ export const ChatArea = () => {
   }, [queryClient]);
 
   return (
-    <div className="[scrollbar-width:thin] ">
-      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700">
-        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-2xl ml-2">
+    <div className="[scrollbar-width:thin]">
+      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2">
+        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
         <img
-          className="h-12 absolute left-1/2 transform -translate-x-1/2"
+          className="h-12 absolute left-1/2 transform -translate-x-1/2 xl:h-16"
           src={robot}
           alt="robot"
         />
@@ -82,7 +96,7 @@ export const ChatArea = () => {
             className="cursor-pointer flex flex-col items-center"
             onClick={() => setMenuOpen((prev) => !prev)}
           >
-            <div className="relative aspect-square h-8 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300">
+            <div className="relative aspect-square h-8 xl:h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300">
               <img
                 className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-170"
                 src={
@@ -93,7 +107,9 @@ export const ChatArea = () => {
                 alt="avatar"
               />
             </div>
-            <span>{chatroomsData?.currentUsername}</span>
+            <span className="mr-2 xl:text-xl">
+              {chatroomsData?.currentUsername}
+            </span>
           </div>
 
           {/* Settings Menu */}
@@ -155,7 +171,7 @@ export const ChatArea = () => {
                   to={`/chatarea/chats/${chatroom.chatId}`}
                 >
                   <li className="flex p-2 border-t-1 hover:bg-gray-600 duration-300">
-                    <div className="relative aspect-square h-12 border-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div className="relative aspect-square h-12 xl:h-20 border-2 bg-gray-700 rounded-full overflow-hidden">
                       <img
                         className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-150"
                         src={
@@ -172,8 +188,11 @@ export const ChatArea = () => {
                       </span>
                       {chatroom.usernames.join(", ")
                         ? chatroom.lastMessage && (
-                            <span className="text-xs">
-                              {truncateText(chatroom.lastMessage.content, 20)}
+                            <span className="text-xs xl:text-xl">
+                              {truncateText(
+                                chatroom.lastMessage.content,
+                                maxLength
+                              )}
                             </span>
                           )
                         : "Deleted account"}
@@ -198,7 +217,7 @@ export const ChatArea = () => {
               ))}
             </ul>
             <button
-              className="cursor-pointer fixed bottom-2 right-2 flex items-center px-6 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              className="xl:h-20 xl:w-30 xl:bottom-4 xl:right-4 justify-center cursor-pointer fixed bottom-2 right-2 flex items-center px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
               onClick={() => navigate("/chatarea/exist")}
             >
               <span
