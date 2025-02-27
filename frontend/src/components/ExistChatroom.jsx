@@ -90,19 +90,19 @@ export const ExistChatroom = (e) => {
       </header>
       <form
         onSubmit={handleExistChatroom}
-        className="mt-[10%] mx-auto w-full max-w-md bg-white p-6 rounded-lg shadow-lg"
+        className="mt-[10%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
-        <h1 className="text-2xl font-bold text-center mb-4 text-black">
+        <h1 className="text-2xl font-bold text-center mb-4 text-white">
           Search for a User
         </h1>
 
-        <label htmlFor="username" className="block text-gray-700 font-semibold">
+        <label htmlFor="username" className="block text-gray-300 font-semibold">
           Username
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              className="w-5 h-5 text-gray-400"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -118,13 +118,14 @@ export const ExistChatroom = (e) => {
             id="username"
             placeholder="John-Doe"
             minLength={2}
-            className="bg-gray-50 focus:border-blue-500 block ps-10 text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
         </div>
+
         <button
           type="submit"
-          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
+          className="w-full bg-blue-500 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
           Create new chatroom
         </button>
