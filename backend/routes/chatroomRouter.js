@@ -192,6 +192,15 @@ export default (io) => {
       );
 
       const partner = await User.findById(partnerId);
+      if (!partner) {
+        const partnerName = "deletedUser";
+        return res.json({
+          chatroomMessages,
+          currentUsername,
+          partnerName,
+          unreadMessagesCount,
+        });
+      }
       const partnerName = partner.username;
 
       res.json({

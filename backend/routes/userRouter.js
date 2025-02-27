@@ -266,6 +266,10 @@ export default (io) => {
 
       await Message.deleteMany({ sender: userId });
 
+      io.in(userId).disconnectSockets(true);
+
+      await User.findByIdAndDelete(userId);
+
       req.session.destroy((err) => {
         if (err) {
           console.error("Error destroying session:", err);
@@ -274,14 +278,10 @@ export default (io) => {
             .json({ errorMessage: "Internal server error" });
         }
         res.clearCookie("connect.sid");
+        res.json({ message: `User has been deleted successfully` });
       });
-
-      io.in(userId).disconnectSockets(true);
-
-      await User.findByIdAndDelete(userId);
-
-      res.json({ message: `User has been deleted successfully` });
     } catch (error) {
+      console.error("Fehler beim Löschen des Benutzers:", error);
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });

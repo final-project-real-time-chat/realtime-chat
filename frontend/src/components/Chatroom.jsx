@@ -202,6 +202,14 @@ export const Chatroom = () => {
     }
   }, [nearBottom, latestMessageId, markAsRead, queryClient, id]);
 
+  function userImg(partnerName) {
+    if (partnerName === "deletedUser") {
+      return robot;
+    } else {
+      return `https://robohash.org/${partnerName}`;
+    }
+  }
+
   return (
     <div className="min-h-svh flex flex-col">
       <header className="h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
@@ -211,7 +219,7 @@ export const Chatroom = () => {
         >
           <img
             className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-170 z-50"
-            src={partnerName ? `https://robohash.org/${partnerName}` : robot}
+            src={userImg(partnerName)}
             alt="avatar"
           />
         </div>
@@ -352,14 +360,13 @@ export const Chatroom = () => {
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
-        
+
         <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
           <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
             <input type="file" className="hidden" />
             <span className="material-symbols-outlined p-1">add</span>
           </label>
 
-        
           <textarea
             name="textarea"
             id="textarea"
@@ -368,7 +375,7 @@ export const Chatroom = () => {
             ref={textareaRef}
             onKeyDown={handleKeyDown}
             autoFocus={window.innerWidth >= 1024}
-            className="min-h-8 block mx-3 p-2 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="[scrollbar-width:thin] resize-none min-h-8 block mx-3 p-2 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Hello, word! ……"
           ></textarea>
           <button

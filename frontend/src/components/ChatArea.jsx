@@ -67,7 +67,7 @@ export const ChatArea = () => {
   }, [queryClient]);
 
   return (
-    <>
+    <div className="[scrollbar-width:thin]">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700">
         <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-2xl ml-2">
           Hello, Word!
@@ -178,7 +178,7 @@ export const ChatArea = () => {
                         alt="avatar"
                       />
                     </div>
-                    <div className={cn("flex flex-col pl-2")}>
+                    <div className="flex flex-col pl-2">
                       <span className="font-bold">
                         {chatroom.usernames.join(", ") ?? "No Username"}
                       </span>
@@ -193,11 +193,7 @@ export const ChatArea = () => {
                     <div className="ml-auto">
                       {chatroom.timestamps &&
                         chatroom.timestamps.length > 0 && (
-                          <span
-                            className={cn(
-                              "flex justify-end text-gray-400 text-xs"
-                            )}
-                          >
+                          <span className="flex justify-end text-gray-400 text-xs">
                             {formatTimestamp(chatroom.timestamps[0])}
                           </span>
                         )}
@@ -227,7 +223,7 @@ export const ChatArea = () => {
           </>
         )}
       </main>
-    </>
+    </div>
   );
 };
 
