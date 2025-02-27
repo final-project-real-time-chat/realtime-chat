@@ -352,66 +352,14 @@ export const Chatroom = () => {
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
+        
         <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
-          <label
-            className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+          <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
             <input type="file" className="hidden" />
             <span className="material-symbols-outlined p-1">add</span>
           </label>
 
-          {/* <button
-            type="button"
-            className="inline-flex justify-center pl-3 text-gray-500 cursor-pointer hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-          >
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 18"
-            >
-              <path
-                fill="currentColor"
-                d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-              />
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-              />
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-              />
-            </svg>
-            <span className="sr-only">Upload image</span>
-          </button> */}
-          {/* <button
-            type="button"
-            className="pl-3 text-gray-500 cursor-pointer hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-          >
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13.408 7.5h.01m-6.876 0h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM4.6 11a5.5 5.5 0 0 0 10.81 0H4.6Z"
-              />
-            </svg>
-            <span className="sr-only">Add emoji</span>
-          </button> */}
+        
           <textarea
             name="textarea"
             id="textarea"
@@ -425,10 +373,10 @@ export const Chatroom = () => {
           ></textarea>
           <button
             type="submit"
-            className="inline-flex justify-center pr-3 text-blue-600 cursor-pointer"
+            className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
           >
             <svg
-              className="w-7 h-7 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-blue-500 duration-200"
+              className="w-8 h-8 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-[rgb(255,50,54)] duration-200"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"

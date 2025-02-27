@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../utils/cn.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 
 export const NewChatroom = () => {
   const navigate = useNavigate();
   const { username } = useParams();
   const queryClient = useQueryClient();
+  const textareaRef = useRef(null);
 
   const mutation = useMutation({
     mutationFn: async (userInput) => {
@@ -42,16 +44,24 @@ export const NewChatroom = () => {
     mutation.mutate(userInput);
   }
 
-  function handleInput(event) {
-    const textarea = event.target;
-    const maxHeight = 150;
-    if (textarea.scrollHeight >= maxHeight) {
-      textarea.style.height = `${maxHeight}px`;
-    } else {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
+  function handleKeyDown(event) {
+    if (window.innerWidth >= 1024 && event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage({
+        preventDefault: () => {},
+        target: { textarea: textareaRef.current },
+      });
     }
   }
+
+  function handleInput(event) {
+    const textarea = event.target;
+    textarea.style.height = "auto";
+    const maxHeight = 150;
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    textarea.style.height = `${newHeight}px`;
+  }
+
   return (
     <div className="min-h-svh flex flex-col">
       <header className="h-16 flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
@@ -86,38 +96,41 @@ export const NewChatroom = () => {
         </button>
       </header>
       <div className="flex flex-col h-full flex-grow"></div>
-      <form
-        className="grid grid-cols-[2rem_1fr_4rem] sticky bottom-0 gap-2 mx-2"
-        onSubmit={handleSendMessage}
-      >
-        <label className="flex items-center justify-center rounded-full bg-blue-500 text-white text-2xl cursor-pointer hover:bg-blue-600">
-          <input type="file" className="hidden" />+
-        </label>
-        <textarea
-          className="min-h-8 outline-none border-2 bg-white text-black w-full px-1"
-          name="textarea"
-          id="textarea"
-          rows={1}
-          onInput={handleInput}
-        ></textarea>
-        <button className="relative flex items-center justify-center w-full h-full bg-[rgb(249,47,64)] text-white text-lg font-bold rounded-lg overflow-hidden transition-all duration-200 ease-in-out cursor-pointer hover:bg-[rgb(200,40,50)] active:scale-95">
-          <div className="svg-wrapper-1 flex items-center justify-center">
-            <div className="svg-wrapper">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-              >
-                <path fill="none" d="M0 0h24v24H0z"></path>
-                <path
-                  fill="currentColor"
-                  d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-                ></path>
-              </svg>
-            </div>
-          </div>
-        </button>
+      <form onSubmit={handleSendMessage} className="sticky bottom-0">
+        <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
+          <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+            <input type="file" className="hidden" />
+            <span className="material-symbols-outlined p-1">add</span>
+          </label>
+
+          <textarea
+            name="textarea"
+            id="textarea"
+            rows={1}
+            onInput={handleInput}
+            ref={textareaRef}
+            onKeyDown={handleKeyDown}
+            autoFocus={window.innerWidth >= 1024}
+            className="min-h-8 block mx-3 p-2 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Hello, word! ……"
+          ></textarea>
+
+          <button
+            type="submit"
+            className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
+          >
+            <svg
+              className="w-8 h-8 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-[rgb(255,50,54)] duration-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 18 20"
+            >
+              <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+            </svg>
+            <span className="sr-only">Send message</span>
+          </button>
+        </div>
       </form>
     </div>
   );
