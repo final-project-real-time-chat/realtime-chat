@@ -86,7 +86,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
     },
