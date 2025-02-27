@@ -67,7 +67,7 @@ export const ChatArea = () => {
   }, [queryClient]);
 
   return (
-    <div className="[scrollbar-width:thin]">
+    <div className="[scrollbar-width:thin] ">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700">
         <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-2xl ml-2">
           Hello, Word!
@@ -141,32 +141,20 @@ export const ChatArea = () => {
           )}
         </div>
       </header>
-      <main>
+      <main className="min-h-screen">
         {isLoading ? (
           <p>Loading...</p>
         ) : chatroomsError ? (
           <p>Error loading chatrooms: {chatroomsError.message}</p>
         ) : (
           <>
-            {/* <div className="flex justify-start pl-2 md:justify-center md:pl-0 bg-blue-300 w-full text-black py-1"> */}
-            {/* <button className="cursor-pointer relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-red-200 via-red-300 to-amber-400 group-hover:from-red-200 group-hover:via-red-300 group-hover:to-amber-400 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400">
-                <span className="relative px-5 py-2.5 transition-all ease-in duration-300 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
-                  Add new chat
-                </span>
-              </button> */}
-
-            {/* </div> */}
             <ul>
               {chatroomsData?.chatrooms.map((chatroom) => (
                 <Link
                   key={chatroom.chatId}
                   to={`/chatarea/chats/${chatroom.chatId}`}
                 >
-                  <li
-                    className={cn(
-                      "flex p-2 border-t-1 hover:bg-gray-600 duration-300"
-                    )}
-                  >
+                  <li className="flex p-2 border-t-1 hover:bg-gray-600 duration-300">
                     <div className="relative aspect-square h-12 border-2 bg-gray-700 rounded-full overflow-hidden">
                       <img
                         className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-150"
@@ -210,7 +198,7 @@ export const ChatArea = () => {
               ))}
             </ul>
             <button
-              className="cursor-pointer sticky bottom-2 left-full mr-2 flex items-center px-6 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              className="cursor-pointer fixed bottom-2 right-2 flex items-center px-6 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
               onClick={() => navigate("/chatarea/exist")}
             >
               <span
