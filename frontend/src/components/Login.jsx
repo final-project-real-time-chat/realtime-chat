@@ -38,26 +38,27 @@ export const Login = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen  p-6">
       <header className="flex items-center justify-between w-full max-w-md bg-gray-700 text-white p-4 rounded-lg shadow-lg">
         <h1 className="text-xl font-bold tracking-wide">Hello, Word!</h1>
         <img className="h-12" src={robot} alt="robot" />
       </header>
-
+      <Toaster />
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mt-6"
+        className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
-        <h1 className="text-2xl font-bold text-center mb-4 text-black">
+        <h1 className="text-2xl font-bold text-center mb-4 text-white">
           Login
         </h1>
-        <label htmlFor="email" className="block text-gray-700 font-semibold">
+
+        <label htmlFor="email" className="block text-gray-300 font-semibold">
           Email
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              className="w-5 h-5 text-gray-400"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -72,24 +73,25 @@ export const Login = () => {
             name="email"
             id="email"
             placeholder="Email"
-            className="bg-gray-50 focus:border-blue-500 block ps-10 text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
           />
         </div>
-        <label htmlFor="password" className="block text-gray-700 font-semibold">
+
+        <label htmlFor="password" className="block text-gray-300 font-semibold">
           Password
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              className="w-5 h-5 text-gray-400"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 512 512"
             >
-              <path d="M336 192h-16v-64C320 57.406 262.594 0 192 0S64 57.406 64 128v64H48c-26.453 0-48 21.523-48 48v224c0 26.477 21.547 48 48 48h288c26.453 0 48-21.523 48-48V240c0-26.477-21.547-48-48-48zm-229.332-64c0-47.063 38.27-85.332 85.332-85.332s85.332 38.27 85.332 85.332v64H106.668zm0 0" />
+              <path d="M336 192h-16v-64C320 57.406 262.594 0 192 0S64 57.406 64 128v64H48c-26.453 0-48 21.523-48 48v224c0 26.477 21.547 48 48 48h288c26.453 0 48-21.523 48-48V240c0-26.477-21.547-48-48-48zm-229.332-64c0-47.063 38.27-85.332 85.332-85.332s85.332 38.27 85.332 85.332v64H106.668z" />
             </svg>
           </div>
 
@@ -99,7 +101,7 @@ export const Login = () => {
             id="password"
             placeholder="Password"
             minLength={6}
-            className="bg-gray-50 focus:border-blue-500 block ps-10 pe-10 text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
           <div
@@ -129,24 +131,24 @@ export const Login = () => {
             )}
           </div>
         </div>
+
         <button
           type="button"
           onClick={() => navigate("/forgot-pw")}
-          className="text-black text-sm cursor-pointer mb-3"
+          className="text-white text-sm cursor-pointer mb-3 hover:underline"
         >
           Forgot Password?
         </button>
 
         <button
           type="submit"
-          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
+          className="cursor-pointer w-full bg-blue-500 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
           Login
         </button>
-        <Toaster />
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-black">Are you not registered yet?</p>
+        <p className="text-white">Are you not registered yet?</p>
         <button
           className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
           onClick={() => navigate("/register")}
@@ -156,7 +158,7 @@ export const Login = () => {
       </div>
 
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-black">Do you need to verify your account?</p>
+        <p className="text-white">Do you need to verify your account?</p>
         <button
           className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
           onClick={() => navigate("/register/verify")}
