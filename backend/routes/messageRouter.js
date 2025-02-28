@@ -54,16 +54,14 @@ export default (io) => {
       message.content = content;
       await message.save();
 
-      io.to(message.chatroom).emit("message-updated", {
+      io.to(message.chatroom.toString()).emit("message-updated", {
         updatedMessage: message,
       });
 
-      res
-        .status(200)
-        .json({
-          message: "Message edited successfully",
-          updatedMessage: message,
-        });
+      res.status(200).json({
+        message: "Message edited successfully",
+        updatedMessage: message,
+      });
     } catch (error) {
       console.error("Error editing messages:", error);
       res.status(500).json({ errorMessage: "Internal server error" });
