@@ -75,6 +75,10 @@ export const ChatArea = () => {
       queryClient.invalidateQueries(["chatrooms"]);
     });
 
+    socket.on("message-updated", () => {
+      queryClient.invalidateQueries(["chatroom"]);
+    });
+
     return () => {
       socket.disconnect();
     };
