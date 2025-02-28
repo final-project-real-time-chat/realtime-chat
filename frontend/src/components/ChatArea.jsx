@@ -12,17 +12,18 @@ export const ChatArea = () => {
   const queryClient = useQueryClient();
   const [menuOpen, setMenuOpen] = useState(false);
   const [maxLength, setMaxLength] = useState(20);
-
+  
+  window.scrollTo(0, 0);
+  
   useEffect(() => {
     const updateMaxLength = () => {
       setMaxLength(window.innerWidth >= 1280 ? 80 : 20);
     };
-
+    
     updateMaxLength();
     window.addEventListener("resize", updateMaxLength);
-
-    window.scrollTo(0, 0);
-
+    
+    
     return () => {
       window.removeEventListener("resize", updateMaxLength);
     };
