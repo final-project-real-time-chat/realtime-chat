@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
 
 import robot from "../assets/robot.png";
+import notification from "../assets/positive-notification.wav";
 import { cn } from "../utils/cn.js";
 
 export const ChatArea = () => {
@@ -12,18 +13,20 @@ export const ChatArea = () => {
   const queryClient = useQueryClient();
   const [menuOpen, setMenuOpen] = useState(false);
   const [maxLength, setMaxLength] = useState(20);
-  
+  const audioRef = useRef(new Audio(notification));
+
+  audioRef.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+
   window.scrollTo(0, 0);
-  
+
   useEffect(() => {
     const updateMaxLength = () => {
       setMaxLength(window.innerWidth >= 1280 ? 80 : 20);
     };
-    
+
     updateMaxLength();
     window.addEventListener("resize", updateMaxLength);
-    
-    
+
     return () => {
       window.removeEventListener("resize", updateMaxLength);
     };
@@ -76,10 +79,17 @@ export const ChatArea = () => {
 
     socket.on("message", () => {
       queryClient.invalidateQueries(["chatrooms"]);
+      audioRef.current.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
     });
 
-    socket.on("message-updated", () => {
+    socket.on("message-update", () => {
       queryClient.invalidateQueries(["chatroom"]);
+    });
+
+    socket.on("message-delete", () => {
+      queryClient.invalidateQueries(["chatrooms"]);
     });
 
     return () => {
@@ -177,7 +187,7 @@ export const ChatArea = () => {
                   key={chatroom.chatId}
                   to={`/chatarea/chats/${chatroom.chatId}`}
                 >
-                  <li className="flex p-2 border-t-1 hover:bg-gray-600 duration-300">
+                  <li className="flex p-2 py-4 border-t-1 hover:bg-gray-600 duration-300">
                     <div className="relative aspect-square h-12 xl:h-20 border-2 bg-gray-700 rounded-full overflow-hidden">
                       <img
                         className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-150"
@@ -189,7 +199,7 @@ export const ChatArea = () => {
                         alt="avatar"
                       />
                     </div>
-                    <div className="flex flex-col pl-2">
+                    <div className="flex flex-col pl-4">
                       <span className="font-bold">
                         {chatroom.usernames.join(", ") ?? "No Username"}
                       </span>
@@ -212,8 +222,8 @@ export const ChatArea = () => {
                           </span>
                         )}
                       {chatroom.unreadMessagesCount > 0 && (
-                        <div className="text-amber-400 border-2 rounded-full px-2 flex items-center justify-center w-8 h-8 mt-1">
-                          <span className="animate-pulse">
+                        <div className="text-amber-400 border-2 rounded-full px-2 flex items-center ml-auto justify-center w-7 h-7 mt-1">
+                          <span className="animate-pulse text-xs">
                             {chatroom.unreadMessagesCount}
                           </span>
                         </div>

@@ -6,16 +6,23 @@ import { io } from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
 
 import robot from "../assets/robot.png";
+import fingerSnap from "../assets/finger-snap.mp3";
+import positiveNotification from "../assets/positive-notification.wav";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
-  const textareaRef = useRef(null);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [editingMessage, setEditingMessage] = useState(null);
+  const textareaRef = useRef(null);
+  const audioSendRef = useRef(new Audio(fingerSnap));
+  const audioReceiveRef = useRef(new Audio(positiveNotification));
+
+  audioSendRef.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+  audioReceiveRef.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
@@ -63,6 +70,9 @@ export const Chatroom = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["chatroom", id]);
       textareaRef.current.value = "";
+      audioSendRef.current.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
     },
     onError: (error) => {
       console.error(error.message);
@@ -87,6 +97,31 @@ export const Chatroom = () => {
       queryClient.invalidateQueries(["chatroom", id]);
       setEditingMessage(null);
       textareaRef.current.value = "";
+      audioSendRef.current.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
+  const deleteMessageMutation = useMutation({
+    mutationFn: async ({ messageId, content }) => {
+      const response = await fetch(`/api/messages/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messageId, content }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete message");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["chatroom", id]);
     },
     onError: (error) => {
       console.error(error.message);
@@ -113,6 +148,7 @@ export const Chatroom = () => {
     e.target.textarea.style.height = "auto";
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   }
+
   function handleKeyDown(event) {
     if (window.innerWidth >= 1024 && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -177,7 +213,7 @@ export const Chatroom = () => {
       if (message.chatroom !== id) return;
 
       queryClient.setQueryData(["chatroom", id], (prevData) => {
-       if (!prevData) {
+        if (!prevData) {
           return { chatroomMessages: [message] };
         }
 
@@ -188,11 +224,17 @@ export const Chatroom = () => {
             : prevData.unreadMessagesCount + 1,
           chatroomMessages: [...prevData.chatroomMessages, message],
         };
+
+        if (!nearBottom) {
+          audioReceiveRef.current.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+        }
         return updatedData;
       });
     });
 
-    socket.on("message-updated", ({updatedMessage}) => {
+    socket.on("message-update", ({ updatedMessage }) => {
       if (updatedMessage.chatroom.toString() !== id) return;
 
       queryClient.setQueryData(["chatroom", id], (prevData) => {
@@ -209,9 +251,27 @@ export const Chatroom = () => {
       });
     });
 
+    socket.on("message-delete", ({ deletedMessage }) => {
+      if (deletedMessage.chatroom.toString() !== id) return;
+
+      queryClient.setQueryData(["chatroom", id], (prevData) => {
+        if (!prevData) return prevData;
+
+        const deletedMessages = prevData.chatroomMessages.filter(
+          (message) => message._id !== deletedMessage._id
+        );
+
+        return {
+          ...prevData,
+          chatroomMessages: deletedMessages,
+        };
+      });
+    });
+
     return () => {
       socket.off("message");
-      socket.off("message-updated");
+      socket.off("message-update");
+      socket.off("message-delete");
     };
   }, [id, queryClient, nearBottom]);
 
@@ -261,6 +321,10 @@ export const Chatroom = () => {
     setEditingMessage(message);
     textareaRef.current.value = message.content;
     textareaRef.current.focus();
+  }
+
+  function handleDeleteMessage(message) {
+    deleteMessageMutation.mutate({ messageId: message._id });
   }
 
   return (
@@ -356,7 +420,7 @@ export const Chatroom = () => {
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-1 my-4 rounded-2xl w-fit max-w-[75%]",
+                "px-4 pt-2 mx-1 my-4 rounded-xl w-fit max-w-[75%]",
                 message.sender.username === currentUsername
                   ? "border-blue-400 border-2 ml-auto rounded-br-none"
                   : "border-amber-400 border-2 rounded-bl-none"
@@ -379,12 +443,36 @@ export const Chatroom = () => {
                   : `${formatTimestamp(message.createdAt)}`}
               </span>
               {message.sender.username === currentUsername && (
-                <button
-                  onClick={() => handleEditMessage(message)}
-                  className="text-blue-500 hover:underline"
-                >
-                  Edit
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={() => handleEditMessage(message)}
+                    className="absolute -left-9 -top-13 text-gray-400"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="14px"
+                      width="14px"
+                      viewBox="0 -960 960 960"
+                      fill="currentColor"
+                    >
+                      <path d="M186.67-120q-27 0-46.84-19.83Q120-159.67 120-186.67v-586.66q0-27 19.83-46.84Q159.67-840 186.67-840h389L509-773.33H186.67v586.66h586.66v-324.66L840-578v391.33q0 27-19.83 46.84Q800.33-120 773.33-120H186.67ZM480-480ZM360-360v-170l377-377q10-10 22.33-14.67 12.34-4.66 24.67-4.66 12.67 0 25.04 5 12.38 5 22.63 15l74 75q9.4 9.97 14.53 22.02 5.13 12.05 5.13 24.51 0 12.47-4.83 24.97-4.83 12.5-14.83 22.5L530-360H360Zm499-424.67-74.67-74.66L859-784.67Zm-432.33 358H502l246-246L710-710l-38.33-37.33-245 244.33v76.33ZM710-710l-38.33-37.33L710-710l38 37.33L710-710Z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeleteMessage(message)}
+                    className="absolute -left-9 -top-4 text-gray-400"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="14px"
+                      width="14px"
+                      viewBox="0 -960 960 960"
+                      fill="currentColor"
+                    >
+                      <path d="M267.33-120q-27.5 0-47.08-19.58-19.58-19.59-19.58-47.09V-740H160v-66.67h192V-840h256v33.33h192V-740h-40.67v553.33q0 27-19.83 46.84Q719.67-120 692.67-120H267.33Zm425.34-620H267.33v553.33h425.34V-740Zm-328 469.33h66.66v-386h-66.66v386Zm164 0h66.66v-386h-66.66v386ZM267.33-740v553.33V-740Z" />
+                    </svg>
+                  </button>
+                </div>
               )}
             </div>
           ))}
