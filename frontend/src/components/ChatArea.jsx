@@ -21,6 +21,8 @@ export const ChatArea = () => {
     updateMaxLength();
     window.addEventListener("resize", updateMaxLength);
 
+    window.scrollTo(0, 0);
+
     return () => {
       window.removeEventListener("resize", updateMaxLength);
     };
