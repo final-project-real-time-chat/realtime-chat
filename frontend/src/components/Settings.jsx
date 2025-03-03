@@ -94,14 +94,14 @@ export const Settings = () => {
         <h1 className="text-center text-4xl mt-5">Settings</h1>
         <form
           onSubmit={changePassword}
-          className="text-center mt-[5%] mx-auto w-full max-w-md bg-white p-6 rounded-lg shadow-lg"
+          className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
         >
-          <h1 className="text-2xl font-bold text-center mb-4 text-black">
+          <h1 className="text-2xl font-bold text-center mb-4 text-white">
             Change Password:
           </h1>
           <label
             htmlFor="oldPassword"
-            className="block text-gray-700 font-semibold"
+            className="block text-gray-300 font-semibold"
           >
             Your current Password:
           </label>
@@ -124,7 +124,7 @@ export const Settings = () => {
               id="oldPassword"
               placeholder="Your current password"
               minLength={6}
-              className="bg-gray-50 focus:border-blue-500 block ps-10 pe-10 text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 tracking-widest"
+              className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
               autoFocus
             />
@@ -158,7 +158,7 @@ export const Settings = () => {
           </div>
           <label
             htmlFor="newPassword"
-            className="block text-gray-700 font-semibold"
+            className="block text-gray-300 font-semibold"
           >
             Your new Password:
           </label>
@@ -181,7 +181,7 @@ export const Settings = () => {
               id="newPassword"
               placeholder="Your new password"
               minLength={6}
-              className="bg-gray-50 focus:border-blue-500 block ps-10 pe-10 text-black w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 tracking-widest"
+              className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
             />
 
@@ -221,7 +221,7 @@ export const Settings = () => {
           </button>
           {/* </div> */}
         </form>
-        <form className="mt-[10%] mx-auto w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+        <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>
             <h1 className="text-2xl font-bold text-center mb-4 text-red-600">
               Delete your Account
