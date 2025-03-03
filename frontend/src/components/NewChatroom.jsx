@@ -64,13 +64,13 @@ export const NewChatroom = () => {
 
   return (
     <div className="min-h-svh flex flex-col">
-      <header className="h-16 flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
+      <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <img
-          className="aspect-square h-12 border-2 bg-gray-400 rounded-full"
+          className="relative mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50 aspect-square h-12 border-2 bg-gray-400 rounded-full"
           src={username ? `https://robohash.org/${username}` : robot}
           alt="avatar"
         />
-        <h1 className="tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
+        <h1 className="md:text-base xl:text-3xl tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
           {username}
         </h1>
 

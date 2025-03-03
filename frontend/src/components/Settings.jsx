@@ -59,13 +59,13 @@ export const Settings = () => {
   });
 
   return (
-    <>
-      <header className="h-16 flex items-center justify-between pl-2 sticky top-0 bg-gray-700">
-        <h1 className="flex items-center tracking-widest font-bold">
+    <div className="min-h-svh flex flex-col">
+      <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
+        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
         <img
-          className="h-12 absolute left-1/2 transform -translate-x-1/2"
+          className="h-12 absolute left-1/2 transform -translate-x-1/2 xl:h-16"
           src={robot}
           alt="robot"
         />
@@ -255,6 +255,6 @@ export const Settings = () => {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 };

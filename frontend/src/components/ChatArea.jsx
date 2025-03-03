@@ -6,7 +6,6 @@ import { io } from "socket.io-client";
 
 import robot from "../assets/robot.png";
 import notification from "../assets/positive-notification.wav";
-import { cn } from "../utils/cn.js";
 
 export const ChatArea = () => {
   const navigate = useNavigate();
@@ -99,7 +98,7 @@ export const ChatArea = () => {
 
   return (
     <div className="[scrollbar-width:thin]">
-      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2">
+      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
         <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
