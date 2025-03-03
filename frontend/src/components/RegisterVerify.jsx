@@ -37,7 +37,7 @@ export const RegisterVerify = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen  p-6">
       <header className="flex items-center justify-between w-full max-w-md bg-gray-700 text-white p-4 rounded-lg shadow-lg">
-        <h1 className="text-xl font-bold tracking-wide">Hello, World!</h1>
+        <h1 className="text-xl font-bold tracking-wide">Hello, Word!</h1>
         <img className="h-12" src={robot} alt="robot" />
       </header>
       <Toaster />

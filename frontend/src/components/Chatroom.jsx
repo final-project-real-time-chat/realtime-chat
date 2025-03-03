@@ -321,6 +321,11 @@ export const Chatroom = () => {
     setEditingMessage(message);
     textareaRef.current.value = message.content;
     textareaRef.current.focus();
+    textareaRef.current.style.outline = "2px solid yellow";
+
+    setTimeout(() => {
+      textareaRef.current.style.outline = "";
+    }, 3000);
   }
 
   function handleDeleteMessage(message) {

@@ -134,7 +134,7 @@ export const ChatArea = () => {
 
           {/* Settings Menu */}
           {menuOpen && (
-            <ul className="border-gray-300 border-l-2 border-b-2 bg-gray-700 absolute right-0 backdrop-blur-xs rounded-bl-2xl shadow-lg z-999 duration-1000">
+            <ul className="border-gray-300 border-l-2 border-b-2 bg-gray-700 absolute right-0 xl:-right-2 xl:top-23 backdrop-blur-xs rounded-bl-2xl shadow-lg z-999 duration-300">
               <li
                 className="hover:bg-gray-600 cursor-pointer  text-white font-extrabold duration-300  px-3 py-1 md:px-8"
                 onClick={() => navigate(`/profile`)}
@@ -153,7 +153,7 @@ export const ChatArea = () => {
               >
                 Delete Chat
               </li>
-              <li
+              {/* <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
                 // onClick={() => navigate(`/`)}
@@ -166,7 +166,7 @@ export const ChatArea = () => {
                 // onClick={() => navigate(`/`)}
               >
                 Legal
-              </li>
+              </li> */}
               <li
                 className="hover:bg-gray-600 rounded-bl-2xl cursor-pointer text-red-600 font-extrabold  duration-300 px-3 py-1 md:px-8 outline-none"
                 onClick={() => logoutMutation.mutate()}

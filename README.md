@@ -9,7 +9,7 @@ This project is a real-time chat application built with the MERN stack (MongoDB,
 ### TOOLS
 
 - VSCODE: https://code.visualstudio.com
-  - **Team members: synchronize ALL extensions**
+- **Team members: synchronize ALL extensions**
 - GITHUB: https://github.com
 - GOOGLE-MEET: https://meet.google.com
 - TRELLO: https://trello.com
@@ -22,6 +22,12 @@ This project is a real-time chat application built with the MERN stack (MongoDB,
 ##### FRONTEND
 
 - VITE - react.js: https://vite.dev/guide
+
+***Used Notification Sounds & Icon***
+-   https://mixkit.co/free-sound-effects/robot/
+-   https://pixabay.com/de/sound-effects/search/finger%20snap/
+-   https://www.flaticon.com/free-icon/robot_2593635?term=robot&page=1&position=35&origin=search&related_id=2593635
+
 
 ```bash
 npm create vite@latest
