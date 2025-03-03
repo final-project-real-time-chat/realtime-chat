@@ -450,8 +450,8 @@ export const Chatroom = () => {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      height="14px"
-                      width="14px"
+                      height="16px"
+                      width="16px"
                       viewBox="0 -960 960 960"
                       fill="currentColor"
                     >
@@ -464,8 +464,8 @@ export const Chatroom = () => {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      height="14px"
-                      width="14px"
+                      height="16px"
+                      width="16px"
                       viewBox="0 -960 960 960"
                       fill="currentColor"
                     >
