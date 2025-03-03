@@ -54,6 +54,10 @@ export default (io) => {
       message.content = content;
       await message.save();
 
+      await Message.populate(message, {
+        path: "sender",
+      });
+
       io.to(message.chatroom.toString()).emit("message-update", {
         updatedMessage: message,
       });
