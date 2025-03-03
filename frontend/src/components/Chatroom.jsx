@@ -420,7 +420,7 @@ export const Chatroom = () => {
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-1 my-4 rounded-xl w-fit max-w-[75%]",
+                "px-4 pt-2 mx-1 my-6 rounded-xl w-fit max-w-[75%]",
                 message.sender.username === currentUsername
                   ? "border-blue-400 border-2 ml-auto rounded-br-none"
                   : "border-amber-400 border-2 rounded-bl-none"
@@ -430,7 +430,7 @@ export const Chatroom = () => {
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              <p className="break-words whitespace-pre-line">
+              <p className="break-words whitespace-pre-line min-w-40">
                 {message.content}
               </p>
               <span
@@ -446,7 +446,7 @@ export const Chatroom = () => {
                 <div className="relative">
                   <button
                     onClick={() => handleEditMessage(message)}
-                    className="absolute -left-9 -top-13 text-gray-400"
+                    className="absolute -left-3 top-1 text-gray-400"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -460,7 +460,7 @@ export const Chatroom = () => {
                   </button>
                   <button
                     onClick={() => handleDeleteMessage(message)}
-                    className="absolute -left-9 -top-4 text-gray-400"
+                    className="absolute top-1 -right-3 text-gray-400"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -499,7 +499,7 @@ export const Chatroom = () => {
             onKeyDown={handleKeyDown}
             autoFocus={window.innerWidth >= 1024}
             className="[scrollbar-width:thin] resize-none min-h-8 block mx-3 p-2 w-full text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Hello, word! ……"
+            placeholder="Hello, Word! …"
           ></textarea>
           <button
             type="submit"
