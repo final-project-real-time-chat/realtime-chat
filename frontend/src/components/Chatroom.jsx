@@ -15,7 +15,6 @@ export const Chatroom = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [editingMessage, setEditingMessage] = useState(null);
   const textareaRef = useRef(null);
   const audioSendRef = useRef(new Audio(fingerSnap));
@@ -335,10 +334,7 @@ export const Chatroom = () => {
   return (
     <div className="min-h-svh flex flex-col">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <div
-          className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50"
-          onClick={() => setMenuOpen((prev) => !prev)}
-        >
+        <div className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-10">
           <img
             className={cn(
               "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
@@ -348,40 +344,6 @@ export const Chatroom = () => {
             alt="avatar"
           />
         </div>
-        {menuOpen && (
-          <ul className="border-gray-300 border-r-2 border-b-2 bg-gray-700 absolute left-0 mt-50 backdrop-blur-xs rounded-br-2xl shadow-lg duration-1000">
-            <li
-              className="hover:bg-gray-600 cursor-pointer  text-white font-extrabold duration-300  px-3 pb-1 pt-3 md:px-8 overflow-hidden"
-              // onClick={() => navigate(`/`)}
-            >
-              Profile
-            </li>
-            <li
-              className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8"
-              // onClick={() => navigate(`/`)}
-            >
-              Settings
-            </li>
-            <li
-              className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
-              // onClick={() => navigate(`/`)}
-            >
-              Edit Message
-            </li>
-            <li
-              className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
-              // onClick={() => navigate(`/`)}
-            >
-              Delete Message
-            </li>
-            <li
-              className="hover:bg-gray-600 rounded-br-2xl cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
-              // onClick={() => navigate(`/`)}
-            >
-              Delete Chat
-            </li>
-          </ul>
-        )}
         <h1 className="md:text-base xl:text-3xl tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
           {partnerName}
         </h1>
@@ -425,9 +387,9 @@ export const Chatroom = () => {
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-1 my-6 rounded-xl w-fit max-w-[75%]",
+                "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%]",
                 message.sender.username === currentUsername
-                  ? "border-blue-400 border-2 ml-auto rounded-br-none"
+                  ? "border-blue-400 border-2 rounded-br-none ml-auto"
                   : "border-amber-400 border-2 rounded-bl-none"
               )}
               key={message._id}
