@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import robot from "../assets/robot.png";
 import { useQuery } from "@tanstack/react-query";
+import { cn } from "../utils/cn.js";
 
 export const Profile = () => {
   const navigate = useNavigate();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const response = await fetch("/api/users/current");
@@ -71,20 +72,22 @@ export const Profile = () => {
           </svg>
         </button>
       </header>
-      <main className="flex flex-col justify-center mt-5 mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
-        <img
-          src={username ? `https://robohash.org/${username}` : robot}
-          alt=""
-          className="m-auto mb-5"
-        />
-        <p className="mx-auto font-bold">Username:</p>
-        <p className="mx-auto mb-3"> {username}</p>
-        <p className="mx-auto font-bold">Email: </p>
-        <p className="mx-auto mb-3">{usermail}</p>
+      {!isLoading && (
+        <main className="flex flex-col justify-center mt-5 mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
+          <img
+            src={username ? `https://robohash.org/${username}` : robot}
+            alt=""
+            className="m-auto mb-5"
+          />
+          <p className="mx-auto font-bold">Username:</p>
+          <p className="mx-auto mb-3 "> {username}</p>
+          <p className="mx-auto font-bold">Email: </p>
+          <p className="mx-auto mb-3 ">{usermail}</p>
 
-        <p className="mx-auto font-bold">Registriert am:</p>
-        <p className="mx-auto">{rightDate}</p>
-      </main>
+          <p className="mx-auto font-bold">Registriert am:</p>
+          <p className="mx-auto ">{rightDate}</p>
+        </main>
+      )}
     </div>
   );
 };

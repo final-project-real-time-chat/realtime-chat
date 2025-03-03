@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
+import { cn } from "../utils/cn.js";
 
 import robot from "../assets/robot.png";
 import notification from "../assets/positive-notification.wav";
@@ -114,7 +115,10 @@ export const ChatArea = () => {
           >
             <div className="relative aspect-square h-8 xl:h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300">
               <img
-                className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-170"
+                className={cn(
+                  "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
+                  isLoading && "opacity-0"
+                )}
                 src={
                   chatroomsData?.currentUsername
                     ? `https://robohash.org/${chatroomsData?.currentUsername}`

@@ -421,7 +421,7 @@ export const Chatroom = () => {
             <div
               className={cn(
                 "px-4 pt-2 mx-1 my-4 rounded-xl w-fit max-w-[75%]",
-                message.sender.username === currentUsername
+                message.sender.username == currentUsername
                   ? "border-blue-400 border-2 ml-auto rounded-br-none"
                   : "border-amber-400 border-2 rounded-bl-none"
               )}
