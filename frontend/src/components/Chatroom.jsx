@@ -329,7 +329,7 @@ export const Chatroom = () => {
 
   return (
     <div className="min-h-svh flex flex-col">
-      <header className="h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
+      <header className="z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <div
           className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50"
           onClick={() => setMenuOpen((prev) => !prev)}
