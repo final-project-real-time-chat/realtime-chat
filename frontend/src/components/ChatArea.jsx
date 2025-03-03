@@ -133,7 +133,7 @@ export const ChatArea = () => {
             <ul className="border-gray-300 border-l-2 border-b-2 bg-gray-700 absolute right-0 backdrop-blur-xs rounded-bl-2xl shadow-lg z-999 duration-1000">
               <li
                 className="hover:bg-gray-600 cursor-pointer  text-white font-extrabold duration-300  px-3 py-1 md:px-8"
-                // onClick={() => navigate(`/`)}
+                onClick={() => navigate(`/profile`)}
               >
                 Profile
               </li>

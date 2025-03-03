@@ -11,6 +11,7 @@ import { ForgotPw } from "./components/ForgotPw.jsx";
 import { NewPassword } from "./components/NewPassword.jsx";
 import { PageNotFound } from "./components/PageNotFound.jsx";
 import PreventZoom from "./utils/PreventZoom.js";
+import { Profile } from "./components/Profile.jsx";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/register/verify" element={<RegisterVerify />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
 
           <Route path="/chatarea" element={<ChatArea />} />
           <Route path="/chatarea/exist" element={<ExistChatroom />} />
