@@ -239,7 +239,7 @@ export const Settings = () => {
       </main>
 
       {show && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-4">
+        <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg flex flex-col gap-2 text-center xl:top-25">
           <span>Do you really want to delete your account?</span>
           <button
             onClick={() => deleteAccountMutation.mutate()}

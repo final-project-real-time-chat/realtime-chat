@@ -147,26 +147,19 @@ export const ChatArea = () => {
               >
                 Settings
               </li>
-              <li
+              {/* <li
                 className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
                 // onClick={() => navigate(`/`)}
               >
                 Delete Chat
-              </li>
-              {/* <li
+              </li> */}
+               <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
-                // onClick={() => navigate(`/`)}
+                onClick={() => navigate(`/about-us`)}
               >
                 About us
               </li>
-              <li
-                className="hover:bg-gray-600 cursor-pointer text-white 
-                duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
-                // onClick={() => navigate(`/`)}
-              >
-                Legal
-              </li> */}
               <li
                 className="hover:bg-gray-600 rounded-bl-2xl cursor-pointer text-red-600 font-extrabold  duration-300 px-3 py-1 md:px-8 outline-none"
                 onClick={() => logoutMutation.mutate()}
