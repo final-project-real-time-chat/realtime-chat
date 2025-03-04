@@ -1,11 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import "./PageNotFound.css";
+import robot from "../assets/robot.png";
 
 export function PageNotFound() {
   const navigate = useNavigate();
 
   return (
     <>
+      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
+        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+          Hello, Word!
+        </h1>
+        <img
+          className="h-12 absolute left-1/2 transform -translate-x-1/2 xl:h-16"
+          src={robot}
+          alt="robot"
+        />
+        <button
+          onClick={() => navigate("/chatarea")}
+          className="cursor-pointer pr-4 scr"
+        >
+          <svg
+            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 16 16"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"
+            />
+          </svg>
+        </button>
+      </header>
       <div className="main_wrapper">
         <div className="main">
           <div className="antenna">
@@ -74,12 +105,6 @@ export function PageNotFound() {
           <div className="text_4043">4</div>
         </div>
       </div>
-      <button
-        onClick={() => navigate(-1)}
-        className="absolute bottom-8 right-4 bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:from-red-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300"
-      >
-        Go Back
-      </button>
     </>
   );
 }

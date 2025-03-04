@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
@@ -27,6 +27,7 @@ export const Chatroom = () => {
     queryKey: ["chatroom", id],
     queryFn: async () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
+
       return response.json();
     },
   });
@@ -329,6 +330,10 @@ export const Chatroom = () => {
 
   function handleDeleteMessage(message) {
     deleteMessageMutation.mutate({ messageId: message._id });
+  }
+
+  if ((data === undefined && !isLoading) || data?.errorMessage) {
+    return <Navigate to={"/404"}></Navigate>;
   }
 
   return (
