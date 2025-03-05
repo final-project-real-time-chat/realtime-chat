@@ -36,7 +36,7 @@ export const NewPassword = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen  p-6 dark:bg-[#1D232A] dark:bg-none bg-gradient-to-r  from-amber-200 to-blue-300">
       <header className="flex items-center justify-between w-full max-w-md bg-gray-700 text-white p-4 rounded-lg shadow-lg">
         <h1 className="text-xl font-bold tracking-wide">Hello, Word!</h1>
         <img className="h-12" src={robot} alt="robot" />
@@ -46,10 +46,13 @@ export const NewPassword = () => {
         onSubmit={handleNewPw}
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
-        <h1 className="text-2xl font-bold text-center mb-4 text-white">
+        <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
           Reset your Password
         </h1>
-        <label htmlFor="email" className="block text-gray-300 font-semibold">
+        <label
+          htmlFor="email"
+          className="block dark:text-gray-300 text-gray-600 font-semibold"
+        >
           Email
         </label>
         <div className="relative mb-4">
@@ -70,12 +73,15 @@ export const NewPassword = () => {
             name="email"
             id="email"
             placeholder="Email"
-            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
           />
         </div>
-        <label htmlFor="key" className="block text-gray-300 font-semibold">
+        <label
+          htmlFor="key"
+          className="block text-gray-600 dark:text-gray-300 font-semibold"
+        >
           Key
         </label>
         <div className="relative mb-4">
@@ -95,11 +101,14 @@ export const NewPassword = () => {
             name="key"
             id="key"
             placeholder="Enter your key"
-            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
         </div>
-        <label htmlFor="newPw" className="block text-gray-300 font-semibold">
+        <label
+          htmlFor="newPw"
+          className="block text-gray-600 dark:text-gray-300 font-semibold"
+        >
           New Password
         </label>
         <div className="relative mb-4">
@@ -119,7 +128,7 @@ export const NewPassword = () => {
             name="newPw"
             id="newPw"
             placeholder="Enter your new Password"
-            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             minLength={6}
             autoComplete="new-password"

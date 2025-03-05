@@ -36,7 +36,7 @@ export const ForgotPw = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen  p-6 dark:bg-[#1D232A] dark:bg-none bg-gradient-to-r  from-amber-200 to-blue-300">
       <header className="flex items-center justify-between w-full max-w-md bg-gray-700 text-white p-4 rounded-lg shadow-lg">
         <h1 className="text-xl font-bold tracking-wide">Hello, Word!</h1>
         <img className="h-12" src={robot} alt="robot" />
@@ -46,10 +46,13 @@ export const ForgotPw = () => {
         onSubmit={handleResetPw}
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
-        <h1 className="text-2xl font-bold text-center mb-4 text-white">
+        <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
           Reset your Password
         </h1>
-        <label htmlFor="email" className="block text-gray-300 font-semibold">
+        <label
+          htmlFor="email"
+          className="block dark:text-gray-300 text-gray-600 font-semibold"
+        >
           Email
         </label>
         <div className="relative mb-4">
@@ -70,7 +73,7 @@ export const ForgotPw = () => {
             name="email"
             id="email"
             placeholder="Email"
-            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
           />
@@ -84,7 +87,7 @@ export const ForgotPw = () => {
         <Toaster />
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-white">Back to Login</p>
+        <p className="dark:text-white text-gray-600">Back to Login</p>
         <button
           className=" cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
           onClick={() => navigate("/")}
