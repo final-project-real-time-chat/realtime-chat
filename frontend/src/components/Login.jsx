@@ -148,9 +148,9 @@ export const Login = () => {
         </button>
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-white">Are you not registered yet?</p>
+        <p className="text-white text-sm">Not Registered yet?</p>
         <button
-          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
+          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm text-nowrap"
           onClick={() => navigate("/register")}
         >
           Click here
@@ -158,9 +158,11 @@ export const Login = () => {
       </div>
 
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="text-white">Do you need to verify your account?</p>
+        <p className="text-white text-sm">
+          Not verified your account?
+        </p>
         <button
-          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
+          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm text-nowrap"
           onClick={() => navigate("/register/verify")}
         >
           Click here
