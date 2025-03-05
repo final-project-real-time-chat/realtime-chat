@@ -59,9 +59,9 @@ export const Settings = () => {
   });
 
   return (
-    <div className="min-h-svh flex flex-col">
+    <div className="min-h-svh flex flex-col dark:bg-base-100 bg-gray-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+        <h1 className=" flex text-white items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
         <img
@@ -74,7 +74,7 @@ export const Settings = () => {
           className="cursor-pointer pr-4"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -96,12 +96,12 @@ export const Settings = () => {
           onSubmit={changePassword}
           className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
         >
-          <h1 className="text-2xl font-bold text-center mb-4 text-white">
+          <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
             Change Password:
           </h1>
           <label
             htmlFor="oldPassword"
-            className="block text-gray-300 font-semibold"
+            className="block text-gray-600 dark:text-gray-300 font-semibold"
           >
             Your current Password:
           </label>
@@ -124,7 +124,7 @@ export const Settings = () => {
               id="oldPassword"
               placeholder="Your current password"
               minLength={6}
-              className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+              className="bg-white/10 text-gray-500 dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
               autoFocus
             />
@@ -158,7 +158,7 @@ export const Settings = () => {
           </div>
           <label
             htmlFor="newPassword"
-            className="block text-gray-300 font-semibold"
+            className="block text-gray-600 dark:text-gray-300 font-semibold"
           >
             Your new Password:
           </label>
@@ -181,7 +181,7 @@ export const Settings = () => {
               id="newPassword"
               placeholder="Your new password"
               minLength={6}
-              className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+              className="bg-white/10 text-gray-500 dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
             />
 

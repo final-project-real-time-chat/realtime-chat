@@ -53,9 +53,9 @@ export const ExistChatroom = (e) => {
   }
 
   return (
-    <>
+    <div className="min-h-svh dark:bg-base-100 bg-gray-300">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 h-16 xl:p-2 xl:h-25">
-        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+        <h1 className="text-white flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
         <img
@@ -68,7 +68,7 @@ export const ExistChatroom = (e) => {
           className="cursor-pointer pr-4"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -88,11 +88,14 @@ export const ExistChatroom = (e) => {
         onSubmit={handleExistChatroom}
         className="mt-[10%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
-        <h1 className="text-2xl font-bold text-center mb-4 text-white">
+        <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
           Search for a User
         </h1>
 
-        <label htmlFor="username" className="block text-gray-300 font-semibold">
+        <label
+          htmlFor="username"
+          className="block text-black dark:text-gray-300 font-semibold"
+        >
           Username
         </label>
         <div className="relative mb-4">
@@ -114,7 +117,7 @@ export const ExistChatroom = (e) => {
             id="username"
             placeholder="John-Doe"
             minLength={2}
-            className="bg-white/10 text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            className="bg-white/10 text-black dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
         </div>
@@ -127,6 +130,6 @@ export const ExistChatroom = (e) => {
         </button>
         <Toaster />
       </form>
-    </>
+    </div>
   );
 };

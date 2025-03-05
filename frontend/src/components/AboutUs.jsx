@@ -10,7 +10,7 @@ export const AboutUs = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-svh bg-gray-800 text-white">
+    <div className="min-h-svh dark:bg-gray-800 bg-gray-300 dark:text-white">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <h1 className="flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
@@ -25,7 +25,7 @@ export const AboutUs = () => {
           className="cursor-pointer pr-4"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

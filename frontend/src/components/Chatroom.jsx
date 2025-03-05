@@ -337,7 +337,7 @@ export const Chatroom = () => {
   }
 
   return (
-    <div className="min-h-svh flex flex-col">
+    <div className="min-h-svh flex flex-col dark:bg-[#1d232a] bg-gray-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <div className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-10">
           <img
@@ -349,7 +349,7 @@ export const Chatroom = () => {
             alt="avatar"
           />
         </div>
-        <h1 className="md:text-base xl:text-3xl tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
+        <h1 className="md:text-base xl:text-3xl text-white tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
           {partnerName}
         </h1>
 
@@ -358,7 +358,7 @@ export const Chatroom = () => {
           className="cursor-pointer pr-4 scr"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6  text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -374,7 +374,7 @@ export const Chatroom = () => {
           </svg>
         </button>
       </header>
-      <div className={cn("flex flex-col h-full flex-grow")}>
+      <div className="flex flex-col h-full flex-grow ">
         <ErrorMessage error={error} />
         {unreadMessagesCount > 0 && (
           <button

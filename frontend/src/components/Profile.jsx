@@ -41,9 +41,9 @@ export const Profile = () => {
   const rightDate = germanDateOfRegistration.split("MEZ")[0];
 
   return (
-    <div className="min-h-svh flex flex-col">
+    <div className="min-h-svh flex flex-col dark:bg-base-100 bg-gray-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <h1 className="flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+        <h1 className="flex text-white items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
         <img
@@ -56,7 +56,7 @@ export const Profile = () => {
           className="cursor-pointer pr-4"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

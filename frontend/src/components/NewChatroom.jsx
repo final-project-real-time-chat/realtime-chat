@@ -63,14 +63,14 @@ export const NewChatroom = () => {
   }
 
   return (
-    <div className="min-h-svh flex flex-col">
+    <div className="min-h-svh flex flex-col dark:bg-base-100 bg-gray-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <img
           className="relative mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50 aspect-square h-12 border-2 bg-gray-400 rounded-full"
           src={username ? `https://robohash.org/${username}` : robot}
           alt="avatar"
         />
-        <h1 className="md:text-base xl:text-3xl tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
+        <h1 className="md:text-base xl:text-3xl text-white tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
           {username}
         </h1>
 
@@ -79,7 +79,7 @@ export const NewChatroom = () => {
           className="cursor-pointer pr-4"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

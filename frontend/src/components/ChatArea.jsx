@@ -98,9 +98,9 @@ export const ChatArea = () => {
   }, [queryClient]);
 
   return (
-    <div className="[scrollbar-width:thin]">
+    <div className="[scrollbar-width:thin] dark:bg-base-100 bg-gray-300">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
-        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+        <h1 className="text-white flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
         </h1>
         <img
@@ -127,7 +127,7 @@ export const ChatArea = () => {
                 alt="avatar"
               />
             </div>
-            <span className="mr-2 xl:text-xl">
+            <span className="mr-2 xl:text-xl text-white">
               {chatroomsData?.currentUsername}
             </span>
           </div>
@@ -153,7 +153,7 @@ export const ChatArea = () => {
               >
                 Delete Chat
               </li> */}
-               <li
+              <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
                 onClick={() => navigate(`/about-us`)}
@@ -183,8 +183,8 @@ export const ChatArea = () => {
                   key={chatroom.chatId}
                   to={`/chatarea/chats/${chatroom.chatId}`}
                 >
-                  <li className="flex p-2 py-4 border-t-1 hover:bg-gray-600 duration-300">
-                    <div className="relative aspect-square h-12 xl:h-20 border-2 bg-gray-700 rounded-full overflow-hidden">
+                  <li className="flex p-2 py-4 border-t-1 dark:hover:bg-gray-600 hover:bg-gray-400 duration-300">
+                    <div className="relative aspect-square h-12 xl:h-20 border-2 bg-gray-700 rounded-full overflow-hidden  ">
                       <img
                         className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-150"
                         src={
@@ -213,12 +213,12 @@ export const ChatArea = () => {
                     <div className="ml-auto">
                       {chatroom.timestamps &&
                         chatroom.timestamps.length > 0 && (
-                          <span className="flex justify-end text-gray-400 text-xs">
+                          <span className="flex justify-end dark:text-gray-400 text-gray-500 text-xs">
                             {formatTimestamp(chatroom.timestamps[0])}
                           </span>
                         )}
                       {chatroom.unreadMessagesCount > 0 && (
-                        <div className="text-amber-400 border-2 rounded-full px-2 flex items-center ml-auto justify-center w-7 h-7 mt-1">
+                        <div className="dark:text-amber-400 text-amber-500 border-2 rounded-full px-2 flex items-center ml-auto justify-center w-7 h-7 mt-1">
                           <span className="animate-pulse text-xs">
                             {chatroom.unreadMessagesCount}
                           </span>
