@@ -136,6 +136,13 @@ export const Chatroom = () => {
       .join("\n");
     if (userInput.trim() === "") return null;
 
+    if (partnerName === "deletedUser" || partnerName === undefined) {
+      e.target.textarea.value = "";
+      toast.dismiss();
+      toast.error("You cannot send messages to a deleted user.");
+      return;
+    }
+
     if (editingMessage) {
       editMessageMutation.mutate({
         messageId: editingMessage._id,
@@ -273,7 +280,7 @@ export const Chatroom = () => {
       socket.off("message-update");
       socket.off("message-delete");
     };
-  }, [id, queryClient, nearBottom]);
+  }, [id, queryClient, nearBottom, partnerName]);
 
   useEffect(() => {
     if (messagesEndRef.current && nearBottom) {
@@ -446,7 +453,7 @@ export const Chatroom = () => {
           ))}
         <div ref={messagesEndRef} />
       </div>
-
+      <Toaster />
       <form onSubmit={handleSendMessage} className="sticky bottom-0">
         <label htmlFor="chat" className="sr-only">
           Your message
