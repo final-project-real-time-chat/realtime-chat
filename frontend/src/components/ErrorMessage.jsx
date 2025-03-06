@@ -2,7 +2,7 @@ export const ErrorMessage = ({ error }) => {
   if (!error) {
     return null;
   }
-  console.log(error);
+  
   return <div role="alert" className="alert alert-error">
   <svg
     xmlns="http://www.w3.org/2000/svg"

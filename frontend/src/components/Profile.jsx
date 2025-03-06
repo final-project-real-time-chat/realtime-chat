@@ -15,9 +15,7 @@ export const Profile = () => {
       }
       return response.json();
     },
-    onSuccess: () => {
-      console.log("userdata fetched successfully");
-    },
+    onSuccess: () => {},
     onError: (error) => {
       console.error(error.message);
     },
@@ -26,8 +24,6 @@ export const Profile = () => {
   const username = data?.username;
   const usermail = data?.usermail;
   const dateOfRegistration = data?.dateOfRegistration;
-
-  console.log(dateOfRegistration);
 
   const date = dateOfRegistration ? new Date(dateOfRegistration) : null;
   const germanDateOfRegistration = date

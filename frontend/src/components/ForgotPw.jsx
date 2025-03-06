@@ -21,7 +21,6 @@ export const ForgotPw = () => {
     // const data = await response.json();
 
     toast.dismiss();
-    console.log(response);
 
     if (response.ok) {
       toast.success("email sent with new password");

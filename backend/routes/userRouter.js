@@ -316,7 +316,6 @@ export default (io) => {
 
     try {
       const foundUser = await User.findOne({ email });
-      console.log(foundUser);
       if (!foundUser) {
         return res
           .status(404)

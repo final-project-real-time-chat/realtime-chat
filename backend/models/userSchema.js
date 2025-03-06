@@ -24,5 +24,20 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// Method for whitelisting fields in the JSON output
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  const allowedFields = ["_id", "email", "username", "createdAt", "updatedAt"];
+  const filteredUser = {};
+
+  allowedFields.forEach((field) => {
+    if (user[field] !== undefined) {
+      filteredUser[field] = user[field];
+    }
+  });
+
+  return filteredUser;
+};
+
 const User = model("User", userSchema);
 export default User;
