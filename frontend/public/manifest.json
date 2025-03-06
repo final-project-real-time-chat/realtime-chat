@@ -1,8 +1,8 @@
 {
   "name": "Realtime-Chat – Hello, Word!",
   "short_name": "Hello, Word!",
-  "theme_color": "#1d232a",
-  "background_color": "#1d232a",
+  "theme_color": "#364153",
+  "background_color": "#364153",
   "display": "fullScreen",
   "orientation": "portrait",
   "scope": "/",
