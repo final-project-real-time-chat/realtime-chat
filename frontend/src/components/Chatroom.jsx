@@ -11,17 +11,18 @@ import positiveNotification from "../assets/positive-notification.wav";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
 
+const audioSend = new Audio(fingerSnap);
+const audioReceive = new Audio(positiveNotification);
+
+audioSend.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+audioReceive.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+
 export const Chatroom = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
   const [editingMessage, setEditingMessage] = useState(null);
   const textareaRef = useRef(null);
-  const audioSendRef = useRef(new Audio(fingerSnap));
-  const audioReceiveRef = useRef(new Audio(positiveNotification));
-
-  audioSendRef.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
-  audioReceiveRef.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
@@ -70,7 +71,7 @@ export const Chatroom = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["chatroom", id]);
       textareaRef.current.value = "";
-      audioSendRef.current.play().catch((error) => {
+      audioSend.play().catch((error) => {
         console.error("Audio playback failed:", error);
       });
     },
@@ -97,7 +98,7 @@ export const Chatroom = () => {
       queryClient.invalidateQueries(["chatroom", id]);
       setEditingMessage(null);
       textareaRef.current.value = "";
-      audioSendRef.current.play().catch((error) => {
+      audioSend.play().catch((error) => {
         console.error("Audio playback failed:", error);
       });
     },
@@ -139,7 +140,9 @@ export const Chatroom = () => {
     if (partnerName === "deletedUser" || partnerName === undefined) {
       e.target.textarea.value = "";
       toast.dismiss();
-      toast.error("You cannot send messages to a deleted user.", {position: "bottom-center"});
+      toast.error("You cannot send messages to a deleted user.", {
+        position: "bottom-center",
+      });
       return;
     }
 
@@ -233,7 +236,7 @@ export const Chatroom = () => {
         };
 
         if (!nearBottom) {
-          audioReceiveRef.current.play().catch((error) => {
+          audioReceive.play().catch((error) => {
             console.error("Audio playback failed:", error);
           });
         }
