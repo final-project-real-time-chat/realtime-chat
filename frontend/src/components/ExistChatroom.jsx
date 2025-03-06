@@ -3,9 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import robot from "../assets/robot.png";
+import { useRef } from "react";
 
 export const ExistChatroom = (e) => {
   const navigate = useNavigate();
+  const partnerNameRef = useRef(null);
 
   const existChatroomMutation = useMutation({
     mutationFn: async (username) => {
@@ -46,7 +48,9 @@ export const ExistChatroom = (e) => {
       if (data.chatroom !== "new-chatroom") {
         navigate(`/chatarea/chats/${data.chatroom}`);
         toast.dismiss();
-        toast.success(`You have already chatted with ${data.partnerName}`);
+        toast.success(
+          `You have already chatted ${partnerNameRef.current.value}`
+        );
         return;
       } else {
         navigate(`/chatarea/chats/new-chatroom/${data.partnerName}`);
@@ -137,6 +141,7 @@ export const ExistChatroom = (e) => {
             className="bg-white/10 text-black dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
+            ref={partnerNameRef}
           />
         </div>
 

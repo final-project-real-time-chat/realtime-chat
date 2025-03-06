@@ -26,15 +26,14 @@ export const Profile = () => {
   const dateOfRegistration = data?.dateOfRegistration;
 
   const date = dateOfRegistration ? new Date(dateOfRegistration) : null;
-  const germanDateOfRegistration = date
-    ? new Intl.DateTimeFormat("de-DE", {
+  const userRegisteredAt = date
+    ? new Intl.DateTimeFormat("en-EN", {
         dateStyle: "long",
         timeStyle: "short",
         timeZone: "Europe/Berlin",
+        hour12: false,
       }).format(date)
-    : "Datum nicht verfügbar";
-
-  const rightDate = germanDateOfRegistration.split("MEZ")[0];
+    : "Date not available";
 
   return (
     <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
@@ -69,19 +68,19 @@ export const Profile = () => {
         </button>
       </header>
       {!isLoading && (
-        <main className="flex flex-col justify-center mt-5 mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
+        <main className="flex flex-col justify-center mt-5 mx-auto max-w-80 dark:bg-gray-700 bg-gray-200 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20">
           <img
             src={username ? `https://robohash.org/${username}` : robot}
             alt=""
-            className="m-auto mb-5"
+            className="m-auto mb-4"
           />
           <p className="mx-auto font-bold">Username:</p>
-          <p className="mx-auto mb-3 "> {username}</p>
+          <p className="mx-auto pb-3 "> {username}</p>
           <p className="mx-auto font-bold">Email: </p>
-          <p className="mx-auto mb-3 ">{usermail}</p>
+          <p className="mx-auto pb-3 ">{usermail}</p>
 
-          <p className="mx-auto font-bold">Registriert am:</p>
-          <p className="mx-auto ">{rightDate}</p>
+          <p className="mx-auto font-bold">Registered:</p>
+          <p className="mx-auto pb-8">{userRegisteredAt}</p>
         </main>
       )}
     </div>
