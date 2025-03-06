@@ -98,7 +98,7 @@ export const ChatArea = () => {
   }, [queryClient]);
 
   return (
-    <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
+    <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
         <h1 className="text-white flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!
@@ -177,7 +177,7 @@ export const ChatArea = () => {
           <p>Error loading chatrooms: {chatroomsError.message}</p>
         ) : (
           <>
-            <ul>
+            <ul className="">
               {chatroomsData?.chatrooms.map((chatroom) => (
                 <Link
                   key={chatroom.chatId}
