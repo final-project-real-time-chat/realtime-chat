@@ -139,7 +139,7 @@ export const Chatroom = () => {
     if (partnerName === "deletedUser" || partnerName === undefined) {
       e.target.textarea.value = "";
       toast.dismiss();
-      toast.error("You cannot send messages to a deleted user.");
+      toast.error("You cannot send messages to a deleted user.", {position: "bottom-center"});
       return;
     }
 
