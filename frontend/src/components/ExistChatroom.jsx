@@ -134,6 +134,7 @@ export const ExistChatroom = (e) => {
             minLength={2}
             className="bg-white/10 text-black dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
+            autoFocus
           />
         </div>
 
