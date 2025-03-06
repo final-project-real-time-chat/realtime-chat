@@ -63,14 +63,14 @@ export const NewChatroom = () => {
   }
 
   return (
-    <div className="min-h-svh flex flex-col dark:bg-base-100 bg-gray-300">
+    <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <img
-          className="relative mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50 aspect-square h-12 border-2 bg-gray-400 rounded-full"
+          className="relative mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50 aspect-square h-12 border-2 border-gray-100 bg-gray-400 rounded-full"
           src={username ? `https://robohash.org/${username}` : robot}
           alt="avatar"
         />
-        <h1 className="md:text-base xl:text-3xl text-white tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
+        <h1 className="md:text-base xl:text-3xl text-white tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
           {username}
         </h1>
 
@@ -95,7 +95,12 @@ export const NewChatroom = () => {
           </svg>
         </button>
       </header>
-      <div className="flex flex-col h-full flex-grow"></div>
+      <div className="relative flex flex-col h-full flex-grow">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap text-2xl text-center">
+          <h2>Send your first message</h2>
+          <h2>to {username}</h2>
+        </div>
+      </div>
       <form onSubmit={handleSendMessage} className="sticky bottom-0">
         <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
           <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">

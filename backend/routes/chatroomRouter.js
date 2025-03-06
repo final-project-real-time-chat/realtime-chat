@@ -22,12 +22,17 @@ export default (io) => {
   router.post("/exist", async (req, res) => {
     try {
       const currentUserId = req.session.user.id;
+      const currentUsername = req.session.user.username;
       const { username } = req.body;
 
       const user = await User.findOne({ username });
 
       if (!user) {
         return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      if (currentUsername === username) {
+        return res.status(401).json({ errorMessage: "Not allowed" });
       }
 
       const chatroomExists = await Chatroom.findOne({
@@ -44,7 +49,6 @@ export default (io) => {
         partnerId: user._id,
       });
     } catch (error) {
-      console.log("ERROR IN /EXIST");
       console.log(error);
       res.status(500).json({ errorMessage: "Internal server error" });
     }

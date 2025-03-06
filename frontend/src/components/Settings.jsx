@@ -59,7 +59,7 @@ export const Settings = () => {
   });
 
   return (
-    <div className="min-h-svh flex flex-col dark:bg-base-100 bg-gray-300">
+    <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <h1 className=" flex text-white items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!

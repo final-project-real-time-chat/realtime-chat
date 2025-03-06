@@ -168,6 +168,15 @@ export const NewPassword = () => {
         </button>
         <Toaster />
       </form>
+      <div className="flex justify-end items-center gap-2 mt-4">
+        <p className="dark:text-white text-gray-600">Back to Login</p>
+        <button
+          className=" cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm"
+          onClick={() => navigate("/")}
+        >
+          Click here
+        </button>
+      </div>
     </div>
   );
 };

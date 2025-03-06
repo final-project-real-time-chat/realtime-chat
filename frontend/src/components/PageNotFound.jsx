@@ -8,7 +8,7 @@ export function PageNotFound() {
   return (
     <>
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
-        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2 text-gray-100">
           Hello, Word!
         </h1>
         <img
@@ -21,7 +21,7 @@ export function PageNotFound() {
           className="cursor-pointer pr-4 scr"
         >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white hover:text-gray-400 duration-200"
+            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

@@ -337,9 +337,9 @@ export const Chatroom = () => {
   }
 
   return (
-    <div className="min-h-svh flex flex-col dark:bg-[#1d232a] bg-gray-300">
+    <div className="min-h-svh flex flex-col dark:bg-[#1d232a] dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <div className="relative aspect-square h-12 border-2 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-10">
+        <div className="relative aspect-square h-12 border-2 border-gray-100 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-10">
           <img
             className={cn(
               "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
@@ -349,7 +349,7 @@ export const Chatroom = () => {
             alt="avatar"
           />
         </div>
-        <h1 className="md:text-base xl:text-3xl text-white tracking-widest uppercase font-bold absolute left-1/2 transform -translate-x-1/2">
+        <h1 className="md:text-base xl:text-3xl text-white tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
           {partnerName}
         </h1>
 
@@ -381,7 +381,7 @@ export const Chatroom = () => {
             onClick={() =>
               messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
             }
-            className="cursor-pointer bg-white/10 shadow-lg shadow-blue-900/30 backdrop-blur-[5.5px] text-xl rounded-[10px] border border-white/20 text-amber-400 sticky top-[50%] mx-auto px-8 py-1 font-bold hover:bg-white/20 transition-colors animate-bounce"
+            className="cursor-pointer dark:bg-white/10 bg-gray-700 shadow-lg shadow-blue-900/30 backdrop-blur-[5.5px] text-xl rounded-[10px] border border-white/20 text-amber-400 sticky top-[50%] mx-auto px-8 py-1 font-bold dark:hover:bg-white/20 hover:bg-gray-600 transition-colors animate-bounce"
           >
             {unreadMessagesCount === 1
               ? `↓ ${unreadMessagesCount} message. Tap to see. ↓`
@@ -392,10 +392,10 @@ export const Chatroom = () => {
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%]",
+                "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%] dark:text-gray-100 text-gray-900 border-2 dark:bg-transparent",
                 message.sender.username === currentUsername
-                  ? "border-blue-400 border-2 rounded-br-none ml-auto"
-                  : "border-amber-400 border-2 rounded-bl-none"
+                  ? "border-blue-400  bg-blue-50 rounded-br-none ml-auto"
+                  : "border-amber-400  bg-amber-50 rounded-bl-none"
               )}
               key={message._id}
               ref={
@@ -405,11 +405,7 @@ export const Chatroom = () => {
               <p className="break-words whitespace-pre-line min-w-40">
                 {message.content}
               </p>
-              <span
-                className={cn(
-                  "pt-1 flex justify-end text-[12px] text-gray-400"
-                )}
-              >
+              <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
                 {message.createdAt !== message.updatedAt
                   ? `( Updated ) ${formatTimestamp(message.createdAt)}`
                   : `${formatTimestamp(message.createdAt)}`}
@@ -418,7 +414,7 @@ export const Chatroom = () => {
                 <div className="relative">
                   <button
                     onClick={() => handleEditMessage(message)}
-                    className="absolute -left-3 top-1 text-gray-400"
+                    className="absolute -left-3 top-1 dark:text-gray-400 text-gray-700"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -432,7 +428,7 @@ export const Chatroom = () => {
                   </button>
                   <button
                     onClick={() => handleDeleteMessage(message)}
-                    className="absolute top-1 -right-3 text-gray-400"
+                    className="absolute top-1 -right-3 dark:text-gray-400 text-gray-700"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -456,10 +452,10 @@ export const Chatroom = () => {
           Your message
         </label>
 
-        <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
-          <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+        <div className="flex items-center py-2 rounded bg-gray-700">
+          <label className="mt-auto cursor-pointer text-gray-400 ml-2 hover:text-white hover:scale-120 duration-300">
             <input type="file" className="hidden" />
-            <span className="material-symbols-outlined p-1">add</span>
+            <span className="material-symbols-outlined p-2">add</span>
           </label>
 
           <textarea

@@ -17,12 +17,27 @@ export const ExistChatroom = (e) => {
         body: JSON.stringify({ username }),
       });
 
-      if (!response.ok) {
+      if (response.status === 404) {
         toast.dismiss();
         toast.error("username not found.");
 
         throw new Error("Failed to create chatroom");
       }
+
+      if (response.status === 401) {
+        toast.dismiss();
+        toast.error("You can't search yourself.");
+
+        throw new Error("Failed to create chatroom");
+      }
+
+      if (!response.ok) {
+        toast.dismiss();
+        toast.error("Failed to find the user.");
+
+        throw new Error("Failed to create chatroom");
+      }
+
       const result = await response.json();
 
       return result;
@@ -53,7 +68,7 @@ export const ExistChatroom = (e) => {
   }
 
   return (
-    <div className="min-h-svh dark:bg-base-100 bg-gray-300">
+    <div className="min-h-svh dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 h-16 xl:p-2 xl:h-25">
         <h1 className="text-white flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
           Hello, Word!

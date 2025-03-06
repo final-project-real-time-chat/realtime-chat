@@ -10,9 +10,9 @@ export const AboutUs = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-svh dark:bg-gray-800 bg-gray-300 dark:text-white">
+    <div className="min-h-svh bg-gray-300 dark:text-white dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <h1 className="flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2">
+        <h1 className="flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2 text-gray-100">
           Hello, Word!
         </h1>
         <img
@@ -101,7 +101,7 @@ export const AboutUs = () => {
             Live Demo:
             <a
               href="https://hello-word-6z2bg.ondigitalocean.app/"
-              className="text-blue-400 hover:text-blue-200 duration-200 underline pl-2"
+              className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
             >
               Hello-Word App
             </a>
@@ -110,7 +110,7 @@ export const AboutUs = () => {
             Live Demo:
             <a
               href="https://hello-word.khambazarov.dev/"
-              className="text-blue-400 hover:text-blue-200 duration-200 underline pl-2"
+              className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
             >
               Hello-Word App
             </a>
@@ -119,17 +119,17 @@ export const AboutUs = () => {
             Source Code:
             <a
               href="https://github.com/final-project-real-time-chat/realtime-chat"
-              className="text-blue-400 hover:text-blue-200 duration-200 underline pl-2"
+              className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
             >
               GitHub Repository
             </a>
           </li>
         </ul>
-        <div className="border-2 shadow-gray-600 bg-gray-700 shadow-2xl mt-8 p-8 rounded-3xl">
-          <h2 className="text-3xl font-semibold tracking-widest">
+        <div className="border-2 border-gray-100 shadow-gray-600 bg-gray-700 shadow-2xl mt-8 p-8 rounded-3xl">
+          <h2 className="text-3xl font-semibold tracking-widest text-gray-100">
             Our Contacts
           </h2>
-          <h2 className="text-2xl font-semibold mt-6 mb-2 tracking-widest">
+          <h2 className="text-2xl font-semibold mt-6 mb-2 tracking-widest text-gray-100">
             Olivia
           </h2>
           <ul className="flex gap-x-8">
@@ -188,7 +188,7 @@ export const AboutUs = () => {
               </a>
             </li>
           </ul>
-          <h2 className="text-2xl font-semibold mt-6 mb-2 tracking-widest">
+          <h2 className="text-2xl font-semibold mt-6 mb-2 tracking-widest text-gray-100">
             Renat
           </h2>
           <ul className="flex gap-x-8">
