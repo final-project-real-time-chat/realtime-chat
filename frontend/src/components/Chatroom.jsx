@@ -14,8 +14,8 @@ import { ErrorMessage } from "./ErrorMessage.jsx";
 const audioSend = new Audio(fingerSnap);
 const audioReceive = new Audio(positiveNotification);
 
-audioSend.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
-audioReceive.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+audioSend.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+audioReceive.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
