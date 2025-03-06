@@ -49,7 +49,7 @@ export const ExistChatroom = (e) => {
         navigate(`/chatarea/chats/${data.chatroom}`);
         toast.dismiss();
         toast.success(
-          `You have already chatted ${partnerNameRef.current.value}`
+          `You have already chatted with ${partnerNameRef.current.value}`
         );
         return;
       } else {
