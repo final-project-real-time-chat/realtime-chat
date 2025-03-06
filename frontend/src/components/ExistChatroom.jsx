@@ -45,6 +45,8 @@ export const ExistChatroom = (e) => {
     onSuccess: (data) => {
       if (data.chatroom !== "new-chatroom") {
         navigate(`/chatarea/chats/${data.chatroom}`);
+        toast.dismiss();
+        toast.success(`You have already chatted with ${data.partnerName}`);
         return;
       } else {
         navigate(`/chatarea/chats/new-chatroom/${data.partnerName}`);
