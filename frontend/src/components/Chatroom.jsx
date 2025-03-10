@@ -5,19 +5,42 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
 
-import EmojiPicker from "emoji-picker-react";
-
 import robot from "../assets/robot.png";
+import Emojis from "../assets/add_reaction.svg";
 import fingerSnap from "../assets/finger-snap.mp3";
 import positiveNotification from "../assets/positive-notification.wav";
 import { cn } from "../utils/cn.js";
 import { ErrorMessage } from "./ErrorMessage.jsx";
+
+import EmojiPicker from "emoji-picker-react";
+import flagOfCircassians from "../assets/flag_of_circassians.png";
+
+const customEmojis = [
+  {
+    names: ["Flagge – Circassia"],
+    imgUrl: flagOfCircassians,
+    id: "flag_of_circassians",
+  },
+];
 
 const audioSend = new Audio(fingerSnap);
 const audioReceive = new Audio(positiveNotification);
 
 audioSend.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
 audioReceive.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+
+function playAudio(audio) {
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+      // Audio played successfully
+      })
+      .catch((error) => {
+      console.error("Audio playback failed:", error);
+      });
+  }
+}
 
 export const Chatroom = () => {
   const queryClient = useQueryClient();
@@ -26,12 +49,12 @@ export const Chatroom = () => {
   const [editingMessage, setEditingMessage] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef(null);
+  const [textareaHeight, setTextareaHeight] = useState(40);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
     queryFn: async () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`);
-
       return response.json();
     },
   });
@@ -74,9 +97,7 @@ export const Chatroom = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["chatroom", id]);
       textareaRef.current.value = "";
-      audioSend.play().catch((error) => {
-        console.error("Audio playback failed:", error);
-      });
+      playAudio(audioSend);
     },
     onError: (error) => {
       console.error(error.message);
@@ -101,9 +122,7 @@ export const Chatroom = () => {
       queryClient.invalidateQueries(["chatroom", id]);
       setEditingMessage(null);
       textareaRef.current.value = "";
-      audioSend.play().catch((error) => {
-        console.error("Audio playback failed:", error);
-      });
+      playAudio(audioSend);
     },
     onError: (error) => {
       console.error(error.message);
@@ -179,6 +198,7 @@ export const Chatroom = () => {
     const maxHeight = 150;
     const newHeight = Math.min(textarea.scrollHeight, maxHeight);
     textarea.style.height = `${newHeight}px`;
+    setTextareaHeight(newHeight);
   }
 
   function formatTimestamp(timestamp) {
@@ -240,9 +260,7 @@ export const Chatroom = () => {
         };
 
         if (!nearBottom) {
-          audioReceive.play().catch((error) => {
-            console.error("Audio playback failed:", error);
-          });
+          playAudio(audioReceive);
         }
         return updatedData;
       });
@@ -351,30 +369,27 @@ export const Chatroom = () => {
   }
 
   function handleEmojiPicker() {
-    setTimeout(() => {
-      setShowEmojiPicker((prev) => !prev);
-    }, 100);
+    setShowEmojiPicker(!showEmojiPicker);
   }
 
-  function handleEmojiClick(emojiObject) {
-    if (!emojiObject || !emojiObject.emoji) return;
+  function handleEmojiClick(emojiObject, event) {
+    const emoji = emojiObject.emoji || emojiObject.imgUrl;
+    if (!emoji) return;
 
     const cursorPosition = textareaRef.current.selectionStart;
     const text = textareaRef.current.value;
     const newText =
-      text.slice(0, cursorPosition) +
-      emojiObject.emoji +
-      text.slice(cursorPosition);
+      text.slice(0, cursorPosition) + emoji + text.slice(cursorPosition);
     textareaRef.current.value = newText;
 
-    const event = new Event("input", { bubbles: true });
-    textareaRef.current.dispatchEvent(event);
+    const inputEvent = new Event("input", { bubbles: true });
+    textareaRef.current.dispatchEvent(inputEvent);
 
     setTimeout(() => {
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(
-        cursorPosition + emojiObject.emoji.length,
-        cursorPosition + emojiObject.emoji.length
+        cursorPosition + emoji.length,
+        cursorPosition + emoji.length
       );
     }, 0);
   }
@@ -492,26 +507,32 @@ export const Chatroom = () => {
       <Toaster />
       <form onSubmit={handleSendMessage} className="sticky bottom-0">
         {showEmojiPicker && (
-          <div className="fixed bottom-16 left-0">
+          <div
+            className="fixed left-0"
+            style={{ bottom: `${textareaHeight + 16}px` }}
+          >
             <EmojiPicker
               className=""
-              width={window.innerWidth >= 1024 ? 500 : 320}
+              width={500}
               theme="auto"
               reactionsDefaultOpen={true}
               onEmojiClick={handleEmojiClick}
+              customEmojis={customEmojis}
             />
           </div>
         )}
 
         <div className="flex items-center py-2 rounded bg-gray-700">
-          <label className="mt-auto cursor-pointer text-gray-400 ml-2 hover:text-white hover:scale-120 duration-300">
-            <span
-              className="material-symbols-outlined p-2"
-              onClick={handleEmojiPicker}
-            >
-              add_reaction
-            </span>
-          </label>
+          {window.innerWidth >= 1024 && (
+            <label className="my-auto cursor-pointer text-gray-400 ml-2 hover:text-white hover:scale-120 duration-300">
+              <img
+                src={Emojis}
+                alt="Emojis picker"
+                width={32}
+                onClick={handleEmojiPicker}
+              />
+            </label>
+          )}
 
           <textarea
             name="textarea"
