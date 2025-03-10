@@ -5,6 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
 
+import EmojiPicker from "emoji-picker-react";
+
 import robot from "../assets/robot.png";
 import fingerSnap from "../assets/finger-snap.mp3";
 import positiveNotification from "../assets/positive-notification.wav";
@@ -22,6 +24,7 @@ export const Chatroom = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [editingMessage, setEditingMessage] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef(null);
 
   const { data, error, isLoading } = useQuery({
@@ -162,6 +165,7 @@ export const Chatroom = () => {
   function handleKeyDown(event) {
     if (window.innerWidth >= 1024 && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
+      setShowEmojiPicker(false);
       handleSendMessage({
         preventDefault: () => {},
         target: { textarea: textareaRef.current },
@@ -346,6 +350,35 @@ export const Chatroom = () => {
     return <Navigate to={"/404"}></Navigate>;
   }
 
+  function handleEmojiPicker() {
+    setTimeout(() => {
+      setShowEmojiPicker((prev) => !prev);
+    }, 100);
+  }
+
+  function handleEmojiClick(emojiObject) {
+    if (!emojiObject || !emojiObject.emoji) return;
+
+    const cursorPosition = textareaRef.current.selectionStart;
+    const text = textareaRef.current.value;
+    const newText =
+      text.slice(0, cursorPosition) +
+      emojiObject.emoji +
+      text.slice(cursorPosition);
+    textareaRef.current.value = newText;
+
+    const event = new Event("input", { bubbles: true });
+    textareaRef.current.dispatchEvent(event);
+
+    setTimeout(() => {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        cursorPosition + emojiObject.emoji.length,
+        cursorPosition + emojiObject.emoji.length
+      );
+    }, 0);
+  }
+
   return (
     <div className="min-h-svh flex flex-col dark:bg-[#1d232a] dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
@@ -458,14 +491,26 @@ export const Chatroom = () => {
       </div>
       <Toaster />
       <form onSubmit={handleSendMessage} className="sticky bottom-0">
-        <label htmlFor="chat" className="sr-only">
-          Your message
-        </label>
+        {showEmojiPicker && (
+          <div className="fixed bottom-16 left-0">
+            <EmojiPicker
+              className=""
+              width={window.innerWidth >= 1024 ? 500 : 320}
+              theme="auto"
+              reactionsDefaultOpen={true}
+              onEmojiClick={handleEmojiClick}
+            />
+          </div>
+        )}
 
         <div className="flex items-center py-2 rounded bg-gray-700">
           <label className="mt-auto cursor-pointer text-gray-400 ml-2 hover:text-white hover:scale-120 duration-300">
-            <input type="file" className="hidden" />
-            <span className="material-symbols-outlined p-2">add</span>
+            <span
+              className="material-symbols-outlined p-2"
+              onClick={handleEmojiPicker}
+            >
+              add_reaction
+            </span>
           </label>
 
           <textarea
@@ -478,9 +523,11 @@ export const Chatroom = () => {
             autoFocus={window.innerWidth >= 1024}
             className="[scrollbar-width:thin] resize-none min-h-8 block mx-3 p-2 w-full text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Hello, Word! …"
-          ></textarea>
+          />
+
           <button
             type="submit"
+            onClick={() => setShowEmojiPicker(false)}
             className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
           >
             <svg

@@ -28,6 +28,8 @@ This project is a real-time chat application built with the MERN stack (MongoDB,
 -   https://pixabay.com/de/sound-effects/search/finger%20snap/
 -   https://www.flaticon.com/free-icon/robot_2593635?term=robot&page=1&position=35&origin=search&related_id=2593635
 
+***Used Emojis***
+-   https://github.com/ealush/emoji-picker-react
 
 ```bash
 npm create vite@latest
