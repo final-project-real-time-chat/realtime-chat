@@ -214,7 +214,8 @@ export const Chatroom = () => {
   const messagesEndRef = useRef(null);
   const [nearBottom, setNearBottom] = useState(true);
 
-  const latestMessageId = chatroomMessages?.at(-1)._id;
+  const latestMessageId =
+    chatroomMessages?.length > 0 ? chatroomMessages.at(-1)._id : null;
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {

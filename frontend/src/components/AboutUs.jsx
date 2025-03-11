@@ -123,10 +123,10 @@ export const AboutUs = () => {
           <ul className="flex gap-x-8">
             <li>
               <a
-                href=""
-                title="Still in Development"
-                // target="_blank"
-                // rel="noopener noreferrer"
+                href="https://olivia-piechowski.netlify.app"
+                title="https://olivia-piechowski.netlify.app"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <img
                   src={Web}

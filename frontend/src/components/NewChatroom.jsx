@@ -1,11 +1,18 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast, { Toaster } from "react-hot-toast";
+
+import EmojiPicker from "emoji-picker-react";
 
 import robot from "../assets/robot.png";
+import Emojis from "../assets/add_reaction.svg";
 import { BackButtonIcon, SendMessageIcon } from "./_AllSVGs";
 
 export const NewChatroom = () => {
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [textareaHeight, setTextareaHeight] = useState(40);
+
   const navigate = useNavigate();
   const { username } = useParams();
   const queryClient = useQueryClient();
@@ -47,6 +54,7 @@ export const NewChatroom = () => {
   function handleKeyDown(event) {
     if (window.innerWidth >= 1024 && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
+      setShowEmojiPicker(false);
       handleSendMessage({
         preventDefault: () => {},
         target: { textarea: textareaRef.current },
@@ -60,6 +68,33 @@ export const NewChatroom = () => {
     const maxHeight = 150;
     const newHeight = Math.min(textarea.scrollHeight, maxHeight);
     textarea.style.height = `${newHeight}px`;
+    setTextareaHeight(newHeight);
+  }
+
+  function handleEmojiPicker() {
+    setShowEmojiPicker(!showEmojiPicker);
+  }
+
+  function handleEmojiClick(emojiObject, event) {
+    const emoji = emojiObject.emoji || emojiObject.imgUrl;
+    if (!emoji) return;
+
+    const cursorPosition = textareaRef.current.selectionStart;
+    const text = textareaRef.current.value;
+    const newText =
+      text.slice(0, cursorPosition) + emoji + text.slice(cursorPosition);
+    textareaRef.current.value = newText;
+
+    const inputEvent = new Event("input", { bubbles: true });
+    textareaRef.current.dispatchEvent(inputEvent);
+
+    setTimeout(() => {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        cursorPosition + emoji.length,
+        cursorPosition + emoji.length
+      );
+    }, 0);
   }
 
   return (
@@ -87,12 +122,34 @@ export const NewChatroom = () => {
           <h2>to {username}</h2>
         </div>
       </div>
+      <Toaster />
       <form onSubmit={handleSendMessage} className="sticky bottom-0">
-        <div className="flex items-center py-2 rounded bg-gray-50 dark:bg-gray-700">
-          <label className="mt-auto cursor-pointer text-gray-500 ml-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-            <input type="file" className="hidden" />
-            <span className="material-symbols-outlined p-1">add</span>
-          </label>
+        {showEmojiPicker && (
+          <div
+            className="fixed left-0"
+            style={{ bottom: `${textareaHeight + 16}px` }}
+          >
+            <EmojiPicker
+              className=""
+              width={500}
+              theme="auto"
+              reactionsDefaultOpen={true}
+              onEmojiClick={handleEmojiClick}
+            />
+          </div>
+        )}
+
+        <div className="flex items-center py-2 rounded bg-gray-700">
+          {window.innerWidth >= 1024 && (
+            <label className="my-auto cursor-pointer text-gray-400 ml-2 hover:text-white hover:scale-120 duration-300">
+              <img
+                src={Emojis}
+                alt="Emojis picker"
+                width={32}
+                onClick={handleEmojiPicker}
+              />
+            </label>
+          )}
 
           <textarea
             name="textarea"
@@ -103,11 +160,12 @@ export const NewChatroom = () => {
             onKeyDown={handleKeyDown}
             autoFocus={window.innerWidth >= 1024}
             className="[scrollbar-width:thin] resize-none min-h-8 block mx-3 p-2 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Hello, word! ……"
+            placeholder="Hello, word! …"
           ></textarea>
 
           <button
             type="submit"
+            onClick={() => setShowEmojiPicker(false)}
             className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
           >
             <SendMessageIcon />
