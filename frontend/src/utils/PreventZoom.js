@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const PreventZoom = () => {
+export const PreventZoom = () => {
   useEffect(() => {
     const preventZoom = (e) => e.preventDefault();
 
@@ -17,5 +17,3 @@ const PreventZoom = () => {
 
   return null;
 };
-
-export default PreventZoom;

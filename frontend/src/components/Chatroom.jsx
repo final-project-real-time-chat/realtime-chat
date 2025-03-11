@@ -1,18 +1,25 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { io } from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
+
+import EmojiPicker from "emoji-picker-react";
+
+import { io } from "socket.io-client";
+
+import { cn } from "../utils/cn.js";
+import { formatTimestamp } from "../utils/formatTimestamp.js";
+import {
+  BackButtonIcon,
+  DeleteMessageIcon,
+  EditMessageIcon,
+  SendMessageIcon,
+} from "./_AllSVGs.jsx";
 
 import robot from "../assets/robot.png";
 import Emojis from "../assets/add_reaction.svg";
 import fingerSnap from "../assets/finger-snap.mp3";
 import positiveNotification from "../assets/positive-notification.wav";
-import { cn } from "../utils/cn.js";
-import { ErrorMessage } from "./ErrorMessage.jsx";
-
-import EmojiPicker from "emoji-picker-react";
 import flagOfCircassians from "../assets/flag_of_circassians.png";
 
 const customEmojis = [
@@ -26,30 +33,32 @@ const customEmojis = [
 const audioSend = new Audio(fingerSnap);
 const audioReceive = new Audio(positiveNotification);
 
-audioSend.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
-audioReceive.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+audioSend.volume = 0.3;
+audioReceive.volume = 0.3;
 
 function playAudio(audio) {
-  const playPromise = audio.play();
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-      // Audio played successfully
-      })
-      .catch((error) => {
-      console.error("Audio playback failed:", error);
+  try {
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((error) => {
+        console.error("Audio playback failed:", error);
       });
+    }
+  } catch (error) {
+    console.error("Audio playback failed:", error);
   }
 }
 
 export const Chatroom = () => {
-  const queryClient = useQueryClient();
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [editingMessage, setEditingMessage] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const textareaRef = useRef(null);
   const [textareaHeight, setTextareaHeight] = useState(40);
+
+  const navigate = useNavigate();
+  const textareaRef = useRef(null);
+  const { id } = useParams();
+
+  const queryClient = useQueryClient();
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
@@ -201,36 +210,6 @@ export const Chatroom = () => {
     setTextareaHeight(newHeight);
   }
 
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-
-    if (date.toDateString() === now.toDateString()) {
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return `Yesterday ${date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}`;
-    } else {
-      return new Intl.DateTimeFormat("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })
-        .format(date)
-        .replace(",", "");
-    }
-  }
-
   const lastMessageRef = useRef(null);
   const messagesEndRef = useRef(null);
   const [nearBottom, setNearBottom] = useState(true);
@@ -341,14 +320,6 @@ export const Chatroom = () => {
     }
   }, [nearBottom, latestMessageId, markAsRead, queryClient, id]);
 
-  function userImg(partnerName) {
-    if (partnerName === "deletedUser" || !partnerName) {
-      return robot;
-    } else {
-      return `https://robohash.org/${partnerName}`;
-    }
-  }
-
   function handleEditMessage(message) {
     setEditingMessage(message);
     textareaRef.current.value = message.content;
@@ -403,7 +374,11 @@ export const Chatroom = () => {
               "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
               isLoading && "opacity-0"
             )}
-            src={userImg(partnerName)}
+            src={
+              partnerName === "deletedUser" || !partnerName
+                ? robot
+                : `https://robohash.org/${partnerName}`
+            }
             alt="avatar"
           />
         </div>
@@ -415,25 +390,10 @@ export const Chatroom = () => {
           onClick={() => navigate("/chatarea")}
           className="cursor-pointer pr-4 scr"
         >
-          <svg
-            className="w-6 h-6  text-white hover:text-gray-400 duration-200"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 16 16"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"
-            />
-          </svg>
+          <BackButtonIcon />
         </button>
       </header>
       <div className="flex flex-col h-full flex-grow ">
-        <ErrorMessage error={error} />
         {unreadMessagesCount > 0 && (
           <button
             onClick={() =>
@@ -474,29 +434,13 @@ export const Chatroom = () => {
                     onClick={() => handleEditMessage(message)}
                     className="absolute -left-3 top-1 dark:text-gray-400 text-gray-700"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="16px"
-                      width="16px"
-                      viewBox="0 -960 960 960"
-                      fill="currentColor"
-                    >
-                      <path d="M186.67-120q-27 0-46.84-19.83Q120-159.67 120-186.67v-586.66q0-27 19.83-46.84Q159.67-840 186.67-840h389L509-773.33H186.67v586.66h586.66v-324.66L840-578v391.33q0 27-19.83 46.84Q800.33-120 773.33-120H186.67ZM480-480ZM360-360v-170l377-377q10-10 22.33-14.67 12.34-4.66 24.67-4.66 12.67 0 25.04 5 12.38 5 22.63 15l74 75q9.4 9.97 14.53 22.02 5.13 12.05 5.13 24.51 0 12.47-4.83 24.97-4.83 12.5-14.83 22.5L530-360H360Zm499-424.67-74.67-74.66L859-784.67Zm-432.33 358H502l246-246L710-710l-38.33-37.33-245 244.33v76.33ZM710-710l-38.33-37.33L710-710l38 37.33L710-710Z" />
-                    </svg>
+                    <EditMessageIcon />
                   </button>
                   <button
                     onClick={() => handleDeleteMessage(message)}
                     className="absolute top-1 -right-3 dark:text-gray-400 text-gray-700"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="16px"
-                      width="16px"
-                      viewBox="0 -960 960 960"
-                      fill="currentColor"
-                    >
-                      <path d="M267.33-120q-27.5 0-47.08-19.58-19.58-19.59-19.58-47.09V-740H160v-66.67h192V-840h256v33.33h192V-740h-40.67v553.33q0 27-19.83 46.84Q719.67-120 692.67-120H267.33Zm425.34-620H267.33v553.33h425.34V-740Zm-328 469.33h66.66v-386h-66.66v386Zm164 0h66.66v-386h-66.66v386ZM267.33-740v553.33V-740Z" />
-                    </svg>
+                    <DeleteMessageIcon />
                   </button>
                 </div>
               )}
@@ -551,15 +495,7 @@ export const Chatroom = () => {
             onClick={() => setShowEmojiPicker(false)}
             className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
           >
-            <svg
-              className="w-8 h-8 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-[rgb(255,50,54)] duration-200"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 18 20"
-            >
-              <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-            </svg>
+            <SendMessageIcon />
             <span className="sr-only">Send message</span>
           </button>
         </div>

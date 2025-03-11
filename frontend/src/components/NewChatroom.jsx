@@ -1,9 +1,9 @@
-import robot from "../assets/robot.png";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { cn } from "../utils/cn.js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import robot from "../assets/robot.png";
+import { BackButtonIcon, SendMessageIcon } from "./_AllSVGs";
 
 export const NewChatroom = () => {
   const navigate = useNavigate();
@@ -78,21 +78,7 @@ export const NewChatroom = () => {
           onClick={() => navigate("/chatarea")}
           className="cursor-pointer pr-4"
         >
-          <svg
-            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 16 16"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"
-            />
-          </svg>
+          <BackButtonIcon />
         </button>
       </header>
       <div className="relative flex flex-col h-full flex-grow">
@@ -124,16 +110,7 @@ export const NewChatroom = () => {
             type="submit"
             className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
           >
-            <svg
-              className="w-8 h-8 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-[rgb(255,50,54)] duration-200"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 18 20"
-            >
-              <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-            </svg>
-            <span className="sr-only">Send message</span>
+            <SendMessageIcon />
           </button>
         </div>
       </form>

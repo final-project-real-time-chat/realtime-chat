@@ -1,36 +1,27 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { io } from "socket.io-client";
+
 import { cn } from "../utils/cn.js";
 
 import robot from "../assets/robot.png";
 import notification from "../assets/positive-notification.wav";
+import { formatTimestamp } from "../utils/formatTimestamp.js";
+import { truncateText } from "../utils/truncateText.js";
 
 export const ChatArea = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [menuOpen, setMenuOpen] = useState(false);
   const [maxLength, setMaxLength] = useState(20);
-  const audioRef = useRef(new Audio(notification));
+  const audioReceiveRef = useRef(new Audio(notification));
 
-  audioRef.current.volume = 1; // Setze die Lautstärke auf einen hörbaren Wert
+  audioReceiveRef.current.volume = 0.3;
 
   window.scrollTo(0, 0);
-
-  useEffect(() => {
-    const updateMaxLength = () => {
-      setMaxLength(window.innerWidth >= 1280 ? 80 : 20);
-    };
-
-    updateMaxLength();
-    window.addEventListener("resize", updateMaxLength);
-
-    return () => {
-      window.removeEventListener("resize", updateMaxLength);
-    };
-  }, []);
 
   const {
     data: chatroomsData,
@@ -79,7 +70,7 @@ export const ChatArea = () => {
 
     socket.on("message", () => {
       queryClient.invalidateQueries(["chatrooms"]);
-      audioRef.current.play().catch((error) => {
+      audioReceiveRef.current.play().catch((error) => {
         console.error("Audio playback failed:", error);
       });
     });
@@ -96,6 +87,20 @@ export const ChatArea = () => {
       socket.disconnect();
     };
   }, [queryClient]);
+
+  useEffect(() => {
+    const updateMaxLength = () => {
+      setMaxLength(window.innerWidth >= 1280 ? 80 : 20);
+    };
+
+    updateMaxLength();
+
+    window.addEventListener("resize", updateMaxLength);
+
+    return () => {
+      window.removeEventListener("resize", updateMaxLength);
+    };
+  }, []);
 
   return (
     <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
@@ -132,7 +137,6 @@ export const ChatArea = () => {
             </span>
           </div>
 
-          {/* Settings Menu */}
           {menuOpen && (
             <ul className="border-gray-300 border-l-2 border-b-2 bg-gray-700 absolute right-0 xl:-right-2 xl:top-23 backdrop-blur-xs rounded-bl-2xl shadow-lg z-999 duration-300">
               <li
@@ -147,12 +151,6 @@ export const ChatArea = () => {
               >
                 Settings
               </li>
-              {/* <li
-                className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8 text-nowrap"
-                // onClick={() => navigate(`/`)}
-              >
-                Delete Chat
-              </li> */}
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
@@ -177,7 +175,7 @@ export const ChatArea = () => {
           <p>Error loading chatrooms: {chatroomsError.message}</p>
         ) : (
           <>
-            <ul className="">
+            <ul>
               {chatroomsData?.chatrooms.map((chatroom) => (
                 <Link
                   key={chatroom.chatId}
@@ -246,40 +244,3 @@ export const ChatArea = () => {
     </div>
   );
 };
-
-function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-
-  if (date.toDateString() === now.toDateString()) {
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } else if (date.toDateString() === yesterday.toDateString()) {
-    return `Yesterday ${date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`;
-  } else {
-    return new Intl.DateTimeFormat("de-DE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    })
-      .format(date)
-      .replace(",", "");
-  }
-}
-
-function truncateText(text, maxLength) {
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + "…";
-  }
-  return text;
-}

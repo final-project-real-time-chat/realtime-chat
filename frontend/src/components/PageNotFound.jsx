@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
+
 import "./PageNotFound.css";
 import robot from "../assets/robot.png";
+import { BackButtonIcon } from "./_AllSVGs";
 
 export function PageNotFound() {
   const navigate = useNavigate();
@@ -17,24 +19,10 @@ export function PageNotFound() {
           alt="robot"
         />
         <button
-          onClick={() => navigate("/chatarea")}
+          onClick={() => navigate(-1)}
           className="cursor-pointer pr-4 scr"
         >
-          <svg
-            className="w-6 h-6 text-white hover:text-gray-400 duration-200"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 16 16"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"
-            />
-          </svg>
+          <BackButtonIcon />
         </button>
       </header>
       <div className="main_wrapper">

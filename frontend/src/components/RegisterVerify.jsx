@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+
 import robot from "../assets/robot.png";
+import { EmailIcon, KeyIcon } from "./_AllSVGs";
+import { ButtonNavigate } from "./_Button";
 
 export const RegisterVerify = () => {
   const navigate = useNavigate();
@@ -62,16 +65,7 @@ export const RegisterVerify = () => {
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 16"
-            >
-              <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
-              <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
-            </svg>
+            <EmailIcon />
           </div>
           <input
             type="email"
@@ -92,15 +86,7 @@ export const RegisterVerify = () => {
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <svg
-              className="w-6 h-6 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 -960 960 960"
-            >
-              <path d="M280.17-395.67q-34.5 0-59.5-24.83-25-24.84-25-59.33 0-34.5 24.83-59.5 24.84-25 59.33-25 34.5 0 59.5 24.83 25 24.84 25 59.33 0 34.5-24.83 59.5-24.84 25-59.33 25ZM280-214.33q-109.78 0-187.72-77.99-77.95-77.99-77.95-187.84 0-109.84 77.95-187.67 77.94-77.84 187.72-77.84 79.33 0 140 38.34Q480.67-669 512.06-601h350.27L991-473.33 802-293.67l-86.33-64.66-84.34 61.66L548.67-359H512q-27 61-87.39 102.83-60.39 41.84-144.61 41.84Zm0-92.34q60.67 0 108.17-39.66 47.5-39.67 59.16-104h132l51 40.33 86-62.33 78 57.66 68.34-56.66-37.34-38.34H447q-8.67-59.33-56.73-101.5-48.06-42.16-110.27-42.16-72 0-122.67 50.66Q106.67-552 106.67-480t50.66 122.67Q208-306.67 280-306.67Z" />
-            </svg>
+            <KeyIcon />
           </div>
           <input
             type="tel"
@@ -124,12 +110,9 @@ export const RegisterVerify = () => {
 
       <div className="flex items-center gap-2 mt-4">
         <p className="dark:text-white text-gray-600 text-sm">Back to login?</p>
-        <button
-          className="cursor-pointer bg-gradient-to-br from-blue-500 to-orange-500 text-white px-4 py-1 rounded-lg font-bold shadow-md hover:from-blue-600 hover:to-orange-600 hover:shadow-lg transition-all duration-300 text-sm text-nowrap"
-          onClick={() => navigate("/")}
-        >
+        <ButtonNavigate onClick={() => navigate("/")}>
           Click here
-        </button>
+        </ButtonNavigate>
       </div>
     </div>
   );
