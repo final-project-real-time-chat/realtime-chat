@@ -199,19 +199,36 @@ export const ChatArea = () => {
                       </span>
                       {chatroom.usernames.join(", ")
                         ? chatroom.lastMessage && (
-                            <span className="text-xs xl:text-xl">
-                              {truncateText(
-                                chatroom.lastMessage.content,
-                                maxLength
+                            <>
+                              {chatroom.currentUserId ===
+                              chatroom.lastMessage.sender ? (
+                                <div className="flex items-center gap-2">
+                                  <span className="material-symbols-outlined dark:text-gray-400 text-gray-700">
+                                    forward
+                                  </span>
+                                  <span className="text-xs xl:text-xl text-nowrap">
+                                    {truncateText(
+                                      chatroom.lastMessage.content,
+                                      maxLength / 2
+                                    )}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-xs xl:text-xl text-nowrap">
+                                  {truncateText(
+                                    chatroom.lastMessage.content,
+                                    maxLength
+                                  )}
+                                </span>
                               )}
-                            </span>
+                            </>
                           )
                         : "Deleted account"}
                     </div>
                     <div className="ml-auto">
                       {chatroom.timestamps &&
                         chatroom.timestamps.length > 0 && (
-                          <span className="flex justify-end dark:text-gray-400 text-gray-700 text-xs">
+                          <span className="flex justify-end dark:text-gray-400 text-gray-700 text-xs text-nowrap">
                             {formatTimestamp(chatroom.timestamps[0])}
                           </span>
                         )}

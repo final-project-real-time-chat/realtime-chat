@@ -125,6 +125,7 @@ export default (io) => {
             lastMessage,
             timestamps: formattedTimestamps,
             unreadMessagesCount,
+            currentUserId,
           };
         })
       );
