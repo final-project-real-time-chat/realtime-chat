@@ -19,7 +19,22 @@ export const ChatArea = () => {
   const [maxLength, setMaxLength] = useState(20);
   const audioReceiveRef = useRef(new Audio(notification));
 
-  audioReceiveRef.current.volume = 0.3;
+  useEffect(() => {
+    const initializeAudio = () => {
+      audioReceiveRef.current = new Audio(notification);
+      audioReceiveRef.current.volume = 0.3;
+      window.removeEventListener("click", initializeAudio);
+      window.removeEventListener("touchstart", initializeAudio);
+    };
+
+    window.addEventListener("click", initializeAudio);
+    window.addEventListener("touchstart", initializeAudio);
+
+    return () => {
+      window.removeEventListener("click", initializeAudio);
+      window.removeEventListener("touchstart", initializeAudio);
+    };
+  }, []);
 
   window.scrollTo(0, 0);
 
@@ -70,9 +85,11 @@ export const ChatArea = () => {
 
     socket.on("message", () => {
       queryClient.invalidateQueries(["chatrooms"]);
-      audioReceiveRef.current.play().catch((error) => {
-        console.error("Audio playback failed:", error);
-      });
+      if (audioReceiveRef.current) {
+        audioReceiveRef.current.play().catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
+      }
     });
 
     socket.on("message-update", () => {
