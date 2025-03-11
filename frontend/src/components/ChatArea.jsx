@@ -17,7 +17,7 @@ export const ChatArea = () => {
   const queryClient = useQueryClient();
   const [menuOpen, setMenuOpen] = useState(false);
   const [maxLength, setMaxLength] = useState(20);
-  const audioReceiveRef = useRef(new Audio(notification));
+  const audioReceiveRef = useRef(null);
 
   useEffect(() => {
     const initializeAudio = () => {
