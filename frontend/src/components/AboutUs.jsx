@@ -52,7 +52,7 @@ export const AboutUs = () => {
             an appealing UI design.
           </li>
           <li className="text-balance">
-            Backend: Express.js as the web framework, MongoDB as the NoSQL
+            Backend: Express.js as the web framework for Node.js, MongoDB as the NoSQL
             database, bcrypt for password encryption, and Express-session for
             secure authentication.
           </li>
@@ -91,7 +91,7 @@ export const AboutUs = () => {
               href="https://hello-word-6z2bg.ondigitalocean.app/"
               className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
             >
-              Hello-Word App
+              Hello-Word Olivia
             </a>
           </li>
           <li>
@@ -100,7 +100,7 @@ export const AboutUs = () => {
               href="https://hello-word.khambazarov.dev/"
               className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
             >
-              Hello-Word App
+              Hello-Word Renat
             </a>
           </li>
           <li>
