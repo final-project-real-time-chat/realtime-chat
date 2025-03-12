@@ -109,7 +109,7 @@ export const AboutUs = () => {
               href="https://github.com/final-project-real-time-chat/realtime-chat"
               className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
             >
-              GitHub Repository
+              GitHub Repo
             </a>
           </li>
         </ul>
