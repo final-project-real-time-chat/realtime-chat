@@ -89,7 +89,8 @@ export default (io) => {
       const currentUsername = req.session.user.username;
       const currentUserId = req.session.user.id;
 
-      // const avatar = await User.findOne({ avatar });
+      const currentUser = await User.findById(currentUserId);
+      const volume = currentUser.volume;
 
       const allChats = await Chatroom.find({ users: currentUserId }).populate(
         "users"
@@ -135,7 +136,7 @@ export default (io) => {
         return b.lastMessage.createdAt - a.lastMessage.createdAt;
       });
 
-      res.json({ chatrooms: sortedChatrooms, currentUsername });
+      res.json({ chatrooms: sortedChatrooms, currentUsername, volume });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
@@ -161,6 +162,9 @@ export default (io) => {
       const { id } = req.params;
       const currentUsername = req.session.user.username;
       const currentUserId = req.session.user.id;
+
+      const currentUser = await User.findById(currentUserId);
+      const volume = currentUser.volume;
 
       const chatroomMessages = await Message.find({ chatroom: id }).populate(
         "sender"
@@ -207,6 +211,7 @@ export default (io) => {
         currentUsername,
         partnerName,
         unreadMessagesCount,
+        volume,
       });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });

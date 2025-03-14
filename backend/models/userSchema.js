@@ -14,6 +14,7 @@ const userSchema = new Schema(
           .padStart(6, "0"),
     },
     key: { type: String },
+    volume: { type: String, default: "middle" },
     // status: {
     //   type: String,
     //   required: true,

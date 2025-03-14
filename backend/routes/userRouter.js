@@ -372,5 +372,28 @@ export default (io) => {
     }
   });
 
+  /** CHANGE NEW PASSWORD */
+  router.patch("/volume", async (req, res) => {
+    try {
+      const { volume } = req.body;
+      const currentUsername = req.session.user.username;
+      console.log("username ", currentUsername, "volume ", volume);
+
+      const updatedUser = await User.findOneAndUpdate(
+        { username: currentUsername },
+        { $set: { volume } },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.status(200).json({ message: "Volume successfully changed", volume });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   return router;
 };

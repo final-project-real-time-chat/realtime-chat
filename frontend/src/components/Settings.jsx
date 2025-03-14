@@ -15,6 +15,7 @@ export const Settings = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [volume, setVolume] = useState("");
 
   function changePassword(e) {
     e.preventDefault();
@@ -58,6 +59,26 @@ export const Settings = () => {
     },
     onError: () => {
       toast.error("Failed to delete account. Please try again.");
+    },
+  });
+
+  const handleAudioVolume = useMutation({
+    mutationFn: async (volume) => {
+      const response = await fetch(`/api/users/volume`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(volume),
+      });
+      if (!response.ok) throw new Error("Failed to change volume.");
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Volume changed successfully!");
+    },
+    onError: () => {
+      toast.error("Failed to change Volume. Please try again.");
     },
   });
 
@@ -153,6 +174,53 @@ export const Settings = () => {
             Change Password
           </button>
           {/* </div> */}
+        </form>
+        <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
+          <div>
+            <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
+              Audio volume
+            </h1>
+            <div>
+              <input
+                type="radio"
+                id="silent"
+                name="audioVolume"
+                value="silent"
+                checked={volume === "silent"}
+                onChange={(e) => setVolume(e.target.value)}
+              />
+              <label htmlFor="silent">silent</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="middle"
+                name="audioVolume"
+                value="middle"
+                checked={volume === "middle"}
+                onChange={(e) => setVolume(e.target.value)}
+              />
+              <label htmlFor="middle">middle</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="full"
+                name="audioVolume"
+                value="full"
+                checked={volume === "full"}
+                onChange={(e) => setVolume(e.target.value)}
+              />
+              <label htmlFor="full">full</label>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleAudioVolume.mutate({ volume })}
+              className="mt-5 cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700 text-nowrap"
+            >
+              Save
+            </button>
+          </div>
         </form>
         <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>

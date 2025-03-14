@@ -19,25 +19,6 @@ export const ChatArea = () => {
   const [maxLength, setMaxLength] = useState(20);
   const audioReceiveRef = useRef(null);
 
-  useEffect(() => {
-    const initializeAudio = () => {
-      audioReceiveRef.current = new Audio(notification);
-      audioReceiveRef.current.volume = 0.3;
-      window.removeEventListener("click", initializeAudio);
-      window.removeEventListener("touchstart", initializeAudio);
-    };
-
-    window.addEventListener("click", initializeAudio);
-    window.addEventListener("touchstart", initializeAudio);
-
-    return () => {
-      window.removeEventListener("click", initializeAudio);
-      window.removeEventListener("touchstart", initializeAudio);
-    };
-  }, []);
-
-  window.scrollTo(0, 0);
-
   const {
     data: chatroomsData,
     error: chatroomsError,
@@ -58,6 +39,34 @@ export const ChatArea = () => {
       console.error(error.message);
     },
   });
+
+  const volume = chatroomsData?.volume || "middle";
+
+  useEffect(() => {
+    if (!audioReceiveRef.current) {
+      audioReceiveRef.current = new Audio(notification);
+    }
+    audioReceiveRef.current.volume =
+      volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
+
+    const initializeAudio = () => {
+      audioReceiveRef.current.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
+      window.removeEventListener("click", initializeAudio);
+      window.removeEventListener("touchstart", initializeAudio);
+    };
+
+    window.addEventListener("click", initializeAudio);
+    window.addEventListener("touchstart", initializeAudio);
+
+    return () => {
+      window.removeEventListener("click", initializeAudio);
+      window.removeEventListener("touchstart", initializeAudio);
+    };
+  }, [volume]);
+
+  window.scrollTo(0, 0);
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
