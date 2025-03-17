@@ -30,6 +30,22 @@ const customEmojis = [
   },
 ];
 
+const audioSend = new Audio(fingerSnap);
+const audioReceive = new Audio(positiveNotification);
+
+function playAudio(audio) {
+  try {
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((error) => {
+        console.error("Audio playback failed:", error);
+      });
+    }
+  } catch (error) {
+    console.error("Audio playback failed:", error);
+  }
+}
+
 export const Chatroom = () => {
   const [editingMessage, setEditingMessage] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -49,26 +65,10 @@ export const Chatroom = () => {
     },
   });
 
-  const audioSend = new Audio(fingerSnap);
-  const audioReceive = new Audio(positiveNotification);
   const volume = data?.volume;
-  console.log(volume);
 
   audioSend.volume = volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
   audioReceive.volume = volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
-
-  function playAudio(audio) {
-    try {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.error("Audio playback failed:", error);
-        });
-      }
-    } catch (error) {
-      console.error("Audio playback failed:", error);
-    }
-  }
 
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;

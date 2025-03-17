@@ -50,9 +50,6 @@ export const ChatArea = () => {
       volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
 
     const initializeAudio = () => {
-      audioReceiveRef.current.play().catch((error) => {
-        console.error("Audio playback failed:", error);
-      });
       window.removeEventListener("click", initializeAudio);
       window.removeEventListener("touchstart", initializeAudio);
     };
