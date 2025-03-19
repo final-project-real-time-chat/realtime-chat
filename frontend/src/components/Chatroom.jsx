@@ -136,6 +136,29 @@ export const Chatroom = () => {
     },
   });
 
+  function handleImageChange(e) {
+    const selectedImage = e.target.files[0];
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("image", selectedImage);
+      uploadImageMutation.mutate(formData);
+    }
+  }
+
+  const imageExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".svg",
+    ".gif",
+    ".bmp",
+    ".webp",
+  ];
+
+  function isImageUrl(url) {
+    return imageExtensions.some((extension) => url.endsWith(extension));
+  }
+
   const editMessageMutation = useMutation({
     mutationFn: async ({ messageId, content }) => {
       const response = await fetch(`/api/messages/edit`, {
@@ -235,10 +258,6 @@ export const Chatroom = () => {
     const newHeight = Math.min(textarea.scrollHeight, maxHeight);
     textarea.style.height = `${newHeight}px`;
     setTextareaHeight(newHeight);
-  }
-
-  function handleImageChange(e) {
-    setImage(e.target.files[0]);
   }
 
   const lastMessageRef = useRef(null);
@@ -452,7 +471,7 @@ export const Chatroom = () => {
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              {message.content.startsWith("http") ? (
+              {isImageUrl(message.content) ? (
                 <img src={message.content} alt="uploaded" />
               ) : (
                 <p className="break-words whitespace-pre-line min-w-40">
@@ -470,7 +489,7 @@ export const Chatroom = () => {
                     onClick={() => handleEditMessage(message)}
                     className="absolute -left-3 top-1 dark:text-gray-400 text-gray-700"
                   >
-                    <EditMessageIcon />
+                    {!isImageUrl(message.content) && <EditMessageIcon />}
                   </button>
                   <button
                     onClick={() => handleDeleteMessage(message)}

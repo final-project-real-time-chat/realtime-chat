@@ -125,6 +125,20 @@ export const ChatArea = () => {
     };
   }, []);
 
+  const imageExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".svg",
+    ".gif",
+    ".bmp",
+    ".webp",
+  ];
+
+  function isImageUrl(url) {
+    return imageExtensions.some((extension) => url.endsWith(extension));
+  }
+
   return (
     <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
@@ -229,12 +243,18 @@ export const ChatArea = () => {
                                   <span className="material-symbols-outlined dark:text-gray-400 text-gray-700">
                                     forward
                                   </span>
-                                  <span className="text-xs xl:text-xl text-nowrap">
-                                    {truncateText(
-                                      chatroom.lastMessage.content,
-                                      maxLength / 2
-                                    )}
-                                  </span>
+                                  {isImageUrl(chatroom.lastMessage.content) ? (
+                                    <span className="text-xs xl:text-xl text-nowrap">
+                                      Image
+                                    </span>
+                                  ) : (
+                                    <span className="text-xs xl:text-xl text-nowrap">
+                                      {truncateText(
+                                        chatroom.lastMessage.content,
+                                        maxLength / 2
+                                      )}
+                                    </span>
+                                  )}
                                 </div>
                               ) : (
                                 <span className="text-xs xl:text-xl text-nowrap">
