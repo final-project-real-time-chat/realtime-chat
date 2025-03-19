@@ -50,6 +50,7 @@ export const Chatroom = () => {
   const [editingMessage, setEditingMessage] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [textareaHeight, setTextareaHeight] = useState(40);
+  const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
   const textareaRef = useRef(null);
@@ -109,6 +110,26 @@ export const Chatroom = () => {
       queryClient.invalidateQueries(["chatroom", id]);
       textareaRef.current.value = "";
       playAudio(audioSend);
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
+  const uploadImageMutation = useMutation({
+    mutationFn: async (formData) => {
+      const response = await fetch(`/api/images/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      sendMessageMutation.mutate(data.url);
+      setImage(null);
     },
     onError: (error) => {
       console.error(error.message);
@@ -179,7 +200,11 @@ export const Chatroom = () => {
       return;
     }
 
-    if (editingMessage) {
+    if (image) {
+      const formData = new FormData();
+      formData.append("image", image);
+      uploadImageMutation.mutate(formData);
+    } else if (editingMessage) {
       editMessageMutation.mutate({
         messageId: editingMessage._id,
         content: userInput,
@@ -210,6 +235,10 @@ export const Chatroom = () => {
     const newHeight = Math.min(textarea.scrollHeight, maxHeight);
     textarea.style.height = `${newHeight}px`;
     setTextareaHeight(newHeight);
+  }
+
+  function handleImageChange(e) {
+    setImage(e.target.files[0]);
   }
 
   const lastMessageRef = useRef(null);
@@ -423,9 +452,13 @@ export const Chatroom = () => {
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              <p className="break-words whitespace-pre-line min-w-40">
-                {message.content}
-              </p>
+              {message.content.startsWith("http") ? (
+                <img src={message.content} alt="uploaded" />
+              ) : (
+                <p className="break-words whitespace-pre-line min-w-40">
+                  {message.content}
+                </p>
+              )}
               <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
                 {message.createdAt !== message.updatedAt
                   ? `( Updated ) ${formatTimestamp(message.createdAt)}`
@@ -480,6 +513,21 @@ export const Chatroom = () => {
               />
             </label>
           )}
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+            id="image-upload"
+          />
+
+          <label
+            htmlFor="image-upload"
+            className="cursor-pointer mx-3 material-symbols-outlined"
+          >
+            add
+          </label>
 
           <textarea
             name="textarea"

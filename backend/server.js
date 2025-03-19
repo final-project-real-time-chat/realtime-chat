@@ -10,6 +10,7 @@ import cookie from "cookie";
 import userRouter from "./routes/userRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 import chatroomRouter from "./routes/chatroomRouter.js";
+import uploadRouter from "./routes/uploadRouter.js"
 import { connectDB } from "./db.js";
 import Chatroom from "./models/chatroomSchema.js";
 
@@ -97,6 +98,7 @@ app.use(
 app.use("/api/users", userRouter(io));
 app.use("/api/messages", messageRouter(io));
 app.use("/api/chatrooms", chatroomRouter(io));
+app.use("/api/images", uploadRouter);
 
 const baseUrl = process.env.BASE_URL;
 const port = parseInt(process.env.PORT) || 3030;
