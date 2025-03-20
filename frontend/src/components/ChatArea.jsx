@@ -136,7 +136,10 @@ export const ChatArea = () => {
   ];
 
   function isImageUrl(url) {
-    return imageExtensions.some((extension) => url.endsWith(extension));
+    return (
+      url.startsWith("https://res.cloudinary.com/") &&
+      imageExtensions.some((extension) => url.endsWith(extension))
+    );
   }
 
   return (
@@ -244,8 +247,8 @@ export const ChatArea = () => {
                                     forward
                                   </span>
                                   {isImageUrl(chatroom.lastMessage.content) ? (
-                                    <span className="text-xs xl:text-xl text-nowrap">
-                                      Image
+                                    <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                                      Sent image
                                     </span>
                                   ) : (
                                     <span className="text-xs xl:text-xl text-nowrap">
@@ -256,6 +259,10 @@ export const ChatArea = () => {
                                     </span>
                                   )}
                                 </div>
+                              ) : isImageUrl(chatroom.lastMessage.content) ? (
+                                <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                                  Sent image
+                                </span>
                               ) : (
                                 <span className="text-xs xl:text-xl text-nowrap">
                                   {truncateText(

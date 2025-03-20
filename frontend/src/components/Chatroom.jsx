@@ -156,7 +156,10 @@ export const Chatroom = () => {
   ];
 
   function isImageUrl(url) {
-    return imageExtensions.some((extension) => url.endsWith(extension));
+    return (
+      url.startsWith("https://res.cloudinary.com/") &&
+      imageExtensions.some((extension) => url.endsWith(extension))
+    );
   }
 
   const editMessageMutation = useMutation({
