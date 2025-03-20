@@ -10,7 +10,7 @@ export const ForgotPw = () => {
 
   async function handleResetPw(e) {
     e.preventDefault();
-    const email = e.target.email.value.toLowerCase();
+    const email = e.target.email.value.toLowerCase().trim();
 
     toast.loading("Waiting...");
 

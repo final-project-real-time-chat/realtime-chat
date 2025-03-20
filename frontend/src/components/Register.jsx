@@ -18,9 +18,9 @@ export const Register = () => {
 
   async function handleRegister(e) {
     e.preventDefault();
-    const email = e.target.email.value.toLowerCase();
-    const username = e.target.username.value;
-    const password = e.target.password.value;
+    const email = e.target.email.value.toLowerCase().trim();
+    const username = e.target.username.value.trim();
+    const password = e.target.password.value.trim();
 
     toast.loading("Waiting...");
 

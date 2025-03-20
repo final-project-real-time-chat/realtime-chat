@@ -18,8 +18,8 @@ export const Login = () => {
 
   async function handleLogin(e) {
     e.preventDefault();
-    const email = e.target.email.value.toLowerCase();
-    const password = e.target.password.value;
+    const email = e.target.email.value.toLowerCase().trim();
+    const password = e.target.password.value.trim();
 
     toast.loading("Waiting...");
 

@@ -12,8 +12,8 @@ export const RegisterVerify = () => {
     e.preventDefault();
     toast.loading("Waiting...");
 
-    const email = e.target.email.value.toLowerCase();
-    const key = e.target.key.value;
+    const email = e.target.email.value.toLowerCase().trim();
+    const key = e.target.key.value.trim();
 
     const response = await fetch("/api/users/register/verify", {
       method: "POST",

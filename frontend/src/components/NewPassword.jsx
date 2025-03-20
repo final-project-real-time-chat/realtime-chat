@@ -18,9 +18,9 @@ export const NewPassword = () => {
 
   async function handleNewPw(e) {
     e.preventDefault();
-    const email = e.target.email.value.toLowerCase();
-    const key = e.target.key.value;
-    const newPw = e.target.newPw.value;
+    const email = e.target.email.value.toLowerCase().trim();
+    const key = e.target.key.value.trim();
+    const newPw = e.target.newPw.value.trim();
 
     toast.loading("Waiting...");
 
