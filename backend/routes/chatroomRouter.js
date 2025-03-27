@@ -120,6 +120,13 @@ export default (io) => {
 
           const formattedTimestamps = timestamps.map((msg) => msg.createdAt);
 
+          const isDeletedAccount =
+            Array.isArray(usernames) && usernames.length === 0;
+
+          if (isDeletedAccount && !lastMessage) {
+            await Chatroom.findByIdAndDelete(chatId);
+          }
+
           return {
             chatId,
             usernames,
@@ -127,13 +134,27 @@ export default (io) => {
             timestamps: formattedTimestamps,
             unreadMessagesCount,
             currentUserId,
+            isDeletedAccount,
           };
         })
       );
 
       const sortedChatrooms = outputChats.sort((a, b) => {
-        if (!a.lastMessage || !b.lastMessage) return 0;
-        return b.lastMessage.createdAt - a.lastMessage.createdAt;
+        // 1. Sortiere gelöschte Konten nach unten
+        if (a.isDeletedAccount && !b.isDeletedAccount) return 1;
+        if (!a.isDeletedAccount && b.isDeletedAccount) return -1;
+
+        // 2. Sortiere Chatrooms ohne lastMessage zwischen denen mit lastMessage und gelöschten Konten
+        if (!a.lastMessage && b.lastMessage) return 1;
+        if (a.lastMessage && !b.lastMessage) return -1;
+
+        // 3. Sortiere nach lastMessage.createdAt, wenn beide eine lastMessage haben
+        if (a.lastMessage && b.lastMessage) {
+          return b.lastMessage.createdAt - a.lastMessage.createdAt;
+        }
+
+        // 4. Wenn beide keine lastMessage haben, bleibt die Reihenfolge gleich
+        return 0;
       });
 
       res.json({ chatrooms: sortedChatrooms, currentUsername, volume });

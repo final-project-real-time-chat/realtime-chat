@@ -237,29 +237,19 @@ export const ChatArea = () => {
                       <span className="font-bold">
                         {chatroom.usernames.join(", ") ?? "No Username"}
                       </span>
-                      {chatroom.usernames.join(", ")
-                        ? chatroom.lastMessage && (
-                            <>
-                              {chatroom.currentUserId ===
-                              chatroom.lastMessage.sender ? (
-                                <div className="flex items-center gap-2">
-                                  <span className="material-symbols-outlined dark:text-gray-400 text-gray-700">
-                                    forward
-                                  </span>
-                                  {isImageUrl(chatroom.lastMessage.content) ? (
-                                    <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
-                                      Sent image
-                                    </span>
-                                  ) : (
-                                    <span className="text-xs xl:text-xl text-nowrap">
-                                      {truncateText(
-                                        chatroom.lastMessage.content,
-                                        maxLength / 2
-                                      )}
-                                    </span>
-                                  )}
-                                </div>
-                              ) : isImageUrl(chatroom.lastMessage.content) ? (
+                      {chatroom.isDeletedAccount ? (
+                        <span className="text-xs xl:text-xl text-red-500">
+                          Deleted account
+                        </span>
+                      ) : chatroom.lastMessage ? (
+                        <>
+                          {chatroom.currentUserId ===
+                          chatroom.lastMessage.sender ? (
+                            <div className="flex items-center gap-2">
+                              <span className="material-symbols-outlined dark:text-gray-400 text-gray-700">
+                                forward
+                              </span>
+                              {isImageUrl(chatroom.lastMessage.content) ? (
                                 <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
                                   Sent image
                                 </span>
@@ -267,13 +257,29 @@ export const ChatArea = () => {
                                 <span className="text-xs xl:text-xl text-nowrap">
                                   {truncateText(
                                     chatroom.lastMessage.content,
-                                    maxLength
+                                    maxLength / 2
                                   )}
                                 </span>
                               )}
-                            </>
-                          )
-                        : "Deleted account"}
+                            </div>
+                          ) : isImageUrl(chatroom.lastMessage.content) ? (
+                            <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                              Sent image
+                            </span>
+                          ) : (
+                            <span className="text-xs xl:text-xl text-nowrap">
+                              {truncateText(
+                                chatroom.lastMessage.content,
+                                maxLength
+                              )}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-xs xl:text-xl text-gray-500">
+                          No messages
+                        </span>
+                      )}
                     </div>
                     <div className="ml-auto">
                       {chatroom.timestamps &&
