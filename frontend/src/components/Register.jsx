@@ -132,6 +132,15 @@ export const Register = () => {
             {showPassword ? <EyeOpenedIcon /> : <EyeClosedIcon />}
           </div>
         </div>
+        <div className="flex gap-2 mb-3">
+          <input type="checkbox" required />
+          <p>
+            I have read the{" "}
+            <a href="/gdpr" target="_blank" className="text-blue-500 underline">
+              GDPR
+            </a>
+          </p>
+        </div>
         <button
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
