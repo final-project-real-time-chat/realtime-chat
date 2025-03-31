@@ -141,7 +141,7 @@ export const GDPR = () => {
             </p>
           </section>
 
-          <footer className="text-center mt-8">
+          <footer className="text-center my-8">
             <p>
               <strong>Stand:</strong> März 2025
             </p>
@@ -279,7 +279,7 @@ export const GDPR = () => {
             </p>
           </section>
 
-          <footer className="text-center mt-8">
+          <footer className="text-center my-8">
             <p>
               <strong>Last updated:</strong> March 2025
             </p>
