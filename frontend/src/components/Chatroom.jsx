@@ -546,7 +546,7 @@ export const Chatroom = () => {
 
           <label
             htmlFor="image-upload"
-            className="cursor-pointer mx-3 material-symbols-outlined"
+            className="cursor-pointer mx-3 material-symbols-outlined text-white"
           >
             add
           </label>
