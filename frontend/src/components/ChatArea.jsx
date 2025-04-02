@@ -6,6 +6,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
 
 import { cn } from "../utils/cn.js";
+import { fetchUserLanguage } from "../utils/api.js";
+import { getTranslations } from "../utils/languageHelper.js";
 
 import robot from "../assets/robot.png";
 import notification from "../assets/positive-notification.wav";
@@ -18,6 +20,24 @@ export const ChatArea = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [maxLength, setMaxLength] = useState(20);
   const audioReceiveRef = useRef(null);
+
+  const [language, setLanguage] = useState("en");
+  const [translations, setTranslations] = useState(getTranslations("en"));
+
+  useEffect(() => {
+    const loadUserLanguage = async () => {
+      try {
+        const userData = await fetchUserLanguage();
+        const userLanguage = userData.language || "en";
+        setLanguage(userLanguage);
+        setTranslations(getTranslations(userLanguage));
+      } catch (error) {
+        console.error("Failed to fetch user language:", error);
+      }
+    };
+
+    loadUserLanguage();
+  }, []);
 
   const {
     data: chatroomsData,
@@ -183,20 +203,20 @@ export const ChatArea = () => {
                 className="hover:bg-gray-600 cursor-pointer  text-white font-extrabold duration-300  px-3 py-1 md:px-8"
                 onClick={() => navigate(`/profile`)}
               >
-                Profile
+                {translations.profile}
               </li>
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8"
                 onClick={() => navigate(`/settings`)}
               >
-                Settings
+                {translations.settings}
               </li>
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
                 onClick={() => navigate(`/about-us`)}
               >
-                About us
+                {translations.aboutUs}
               </li>
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
@@ -208,14 +228,14 @@ export const ChatArea = () => {
                   rel="noopener noreferrer"
                   className="text-blue-500 underline tracking-widest"
                 >
-                  GDPR
+                  {translations.privacyPolicy}
                 </a>
               </li>
               <li
                 className="hover:bg-gray-600 rounded-bl-2xl cursor-pointer text-red-600 font-extrabold  duration-300 px-3 py-1 md:px-8 outline-none"
                 onClick={() => logoutMutation.mutate()}
               >
-                Logout
+                {translations.logout}
               </li>
             </ul>
           )}
@@ -223,9 +243,9 @@ export const ChatArea = () => {
       </header>
       <main className="min-h-screen">
         {isLoading ? (
-          <p>Loading...</p>
+          <p>{translations.loading}</p>
         ) : chatroomsError ? (
-          <p>Error loading chatrooms: {chatroomsError.message}</p>
+          <p>{translations.errorLoadingChatrooms}</p>
         ) : (
           <>
             <ul>
@@ -248,11 +268,12 @@ export const ChatArea = () => {
                     </div>
                     <div className="flex flex-col pl-4">
                       <span className="font-bold">
-                        {chatroom.usernames.join(", ") ?? "No Username"}
+                        {chatroom.usernames.join(", ") ??
+                          translations.noUsername}
                       </span>
                       {chatroom.isDeletedAccount ? (
                         <span className="text-xs xl:text-xl text-red-500">
-                          Deleted account
+                          {translations.deletedAccount}
                         </span>
                       ) : chatroom.lastMessage ? (
                         <>
@@ -264,7 +285,7 @@ export const ChatArea = () => {
                               </span>
                               {isImageUrl(chatroom.lastMessage.content) ? (
                                 <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
-                                  Sent image
+                                  {translations.sentImage}
                                 </span>
                               ) : (
                                 <span className="text-xs xl:text-xl text-nowrap">
@@ -277,7 +298,7 @@ export const ChatArea = () => {
                             </div>
                           ) : isImageUrl(chatroom.lastMessage.content) ? (
                             <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
-                              Sent image
+                              {translations.sentImage}
                             </span>
                           ) : (
                             <span className="text-xs xl:text-xl text-nowrap">
@@ -290,7 +311,7 @@ export const ChatArea = () => {
                         </>
                       ) : (
                         <span className="text-xs xl:text-xl text-gray-500">
-                          No messages
+                          {translations.noMessages}
                         </span>
                       )}
                     </div>

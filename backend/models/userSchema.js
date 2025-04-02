@@ -15,6 +15,11 @@ const userSchema = new Schema(
     },
     key: { type: String },
     volume: { type: String, default: "middle" },
+    language: {
+      type: String,
+      enum: ["en", "de"],
+      default: "en",
+    },
     // status: {
     //   type: String,
     //   required: true,

@@ -166,6 +166,7 @@ export default (io) => {
         usermail: user.email,
         dateOfRegistration: user.createdAt,
         volume: user.volume,
+        language: user.language,
       });
     } catch (error) {
       console.error("Error fetching current user:", error);
@@ -377,6 +378,40 @@ export default (io) => {
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  /** CHANGE APP LANGUAGE */
+  router.patch("/language", async (req, res) => {
+    try {
+      const userId = req.session.user?.id;
+      const { language } = req.body;
+
+      if (!userId) {
+        return res.status(401).json({ errorMessage: "Not authenticated" });
+      }
+
+      if (!["en", "de"].includes(language)) {
+        return res.status(400).json({ errorMessage: "Invalid language" });
+      }
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { language },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      res.json({
+        message: "Language updated successfully",
+        language: user.language,
+      });
+    } catch (error) {
+      console.error("Error updating language:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
 

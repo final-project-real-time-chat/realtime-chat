@@ -1,9 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UkFlag, GermanFlag } from "./_AllSVGs";
+import { fetchUserLanguage, updateUserLanguage } from "../utils/api.js";
 
 export const GDPR = () => {
-  const [language, setLanguage] = useState("english");
-  if (language === "german") {
+  const [language, setLanguage] = useState("en");
+  const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+     const loadLanguage = async () => {
+       try {
+         const userData = await fetchUserLanguage();
+         setLanguage(userData.language || "en");
+       } catch (error) {
+         console.error("Failed to fetch user language:", error);
+         setLanguage("en");
+       } finally {
+         setLoading(false);
+       }
+     };
+
+     loadLanguage();
+   }, []);
+
+   const handleLanguageChange = async (newLanguage) => {
+     try {
+       await updateUserLanguage(newLanguage);
+       setLanguage(newLanguage);
+     } catch (error) {
+       console.error("Failed to update user language:", error);
+     }
+   };
+
+   if (loading) {
+     return <p className="text-white text-center">Loading...</p>;
+   }
+  
+  if (language === "de") {
     return (
       <div className="flex flex-col items-center text-white">
         <div className="xl:w-[50%] w-[90%]">
@@ -12,32 +44,32 @@ export const GDPR = () => {
               <div className="flex gap-2 text-center">
                 <input
                   type="radio"
-                  id="german"
+                  id="de"
                   name="language"
-                  value="german"
-                  checked={language === "german"}
-                  onChange={(e) => setLanguage(e.target.value)}
+                  value="de"
+                  checked={language === "de"}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                 />
-                <label htmlFor="german">
+                <label htmlFor="de">
                   DE <GermanFlag />
                 </label>
               </div>
               <div className="flex gap-2 text-center">
                 <input
                   type="radio"
-                  id="english"
+                  id="en"
                   name="language"
-                  value="english"
-                  checked={language === "english"}
-                  onChange={(e) => setLanguage(e.target.value)}
+                  value="en"
+                  checked={language === "en"}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                 />
-                <label htmlFor="english">
+                <label htmlFor="en">
                   EN <UkFlag />
                 </label>
               </div>
             </div>
             <h1 className="text-3xl font-semibold mb-8 underline text-center">
-              Datenschutz
+              Datenschutzerklärung
             </h1>
           </header>
           <section className="mb-8">
@@ -158,26 +190,26 @@ export const GDPR = () => {
               <div className="flex gap-2 text-center">
                 <input
                   type="radio"
-                  id="german"
+                  id="de"
                   name="language"
-                  value="german"
-                  checked={language === "german"}
-                  onChange={(e) => setLanguage(e.target.value)}
+                  value="de"
+                  checked={language === "de"}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                 />
-                <label htmlFor="german">
+                <label htmlFor="de">
                   DE <GermanFlag />
                 </label>
               </div>
               <div className="flex gap-2 text-center">
                 <input
                   type="radio"
-                  id="english"
+                  id="en"
                   name="language"
-                  value="english"
-                  checked={language === "english"}
-                  onChange={(e) => setLanguage(e.target.value)}
+                  value="en"
+                  checked={language === "en"}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                 />
-                <label htmlFor="english">
+                <label htmlFor="en">
                   EN <UkFlag />
                 </label>
               </div>

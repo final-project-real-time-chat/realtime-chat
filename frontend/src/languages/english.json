@@ -1,0 +1,27 @@
+{
+  "settings": "Settings",
+  "aboutUs": "About Us",
+  "privacyPolicy": "Privacy Policy",
+  "logout": "Logout",
+  "audioVolume": "Audio Volume",
+  "silent": "Silent",
+  "middle": "Middle",
+  "full": "Full",
+  "selectLanguage": "Select Language",
+  "languages": {
+    "en": "EN",
+    "de": "DE"
+  },
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "deleteAccount": "Delete your Account",
+  "deleteBtn": "Delete",
+  "profile": "Profile",
+  "loading": "Loading...",
+  "errorLoadingChatrooms": "Error loading chatrooms",
+  "noUsername": "No Username",
+  "deletedAccount": "Deleted account",
+  "sentImage": "Sent image",
+  "noMessages": "No messages"
+}

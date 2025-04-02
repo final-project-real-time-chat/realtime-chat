@@ -3,12 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
+import { fetchUserLanguage, updateUserLanguage } from "../utils/api.js";
+import { getTranslations } from "../utils/languageHelper.js";
+
 import robot from "../assets/robot.png";
 import {
   BackButtonIcon,
   EyeClosedIcon,
   EyeOpenedIcon,
   PasswordIcon,
+  UkFlag,
+  GermanFlag,
 } from "./_AllSVGs";
 
 export const Settings = () => {
@@ -17,6 +22,9 @@ export const Settings = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [volume, setVolume] = useState(null);
   const queryClient = useQueryClient();
+
+  const [language, setLanguage] = useState("en");
+  const [translations, setTranslations] = useState(getTranslations("en"));
 
   function changePassword(e) {
     e.preventDefault();
@@ -29,19 +37,17 @@ export const Settings = () => {
 
   const { data: userSettings, isLoading } = useQuery({
     queryKey: ["userSettings"],
-    queryFn: async () => {
-      const response = await fetch("/api/users/current");
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-      const data = await response.json();
-      return data;
-    },
+    queryFn: fetchUserLanguage,
     onSuccess: (data) => {
       setVolume(data.volume || "middle");
+      setLanguage(data.language || "en");
+      setTranslations(getTranslations(data.language || "en"));
     },
-    onError: (error) => {
-      toast.error("Failed to load user settings.");
+    onError: () => {
+      toast.error("Failed to load user settings. Using default values.");
+      setVolume("middle");
+      setLanguage("en");
+      setTranslations(getTranslations("en"));
     },
   });
 
@@ -50,6 +56,19 @@ export const Settings = () => {
       setVolume(userSettings.volume);
     }
   }, [userSettings]);
+
+  useEffect(() => {
+    if (userSettings && userSettings.language) {
+      setLanguage(userSettings.language);
+    }
+  }, [userSettings]);
+
+  useEffect(() => {
+    if (language) {
+      const loadedTranslations = getTranslations(language);
+      setTranslations(loadedTranslations);
+    }
+  }, [language]);
 
   const handleAudioVolume = useMutation({
     mutationFn: async (newVolume) => {
@@ -75,6 +94,23 @@ export const Settings = () => {
 
   const handleVolumeChange = (newVolume) => {
     handleAudioVolume.mutate(newVolume);
+  };
+
+  const handleLanguageChange = useMutation({
+    mutationFn: updateUserLanguage,
+    onSuccess: (data) => {
+      setLanguage(data.language || "en");
+      setTranslations(getTranslations(data.language || "en"));
+      toast.success("Language updated successfully!");
+      queryClient.invalidateQueries(["userSettings"]);
+    },
+    onError: () => {
+      toast.error("Failed to update language.");
+    },
+  });
+
+  const handleLanguageSelection = (newLanguage) => {
+    handleLanguageChange.mutate(newLanguage);
   };
 
   const newPasswordMutation = useMutation({
@@ -115,7 +151,12 @@ export const Settings = () => {
     },
   });
 
-  if (isLoading || volume === null) {
+  if (
+    isLoading ||
+    volume === null ||
+    language === null ||
+    translations === null
+  ) {
     return <p>Loading settings...</p>;
   }
 
@@ -138,19 +179,96 @@ export const Settings = () => {
         </button>
       </header>
       <main>
-        <h1 className="text-center text-4xl mt-5">Settings</h1>
+        <h1 className="text-center text-4xl mt-5">{translations.settings}</h1>
+        <form className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
+          <div>
+            <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
+              {translations.selectLanguage}
+            </h1>
+            <div className="flex justify-evenly">
+              <div className="flex gap-2 text-center">
+                <input
+                  type="radio"
+                  id="en"
+                  name="language"
+                  value="en"
+                  checked={language === "en"}
+                  onChange={(e) => handleLanguageSelection(e.target.value)}
+                />
+                <label htmlFor="en">
+                  {translations.languages.en} <UkFlag />
+                </label>
+              </div>
+              <div className="flex gap-2 text-center">
+                <input
+                  type="radio"
+                  id="de"
+                  name="language"
+                  value="de"
+                  checked={language === "de"}
+                  onChange={(e) => handleLanguageSelection(e.target.value)}
+                />
+                <label htmlFor="de">
+                  {translations.languages.de} <GermanFlag />
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
+          <div>
+            <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
+              {translations.audioVolume}
+            </h1>
+            <div className="flex justify-evenly">
+              <div className="flex flex-col items-center">
+                <input
+                  type="radio"
+                  id="silent"
+                  name="audioVolume"
+                  value="silent"
+                  checked={volume === "silent"}
+                  onChange={(e) => handleVolumeChange(e.target.value)}
+                />
+                <label htmlFor="silent">{translations.silent}</label>
+              </div>
+              <div className="flex flex-col items-center">
+                <input
+                  type="radio"
+                  id="middle"
+                  name="audioVolume"
+                  value="middle"
+                  checked={volume === "middle"}
+                  onChange={(e) => handleVolumeChange(e.target.value)}
+                />
+                <label htmlFor="middle">{translations.middle}</label>
+              </div>
+              <div className="flex flex-col items-center">
+                <input
+                  type="radio"
+                  id="full"
+                  name="audioVolume"
+                  value="full"
+                  checked={volume === "full"}
+                  onChange={(e) => handleVolumeChange(e.target.value)}
+                />
+                <label htmlFor="full">{translations.full}</label>
+              </div>
+            </div>
+          </div>
+        </form>
         <form
           onSubmit={changePassword}
           className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
         >
           <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
-            Change Password
+            {translations.changePassword}
           </h1>
           <label
             htmlFor="oldPassword"
             className="block text-gray-600 dark:text-gray-300 font-semibold text-nowrap"
           >
-            Current Password
+            {translations.currentPassword}
           </label>
           <div className="relative mb-4">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -161,7 +279,7 @@ export const Settings = () => {
               type={showPassword ? "text" : "password"}
               name="oldPassword"
               id="oldPassword"
-              placeholder="Your current password"
+              placeholder={translations.currentPassword}
               minLength={6}
               className="bg-white/10 text-gray-500 dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
@@ -179,7 +297,7 @@ export const Settings = () => {
             htmlFor="newPassword"
             className="block text-gray-600 dark:text-gray-300 font-semibold text-nowrap"
           >
-            New Password
+            {translations.newPassword}
           </label>
           <div className="relative mb-4">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -190,7 +308,7 @@ export const Settings = () => {
               type={showPassword ? "text" : "password"}
               name="newPassword"
               id="newPassword"
-              placeholder="Your new password"
+              placeholder={translations.newPassword}
               minLength={6}
               className="bg-white/10 text-gray-500 dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
@@ -203,68 +321,24 @@ export const Settings = () => {
               {showPassword ? <EyeOpenedIcon /> : <EyeClosedIcon />}
             </div>
           </div>
-
           <button
             type="submit"
             className="mt-5 cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700 text-nowrap"
           >
-            Change Password
+            {translations.changePassword}
           </button>
-          {/* </div> */}
-        </form>
-        <form className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
-          <div>
-            <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
-              Audio volume
-            </h1>
-            <div className="flex justify-evenly">
-              <div className="flex flex-col items-center">
-                <input
-                  type="radio"
-                  id="silent"
-                  name="audioVolume"
-                  value="silent"
-                  checked={volume === "silent"}
-                  onChange={(e) => handleVolumeChange(e.target.value)}
-                />
-                <label htmlFor="silent">silent</label>
-              </div>
-              <div className="flex flex-col items-center">
-                <input
-                  type="radio"
-                  id="middle"
-                  name="audioVolume"
-                  value="middle"
-                  checked={volume === "middle"}
-                  onChange={(e) => handleVolumeChange(e.target.value)}
-                />
-                <label htmlFor="middle">middle</label>
-              </div>
-              <div className="flex flex-col items-center">
-                <input
-                  type="radio"
-                  id="full"
-                  name="audioVolume"
-                  value="full"
-                  checked={volume === "full"}
-                  onChange={(e) => handleVolumeChange(e.target.value)}
-                />
-                <label htmlFor="full">full</label>
-              </div>
-            </div>
-          </div>
         </form>
         <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>
             <h1 className="text-2xl font-bold text-center mb-4 text-red-600 text-nowrap">
-              Delete your Account
+              {translations.deleteAccount}
             </h1>
             <button
               type="button"
               onClick={() => setShow(true)}
               className="cursor-pointer w-full bg-red-600 text-white p-2 rounded-lg font-bold hover:bg-red-700"
             >
-              Delete
+              {translations.deleteBtn}
             </button>
           </div>
         </form>
