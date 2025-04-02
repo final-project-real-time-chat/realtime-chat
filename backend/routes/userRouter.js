@@ -132,7 +132,7 @@ export default (io) => {
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return res
-          .status(401)
+          .status(404)
           .json({ errorMessage: "Invalid email or password" });
       }
 
