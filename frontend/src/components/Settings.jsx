@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import robot from "../assets/robot.png";
@@ -15,14 +15,67 @@ export const Settings = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [volume, setVolume] = useState("");
+  const [volume, setVolume] = useState(null);
+  const queryClient = useQueryClient();
 
   function changePassword(e) {
     e.preventDefault();
     const oldPassword = e.target.oldPassword.value.trim();
     const newPassword = e.target.newPassword.value.trim();
     newPasswordMutation.mutate({ oldPassword, newPassword });
+    e.target.oldPassword.value = "";
+    e.target.newPassword.value = "";
   }
+
+  const { data: userSettings, isLoading } = useQuery({
+    queryKey: ["userSettings"],
+    queryFn: async () => {
+      const response = await fetch("/api/users/current");
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      return data;
+    },
+    onSuccess: (data) => {
+      setVolume(data.volume || "middle");
+    },
+    onError: (error) => {
+      toast.error("Failed to load user settings.");
+    },
+  });
+
+  useEffect(() => {
+    if (userSettings && userSettings.volume) {
+      setVolume(userSettings.volume);
+    }
+  }, [userSettings]);
+
+  const handleAudioVolume = useMutation({
+    mutationFn: async (newVolume) => {
+      const response = await fetch(`/api/users/volume`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ volume: newVolume }),
+      });
+      if (!response.ok) throw new Error("Failed to change volume.");
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setVolume(data.volume || "middle");
+      toast.success("Volume updated successfully!");
+      queryClient.invalidateQueries(["userSettings"]);
+    },
+    onError: (error) => {
+      toast.error("Failed to load user settings.");
+    },
+  });
+
+  const handleVolumeChange = (newVolume) => {
+    handleAudioVolume.mutate(newVolume);
+  };
 
   const newPasswordMutation = useMutation({
     mutationFn: async ({ oldPassword, newPassword }) => {
@@ -62,25 +115,9 @@ export const Settings = () => {
     },
   });
 
-  const handleAudioVolume = useMutation({
-    mutationFn: async (volume) => {
-      const response = await fetch(`/api/users/volume`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(volume),
-      });
-      if (!response.ok) throw new Error("Failed to change volume.");
-      return response.json();
-    },
-    onSuccess: () => {
-      toast.success("Volume changed successfully!");
-    },
-    onError: () => {
-      toast.error("Failed to change Volume. Please try again.");
-    },
-  });
+  if (isLoading || volume === null) {
+    return <p>Loading settings...</p>;
+  }
 
   return (
     <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
@@ -180,46 +217,41 @@ export const Settings = () => {
             <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
               Audio volume
             </h1>
-            <div>
-              <input
-                type="radio"
-                id="silent"
-                name="audioVolume"
-                value="silent"
-                checked={volume === "silent"}
-                onChange={(e) => setVolume(e.target.value)}
-              />
-              <label htmlFor="silent">silent</label>
+            <div className="flex justify-evenly">
+              <div className="flex flex-col">
+                <input
+                  type="radio"
+                  id="silent"
+                  name="audioVolume"
+                  value="silent"
+                  checked={volume === "silent"}
+                  onChange={(e) => handleVolumeChange(e.target.value)}
+                />
+                <label htmlFor="silent">silent</label>
+              </div>
+              <div className="flex flex-col">
+                <input
+                  type="radio"
+                  id="middle"
+                  name="audioVolume"
+                  value="middle"
+                  checked={volume === "middle"}
+                  onChange={(e) => handleVolumeChange(e.target.value)}
+                />
+                <label htmlFor="middle">middle</label>
+              </div>
+              <div className="flex flex-col">
+                <input
+                  type="radio"
+                  id="full"
+                  name="audioVolume"
+                  value="full"
+                  checked={volume === "full"}
+                  onChange={(e) => handleVolumeChange(e.target.value)}
+                />
+                <label htmlFor="full">full</label>
+              </div>
             </div>
-            <div>
-              <input
-                type="radio"
-                id="middle"
-                name="audioVolume"
-                value="middle"
-                checked={volume === "middle"}
-                onChange={(e) => setVolume(e.target.value)}
-              />
-              <label htmlFor="middle">middle</label>
-            </div>
-            <div>
-              <input
-                type="radio"
-                id="full"
-                name="audioVolume"
-                value="full"
-                checked={volume === "full"}
-                onChange={(e) => setVolume(e.target.value)}
-              />
-              <label htmlFor="full">full</label>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleAudioVolume.mutate({ volume })}
-              className="mt-5 cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700 text-nowrap"
-            >
-              Save
-            </button>
           </div>
         </form>
         <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">

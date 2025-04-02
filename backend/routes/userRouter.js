@@ -165,6 +165,7 @@ export default (io) => {
         username: user.username,
         usermail: user.email,
         dateOfRegistration: user.createdAt,
+        volume: user.volume,
       });
     } catch (error) {
       console.error("Error fetching current user:", error);
@@ -190,28 +191,6 @@ export default (io) => {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
-
-  /** GET ALL USERS */
-  // router.get("/", async (req, res) => {
-  //   try {
-  //     const users = await User.find({});
-  //     res.json(users);
-  //   } catch (err) {
-  //     res.status(500).json({ error: err.message });
-  //   }
-  // });
-
-  // router.get("/:id", async (req, res) => {
-  //   try {
-  //     const user = await User.findById(req.params.id);
-  //     if (!user) {
-  //       return res.status(404).json({ error: "User not found" });
-  //     }
-  //     res.json(user);
-  //   } catch (err) {
-  //     res.status(500).json({ error: err.message });
-  //   }
-  // });
 
   /** USER UPDATE */
   router.patch("/update", async (req, res) => {
@@ -372,16 +351,21 @@ export default (io) => {
     }
   });
 
-  /** CHANGE NEW PASSWORD */
+  /** CHANGE VOLUME */
   router.patch("/volume", async (req, res) => {
     try {
-      const { volume } = req.body;
-      const currentUsername = req.session.user.username;
-      console.log("username ", currentUsername, "volume ", volume);
+      if (!req.session.user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
-      const updatedUser = await User.findOneAndUpdate(
-        { username: currentUsername },
-        { $set: { volume } },
+      const { volume } = req.body;
+      if (!["silent", "middle", "full"].includes(volume)) {
+        return res.status(400).json({ error: "Invalid volume value" });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.session.user.id,
+        { volume },
         { new: true }
       );
 
@@ -391,7 +375,8 @@ export default (io) => {
 
       res.status(200).json({ message: "Volume successfully changed", volume });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      console.error(err);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 
