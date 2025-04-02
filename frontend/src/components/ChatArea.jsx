@@ -199,6 +199,19 @@ export const ChatArea = () => {
                 About us
               </li>
               <li
+                className="hover:bg-gray-600 cursor-pointer text-white 
+                duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
+              >
+                <a
+                  href="/gdpr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline tracking-widest"
+                >
+                  GDPR
+                </a>
+              </li>
+              <li
                 className="hover:bg-gray-600 rounded-bl-2xl cursor-pointer text-red-600 font-extrabold  duration-300 px-3 py-1 md:px-8 outline-none"
                 onClick={() => logoutMutation.mutate()}
               >
