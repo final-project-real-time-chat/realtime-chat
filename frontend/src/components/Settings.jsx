@@ -212,7 +212,7 @@ export const Settings = () => {
           </button>
           {/* </div> */}
         </form>
-        <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
+        <form className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>
             <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
               Audio volume
