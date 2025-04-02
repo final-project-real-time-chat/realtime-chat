@@ -218,7 +218,7 @@ export const Settings = () => {
               Audio volume
             </h1>
             <div className="flex justify-evenly">
-              <div className="flex flex-col">
+              <div className="flex flex-col items-center">
                 <input
                   type="radio"
                   id="silent"
@@ -229,7 +229,7 @@ export const Settings = () => {
                 />
                 <label htmlFor="silent">silent</label>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col items-center">
                 <input
                   type="radio"
                   id="middle"
@@ -240,7 +240,7 @@ export const Settings = () => {
                 />
                 <label htmlFor="middle">middle</label>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col items-center">
                 <input
                   type="radio"
                   id="full"
