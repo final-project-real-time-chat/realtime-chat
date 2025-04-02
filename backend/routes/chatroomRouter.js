@@ -86,15 +86,28 @@ export default (io) => {
 
   router.get("/chats", async (req, res) => {
     try {
-      const currentUsername = req.session.user.username;
-      const currentUserId = req.session.user.id;
+       const currentUsername = req.session.user?.username;
+       const currentUserId = req.session.user?.id;
 
-      const currentUser = await User.findById(currentUserId);
-      const volume = currentUser.volume;
+       if (!currentUsername || !currentUserId) {
+         return res
+           .status(401)
+           .json({ errorMessage: "User not authenticated" });
+       }
 
-      const allChats = await Chatroom.find({ users: currentUserId }).populate(
-        "users"
-      );
+       const currentUser = await User.findById(currentUserId);
+       if (!currentUser) {
+         return res.status(404).json({ errorMessage: "User not found" });
+       }
+
+       const volume = currentUser.volume || "middle";
+       const allChats = await Chatroom.find({ users: currentUserId }).populate(
+         "users"
+       );
+
+       if (!allChats || allChats.length === 0) {
+         return res.json({ chatrooms: [], currentUsername, volume });
+       }
 
       // TODO: IMPLEMENT AS MONGODB QUERY
       const outputChats = await Promise.all(
