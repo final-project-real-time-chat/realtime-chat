@@ -16,6 +16,16 @@ export const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  let browserLanguage = navigator.language.split("-")[0];
+
+  if (browserLanguage === "de") {
+    browserLanguage = "de";
+  } else {
+    browserLanguage = "en";
+  }
+
+  console.log(browserLanguage);
+
   async function handleRegister(e) {
     e.preventDefault();
     const email = e.target.email.value.toLowerCase().trim();
@@ -29,7 +39,12 @@ export const Register = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, username, password }),
+      body: JSON.stringify({
+        email,
+        username,
+        password,
+        language: browserLanguage,
+      }),
     });
 
     toast.dismiss();

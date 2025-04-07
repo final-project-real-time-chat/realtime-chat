@@ -6,7 +6,7 @@
   "audioVolume": "Audio Volume",
   "silent": "Silent",
   "middle": "Middle",
-  "full": "Full",
+  "full": "Loud",
   "selectLanguage": "Select Language",
   "languages": {
     "en": "EN",
@@ -17,11 +17,20 @@
   "newPassword": "New Password",
   "deleteAccount": "Delete your Account",
   "deleteBtn": "Delete",
+  "cancelBtn": "Cancel",
   "profile": "Profile",
+  "profileUsername": "Username",
+  "email": "Email",
+  "registered": "Registered",
   "loading": "Loading...",
+  "dateNotAvailable": "Date not available",
   "errorLoadingChatrooms": "Error loading chatrooms",
   "noUsername": "No Username",
   "deletedAccount": "Deleted account",
   "sentImage": "Sent image",
-  "noMessages": "No messages"
+  "noMessages": "No messages",
+  "toastSuccess": "Updated successfully!",
+  "toastError": "Failed to change!",
+  "toastSuccessDelete": "Account deleted!",
+  "toastErrorDelete": "Failed to delete account. Please try again!"
 }

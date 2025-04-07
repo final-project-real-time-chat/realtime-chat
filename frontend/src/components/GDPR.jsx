@@ -1,73 +1,35 @@
 import { useState, useEffect } from "react";
-import { UkFlag, GermanFlag } from "./_AllSVGs";
-import { fetchUserLanguage, updateUserLanguage } from "../utils/api.js";
+import { fetchUserLanguage } from "../utils/api.js";
 
 export const GDPR = () => {
   const [language, setLanguage] = useState("en");
   const [loading, setLoading] = useState(true);
 
-   useEffect(() => {
-     const loadLanguage = async () => {
-       try {
-         const userData = await fetchUserLanguage();
-         setLanguage(userData.language || "en");
-       } catch (error) {
-         console.error("Failed to fetch user language:", error);
-         setLanguage("en");
-       } finally {
-         setLoading(false);
-       }
-     };
+  useEffect(() => {
+    const loadLanguage = async () => {
+      try {
+        const userData = await fetchUserLanguage();
+        setLanguage(userData.language || "en");
+      } catch (error) {
+        console.error("Failed to fetch user language:", error);
+        setLanguage("en");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-     loadLanguage();
-   }, []);
+    loadLanguage();
+  }, []);
 
-   const handleLanguageChange = async (newLanguage) => {
-     try {
-       await updateUserLanguage(newLanguage);
-       setLanguage(newLanguage);
-     } catch (error) {
-       console.error("Failed to update user language:", error);
-     }
-   };
+  if (loading) {
+    return <p className="text-white text-center">Loading...</p>;
+  }
 
-   if (loading) {
-     return <p className="text-white text-center">Loading...</p>;
-   }
-  
   if (language === "de") {
     return (
       <div className="flex flex-col items-center text-white">
         <div className="xl:w-[50%] w-[90%]">
           <header>
-            <div className="flex gap-10 justify-end my-5">
-              <div className="flex gap-2 text-center">
-                <input
-                  type="radio"
-                  id="de"
-                  name="language"
-                  value="de"
-                  checked={language === "de"}
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                />
-                <label htmlFor="de">
-                  DE <GermanFlag />
-                </label>
-              </div>
-              <div className="flex gap-2 text-center">
-                <input
-                  type="radio"
-                  id="en"
-                  name="language"
-                  value="en"
-                  checked={language === "en"}
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                />
-                <label htmlFor="en">
-                  EN <UkFlag />
-                </label>
-              </div>
-            </div>
             <h1 className="text-3xl font-semibold mb-8 underline text-center">
               Datenschutzerklärung
             </h1>
@@ -168,7 +130,7 @@ export const GDPR = () => {
             <h2 className="text-2xl font-semibold mb-4">7. Kontakt</h2>
             <p>
               Bei Fragen zur Datenverarbeitung oder zur Wahrnehmung Ihrer Rechte
-              können Sie uns über die auf der <strong>"About Us"</strong>-Seite
+              können Sie uns über die auf der<strong className="underline"> Über uns </strong>Seite
               angegebenen Kontaktmöglichkeiten erreichen.
             </p>
           </section>
@@ -186,34 +148,6 @@ export const GDPR = () => {
       <div className="flex flex-col items-center text-white">
         <div className="xl:w-[50%] w-[90%]">
           <header>
-            <div className="flex gap-10 justify-end my-5">
-              <div className="flex gap-2 text-center">
-                <input
-                  type="radio"
-                  id="de"
-                  name="language"
-                  value="de"
-                  checked={language === "de"}
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                />
-                <label htmlFor="de">
-                  DE <GermanFlag />
-                </label>
-              </div>
-              <div className="flex gap-2 text-center">
-                <input
-                  type="radio"
-                  id="en"
-                  name="language"
-                  value="en"
-                  checked={language === "en"}
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                />
-                <label htmlFor="en">
-                  EN <UkFlag />
-                </label>
-              </div>
-            </div>
             <h1 className="text-3xl font-semibold mb-8 underline text-center">
               General Data Protection Regulation (GDPR)
             </h1>
@@ -307,7 +241,7 @@ export const GDPR = () => {
               If you have any questions regarding data processing or wish to
               exercise your rights, you can reach us via the contact information
               provided on the
-              <strong>"About Us"</strong> page.
+              <strong className="underline"> About Us </strong>page.
             </p>
           </section>
 

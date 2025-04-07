@@ -7,5 +7,5 @@ const languages = {
 };
 
 export const getTranslations = (language) => {
-  return languages[language] || languages["english"];
+  return languages[language] || languages["en"];
 };

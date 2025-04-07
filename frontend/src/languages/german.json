@@ -6,7 +6,7 @@
   "audioVolume": "Audio-Lautstärke",
   "silent": "Stumm",
   "middle": "Mittel",
-  "full": "Voll",
+  "full": "Laut",
   "selectLanguage": "Sprache auswählen",
   "languages": {
     "en": "EN",
@@ -15,13 +15,22 @@
   "changePassword": "Passwort ändern",
   "currentPassword": "Aktuelles Passwort",
   "newPassword": "Neues Passwort",
-  "deleteAccount": "Konto löschen",
+  "deleteAccount": "Nutzerkonto löschen",
   "deleteBtn": "Löschen",
+  "cancelBtn": "Abbrechen",
   "profile": "Profil",
+  "profileUsername": "Nutzername",
+  "email": "E-Mail",
+  "registered": "Registriert",
   "loading": "Lädt...",
+  "dateNotAvailable": "Datum nicht verfügbar",
   "errorLoadingChatrooms": "Fehler beim Laden der Chatrooms",
   "noUsername": "Kein Benutzername",
   "deletedAccount": "Gelöschtes Konto",
   "sentImage": "Bild gesendet",
-  "noMessages": "Keine Nachrichten"
+  "noMessages": "Keine Nachrichten",
+  "toastSuccess": "Erfolgreich geändert!",
+  "toastError": "Fehler bei Änderung aufgetreten!",
+  "toastSuccessDelete": "Nutzerkonto gelöscht!",
+  "toastErrorDelete": "Fehler beim Löschen, erneut versuchen!"
 }

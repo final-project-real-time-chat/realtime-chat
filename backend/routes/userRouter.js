@@ -38,7 +38,7 @@ export default (io) => {
   /** USER REGISTER */
   router.post("/register", async (req, res) => {
     try {
-      const { email, username, password } = req.body;
+      const { email, username, password, language } = req.body;
       const existingUser = await User.findOne({ username });
 
       if (existingUser) {
@@ -57,6 +57,7 @@ export default (io) => {
         email,
         username,
         password: hashedPassword,
+        language,
       });
       await newUser.save();
 

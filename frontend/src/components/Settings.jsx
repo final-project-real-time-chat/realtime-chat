@@ -43,12 +43,6 @@ export const Settings = () => {
       setLanguage(data.language || "en");
       setTranslations(getTranslations(data.language || "en"));
     },
-    onError: () => {
-      toast.error("Failed to load user settings. Using default values.");
-      setVolume("middle");
-      setLanguage("en");
-      setTranslations(getTranslations("en"));
-    },
   });
 
   useEffect(() => {
@@ -84,11 +78,11 @@ export const Settings = () => {
     },
     onSuccess: (data) => {
       setVolume(data.volume || "middle");
-      toast.success("Volume updated successfully!");
+      toast.success(translations.toastSuccess);
       queryClient.invalidateQueries(["userSettings"]);
     },
-    onError: (error) => {
-      toast.error("Failed to load user settings.");
+    onError: () => {
+      toast.error(translations.toastError);
     },
   });
 
@@ -101,11 +95,11 @@ export const Settings = () => {
     onSuccess: (data) => {
       setLanguage(data.language || "en");
       setTranslations(getTranslations(data.language || "en"));
-      toast.success("Language updated successfully!");
       queryClient.invalidateQueries(["userSettings"]);
+      toast.success(getTranslations(data.language || "en").toastSuccess);
     },
-    onError: () => {
-      toast.error("Failed to update language.");
+    onError: (data) => {
+      toast.error(getTranslations(data.language || "en").toastError);
     },
   });
 
@@ -126,10 +120,10 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Password changed successfully!");
+      toast.success(translations.toastSuccess);
     },
     onError: () => {
-      toast.error("Failed to change password. Please try again.");
+      toast.error(translations.toastError);
     },
   });
 
@@ -142,12 +136,12 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Account deleted!");
+      toast.success(translations.toastSuccessDelete);
       setShow(false);
       navigate("/");
     },
     onError: () => {
-      toast.error("Failed to delete account. Please try again.");
+      toast.error(translations.toastErrorDelete);
     },
   });
 
@@ -347,18 +341,18 @@ export const Settings = () => {
 
       {show && (
         <div className="min-w-80 fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg flex flex-col gap-2 text-center xl:top-25">
-          <span className="text-nowrap">Delete your account?</span>
+          <span className="text-nowrap">{translations.deleteAccount}?</span>
           <button
             onClick={() => deleteAccountMutation.mutate()}
             className="bg-gray-200 hover:bg-gray-50 text-red-600 px-2 py-1 rounded duration-300"
           >
-            Delete
+            {translations.deleteBtn}
           </button>
           <button
             onClick={() => setShow(false)}
             className="bg-gray-900 hover:bg-gray-800 px-2 py-1 rounded text-white"
           >
-            Cancel
+            {translations.cancelBtn}
           </button>
         </div>
       )}
