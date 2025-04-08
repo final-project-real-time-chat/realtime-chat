@@ -1,4 +1,8 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+
+import { getTranslations } from "../utils/languageHelper.js";
 
 import { BackButtonIcon } from "./_AllSVGs";
 import robot from "../assets/robot.png";
@@ -10,6 +14,35 @@ import Web from "../assets/web.svg";
 
 export const AboutUs = () => {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["aboutUs"],
+    queryFn: async () => {
+      const response = await fetch("/api/users/current");
+      if (!response.ok) {
+        throw new Error("Failed to fetch userdata");
+      }
+      return response.json();
+    },
+  });
+
+  const [translations, setTranslations] = useState(
+    getTranslations(data?.language || "en")
+  );
+
+  useEffect(() => {
+    if (data?.language) {
+      setTranslations(getTranslations(data.language));
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>{translations.loading || "Loading..."}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-svh bg-gray-300 dark:text-white dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
@@ -30,60 +63,55 @@ export const AboutUs = () => {
         </button>
       </header>
       <div className="max-w-3xl mx-auto px-4 flex flex-col items-center text-center tracking-wide">
-        <h1 className="text-3xl font-bold mt-12">About Us</h1>
-        <p className="text-balance mt-4">
-          We, Olivia and Renat, are passionate developers who took on the
-          challenge of creating a powerful and user-friendly real-time chat
-          application. With our experience in web and software development, we
-          successfully brought this project from concept to implementation. Our
-          goal was to build a modern, fast, and secure communication platform.
-        </p>
-        <h2 className="text-2xl font-semibold mt-8">App Development</h2>
-        <p className="text-balance mt-4">
-          Our real-time chat application is built on the MERN stack (MongoDB,
-          Express, React, Node.js). By utilizing cutting-edge technologies and
-          best practices, we developed a robust and scalable architecture.
-        </p>
-        <h2 className="text-2xl font-semibold mt-8">Technologies Used</h2>
+        <h1 className="text-3xl font-bold mt-12">
+          {translations.aboutUsIntroHeader}
+        </h1>
+        <p className="text-balance mt-4">{translations.aboutUsIntroDev}</p>
+        <h2 className="text-2xl font-semibold mt-8">
+          {translations.aboutUsIntroAppHeader}
+        </h2>
+        <p className="text-balance mt-4">{translations.aboutUsIntroApp}</p>
+        <h2 className="text-2xl font-semibold mt-8">
+          {translations.aboutUsUsedTechnologiesHeader}
+        </h2>
         <ul className="list-disc list-inside mt-4 space-y-4">
           <li className="text-balance">
-            Frontend: React with Vite for an optimized development environment,
-            Zustand for state management, and Tailwind CSS/React-hot-toast for
-            an appealing UI design.
+            {translations.aboutUsUsedTechnologiesFrontend}
           </li>
           <li className="text-balance">
-            Backend: Express.js as the web framework for Node.js, MongoDB as the NoSQL
-            database, bcrypt for password encryption, and Express-session for
-            secure authentication.
+            {translations.aboutUsUsedTechnologiesBackend}
           </li>
           <li className="text-balance">
-            Real-time Communication: Socket.io enables smooth real-time
-            messaging.
+            {translations.aboutUsUsedTechnologiesSocket}
           </li>
           <li className="text-balance">
-            Cloud Integration: Cloudinary is used for storing and managing
-            images.
+            {translations.aboutUsUsedTechnologiesClaudinary}
           </li>
         </ul>
-        <h2 className="text-2xl font-semibold mt-8">App Features</h2>
+        <h2 className="text-2xl font-semibold mt-8">
+          {translations.aboutUsAppFeaturesHeader}
+        </h2>
         <p className="text-balance text-xl mt-4">
-          Our application allows users to register, log in, and communicate in
-          real-time.
+          {translations.aboutUsAppFeaturesRegister}
         </p>
-        <h3 className="my-4 text-xl">Key features include:</h3>
+        <h3 className="my-4 text-xl">
+          {translations.aboutUsAppFeaturesIncludeHeader}
+        </h3>
         <ul className="list-disc list-inside space-y-4">
+          <li className="text-balance">{translations.aboutUsAppFeaturesUI}</li>
           <li className="text-balance">
-            Modern user interface, optimized for both desktop and mobile devices
+            {translations.aboutUsAppFeaturesAuth}
           </li>
           <li className="text-balance">
-            User registration and login with secure authentication
+            {translations.aboutUsAppFeaturesUpload}
           </li>
-          <li className="text-balance">Image uploads and media support</li>
           <li className="text-balance">
-            Real-time messaging powered by Socket.io
+            {translations.aboutUsAppFeaturesMessaging}
           </li>
         </ul>
-        <h2 className="text-2xl font-semibold mt-8">Project Links</h2>
+        <h2 className="text-2xl font-semibold mt-8">
+          {translations.aboutUsProjectHeader}
+        </h2>
         <ul className="list-inside mt-4 space-y-4">
           <li>
             Live Demo:
@@ -104,7 +132,7 @@ export const AboutUs = () => {
             </a>
           </li>
           <li>
-            Source Code:
+            {translations.aboutUsSourceCode}
             <a
               href="https://github.com/final-project-real-time-chat/realtime-chat"
               className="dark:text-blue-400 text-blue-700 dark:hover:text-blue-200 hover:text-blue-500 duration-200 underline pl-2"
@@ -115,12 +143,12 @@ export const AboutUs = () => {
         </ul>
         <div className="border-2 border-gray-100 shadow-gray-600 bg-gray-700 shadow-2xl mt-8 p-8 rounded-3xl">
           <h2 className="text-3xl font-semibold tracking-widest text-gray-100">
-            Our Contacts
+            {translations.aboutUsOurContacts}
           </h2>
           <h2 className="text-2xl font-semibold mt-6 mb-2 tracking-widest text-gray-100">
             Olivia
           </h2>
-          <ul className="flex gap-x-8">
+          <ul className="flex justify-between">
             <li>
               <a
                 href="https://olivia-piechowski.netlify.app"
@@ -179,7 +207,7 @@ export const AboutUs = () => {
           <h2 className="text-2xl font-semibold mt-6 mb-2 tracking-widest text-gray-100">
             Renat
           </h2>
-          <ul className="flex gap-x-8">
+          <ul className="flex justify-between">
             <li>
               <a
                 href="https://khambazarov.dev"
@@ -224,8 +252,8 @@ export const AboutUs = () => {
             </li>
             <li>
               <a
-                href="mailto:renat@khambazarov.dev"
-                title="renat@khambazarov.dev"
+                href="mailto:contact@khambazarov.dev"
+                title="contact@khambazarov.dev"
               >
                 <img
                   src={Email}
@@ -237,8 +265,7 @@ export const AboutUs = () => {
           </ul>
         </div>
         <h3 className="text-xl text-center text-balance my-16">
-          We appreciate feedback and suggestions and warmly invite developers to
-          contribute to the further development of the app!
+          {translations.aboutUsFeedback}
         </h3>
       </div>
     </div>

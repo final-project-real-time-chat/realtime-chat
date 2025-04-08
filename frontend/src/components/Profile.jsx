@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getTranslations } from "../utils/languageHelper.js";
+import { formatTimestamp } from "../utils/formatTimestamp";
 
 import robot from "../assets/robot.png";
 import { BackButtonIcon } from "./_AllSVGs";
@@ -37,20 +38,14 @@ export const Profile = () => {
   const usermail = data?.usermail;
   const dateOfRegistration = data?.dateOfRegistration;
 
-  const date = dateOfRegistration ? new Date(dateOfRegistration) : null;
-  const userRegisteredAt = date
-    ? new Intl.DateTimeFormat(language, {
-        dateStyle: "long",
-        timeStyle: "short",
-        timeZone: "Europe/Berlin",
-        hour12: false,
-      }).format(date)
+  const userRegisteredAt = dateOfRegistration
+    ? formatTimestamp(dateOfRegistration, language)
     : translations.dateNotAvailable || "Date not available";
 
   if (isProfileLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{translations.loading || "Lädt..."}</p>
+        <p>{translations.loading || "Loading..."}</p>
       </div>
     );
   }

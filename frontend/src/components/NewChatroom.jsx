@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import EmojiPicker from "emoji-picker-react";
+import { getTranslations } from "../utils/languageHelper.js";
 
 import robot from "../assets/robot.png";
 import Emojis from "../assets/add_reaction.svg";
@@ -17,6 +18,27 @@ export const NewChatroom = () => {
   const { username } = useParams();
   const queryClient = useQueryClient();
   const textareaRef = useRef(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["newChatroom"],
+    queryFn: async () => {
+      const response = await fetch("/api/users/current");
+      if (!response.ok) {
+        throw new Error("Failed to fetch userdata");
+      }
+      return response.json();
+    },
+  });
+
+  const [translations, setTranslations] = useState(
+    getTranslations(data?.language || "en")
+  );
+
+  useEffect(() => {
+    if (data?.language) {
+      setTranslations(getTranslations(data.language));
+    }
+  }, [data]);
 
   const mutation = useMutation({
     mutationFn: async (userInput) => {
@@ -97,6 +119,14 @@ export const NewChatroom = () => {
     }, 0);
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>{translations.loading || "Loading..."}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
@@ -118,8 +148,10 @@ export const NewChatroom = () => {
       </header>
       <div className="relative flex flex-col h-full flex-grow">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap text-2xl text-center">
-          <h2>Send your first message</h2>
-          <h2>to {username}</h2>
+          <h2>{translations.newChatroomFirstMessage}</h2>
+          <h2>
+            {translations.newChatroomTo} {username}
+          </h2>
         </div>
       </div>
       <Toaster />

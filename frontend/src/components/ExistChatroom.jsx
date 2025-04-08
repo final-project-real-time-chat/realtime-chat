@@ -1,8 +1,10 @@
-import { useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 import toast, { Toaster } from "react-hot-toast";
+
+import { getTranslations } from "../utils/languageHelper.js";
 
 import robot from "../assets/robot.png";
 
@@ -11,6 +13,27 @@ import { BackButtonIcon, UserIcon } from "./_AllSVGs";
 export const ExistChatroom = (e) => {
   const navigate = useNavigate();
   const partnerNameRef = useRef(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["existChatroom"],
+    queryFn: async () => {
+      const response = await fetch("/api/users/current");
+      if (!response.ok) {
+        throw new Error("Failed to fetch userdata");
+      }
+      return response.json();
+    },
+  });
+
+  const [translations, setTranslations] = useState(
+    getTranslations(data?.language || "en")
+  );
+
+  useEffect(() => {
+    if (data?.language) {
+      setTranslations(getTranslations(data.language));
+    }
+  }, [data]);
 
   const existChatroomMutation = useMutation({
     mutationFn: async (username) => {
@@ -24,21 +47,21 @@ export const ExistChatroom = (e) => {
 
       if (response.status === 404) {
         toast.dismiss();
-        toast.error("username not found.");
+        toast.error(translations.existChatroomNotFound);
 
         throw new Error("Failed to create chatroom");
       }
 
       if (response.status === 401) {
         toast.dismiss();
-        toast.error("You can't search yourself.");
+        toast.error(translations.existChatroomYourself);
 
         throw new Error("Failed to create chatroom");
       }
 
       if (!response.ok) {
         toast.dismiss();
-        toast.error("Failed to find the user.");
+        toast.error(translations.existChatroomFailedToFind);
 
         throw new Error("Failed to create chatroom");
       }
@@ -52,7 +75,7 @@ export const ExistChatroom = (e) => {
         navigate(`/chatarea/chats/${data.chatroom}`);
         toast.dismiss();
         toast.success(
-          `You have already chatted with ${partnerNameRef.current.value}`
+          `${translations.existChatroomAlreadyChatted} ${partnerNameRef.current.value}`
         );
         return;
       } else {
@@ -70,10 +93,18 @@ export const ExistChatroom = (e) => {
     const username = e.target.username.value.trim();
     if (username === "") {
       toast.dismiss();
-      toast.error("you have to type a username.");
+      toast.error(translations.existChatroomNameRequired);
       return;
     }
     existChatroomMutation.mutate(username);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>{translations.loading || "Loading..."}</p>
+      </div>
+    );
   }
 
   return (
@@ -99,14 +130,14 @@ export const ExistChatroom = (e) => {
         className="mt-[10%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
-          Search for a User
+          {translations.existChatroomSearchUser}
         </h1>
 
         <label
           htmlFor="username"
           className="block text-black dark:text-gray-300 font-semibold"
         >
-          Username
+          {translations.profileUsername}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -117,7 +148,7 @@ export const ExistChatroom = (e) => {
             type="text"
             name="username"
             id="username"
-            placeholder="John-Doe"
+            placeholder={translations.existChatroomPlaceholder}
             minLength={2}
             className="bg-white/10 text-black dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
@@ -130,7 +161,7 @@ export const ExistChatroom = (e) => {
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          Create new chatroom
+          {translations.existChatroomCreate}
         </button>
         <Toaster />
       </form>

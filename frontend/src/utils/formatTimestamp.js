@@ -1,27 +1,37 @@
-export function formatTimestamp(timestamp) {
+export function formatTimestamp(timestamp, language) {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const date = new Date(timestamp);
   const now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
 
-  const timeFormatter = new Intl.DateTimeFormat("de-DE", {
+  const timeFormatter = new Intl.DateTimeFormat(language, {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false,
+    hour12: language === "en",
   });
 
-  if (date.toDateString() === now.toDateString()) {
+  const dateToString = date.toDateString()
+  const nowToString = now.toDateString()
+  const yesterdayToString = yesterday.toDateString();
+  
+  if (dateToString === nowToString) {
     return timeFormatter.format(date);
-  } else if (date.toDateString() === yesterday.toDateString()) {
-    return `Yesterday ${timeFormatter.format(date)}`;
+  }
+  if (dateToString === yesterdayToString) {
+    const yesterdayText = language === "de" ? "Gestern" : "Yesterday";
+    return `${yesterdayText} ${timeFormatter.format(date)}`;
   } else {
-    return new Intl.DateTimeFormat("de-DE", {
+    return new Intl.DateTimeFormat(language, {
       day: "2-digit",
-      month: "2-digit",
+      month: "short",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false,
-    }).format(date).replace(",", "");
+      hour12: language === "en",
+      timeZone: userTimeZone,
+    })
+      .format(date)
+      .replace(",", "");
   }
 }

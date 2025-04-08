@@ -114,6 +114,7 @@ export const Register = () => {
             id="username"
             placeholder="John-Doe"
             minLength={2}
+            maxLength={20}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />

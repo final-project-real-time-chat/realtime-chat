@@ -3,6 +3,8 @@ import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
+import { getTranslations } from "../utils/languageHelper.js";
+
 import EmojiPicker from "emoji-picker-react";
 
 import { io } from "socket.io-client";
@@ -58,6 +60,28 @@ export const Chatroom = () => {
 
   const queryClient = useQueryClient();
 
+  const { data: formatTimestamps, isLoading: formatTimestampsIsLoading } =
+    useQuery({
+      queryKey: ["formatTimestamps"],
+      queryFn: async () => {
+        const response = await fetch("/api/users/current");
+        if (!response.ok) {
+          throw new Error("Failed to fetch userdata");
+        }
+        return response.json();
+      },
+    });
+
+  const [translations, setTranslations] = useState(
+    getTranslations(formatTimestamps?.language || "en")
+  );
+
+  useEffect(() => {
+    if (formatTimestamps?.language) {
+      setTranslations(getTranslations(formatTimestamps.language));
+    }
+  }, [formatTimestamps]);
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
     queryFn: async () => {
@@ -87,7 +111,7 @@ export const Chatroom = () => {
       return response.json();
     },
     onError: (error) => {
-      toast.error("Internal Server Error.");
+      toast.error(translations.existChatroomTaostError);
       console.error(error.message);
     },
   });
@@ -220,7 +244,7 @@ export const Chatroom = () => {
     if (partnerName === "deletedUser" || partnerName === undefined) {
       e.target.textarea.value = "";
       toast.dismiss();
-      toast.error("You cannot send messages to a deleted user.", {
+      toast.error(translations.existChatroomTaostErrorDeletedUser, {
         position: "bottom-center",
       });
       return;
@@ -419,6 +443,14 @@ export const Chatroom = () => {
     }, 0);
   }
 
+  if (formatTimestampsIsLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>{translations.loading || "Loading..."}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-svh flex flex-col dark:bg-[#1d232a] dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
@@ -456,8 +488,8 @@ export const Chatroom = () => {
             className="cursor-pointer dark:bg-white/10 bg-gray-700 shadow-lg shadow-blue-900/30 backdrop-blur-[5.5px] text-xl rounded-[10px] border border-white/20 text-amber-400 sticky top-[50%] mx-auto px-8 py-1 font-bold dark:hover:bg-white/20 hover:bg-gray-600 transition-colors animate-bounce"
           >
             {unreadMessagesCount === 1
-              ? `↓ ${unreadMessagesCount} message. Tap to see. ↓`
-              : `↓ ${unreadMessagesCount} messages. Tap to see. ↓`}
+              ? `↓ ${unreadMessagesCount} ${translations.existChatroomunreadMessage}`
+              : `↓ ${unreadMessagesCount} ${translations.existChatroomunreadMessages}`}
           </button>
         )}
         {Array.isArray(chatroomMessages) &&
@@ -483,7 +515,7 @@ export const Chatroom = () => {
               )}
               <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
                 {message.createdAt !== message.updatedAt
-                  ? `( Updated ) ${formatTimestamp(message.createdAt)}`
+                  ? `( ${translations.existChatroomFormatTimestamp} ) ${formatTimestamp(message.createdAt)}`
                   : `${formatTimestamp(message.createdAt)}`}
               </span>
               {message.sender.username === currentUsername && (
