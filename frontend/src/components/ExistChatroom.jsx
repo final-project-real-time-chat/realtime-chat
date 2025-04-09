@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import { getTranslations } from "../utils/languageHelper.js";
+import { fetchUserLanguage } from "../utils/api.js";
 
 import robot from "../assets/robot.png";
 
@@ -16,13 +17,7 @@ export const ExistChatroom = (e) => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["existChatroom"],
-    queryFn: async () => {
-      const response = await fetch("/api/users/current");
-      if (!response.ok) {
-        throw new Error("Failed to fetch userdata");
-      }
-      return response.json();
-    },
+    queryFn: fetchUserLanguage,
   });
 
   const [translations, setTranslations] = useState(

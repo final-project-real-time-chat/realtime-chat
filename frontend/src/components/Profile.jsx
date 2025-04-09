@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getTranslations } from "../utils/languageHelper.js";
+import { fetchUserLanguage } from "../utils/api.js";
 import { formatTimestamp } from "../utils/formatTimestamp";
 
 import robot from "../assets/robot.png";
@@ -13,13 +14,7 @@ export const Profile = () => {
 
   const { data, isLoading: isProfileLoading } = useQuery({
     queryKey: ["profile"],
-    queryFn: async () => {
-      const response = await fetch("/api/users/current");
-      if (!response.ok) {
-        throw new Error("Failed to fetch userdata");
-      }
-      return response.json();
-    },
+    queryFn: fetchUserLanguage,
   });
 
   const [language, setLanguage] = useState(data?.language || "en");

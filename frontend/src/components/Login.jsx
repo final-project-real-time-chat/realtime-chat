@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import toast, { Toaster } from "react-hot-toast";
+
+import { getTranslations } from "../utils/languageHelper.js";
+import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 import robot from "../assets/robot.png";
 import {
@@ -12,9 +14,14 @@ import {
 } from "./_AllSVGs";
 import { ButtonNavigate } from "./_Button";
 
+const browserLanguage = fetchBrowserLanguage();
+
 export const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [translations, setTranslations] = useState(
+    getTranslations(browserLanguage)
+  );
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -35,14 +42,14 @@ export const Login = () => {
     toast.dismiss();
 
     if (response.ok && data.isVerified === true) {
-      toast.success("Logged in Successfully.");
+      toast.success(translations.loginToastSuccess);
       setTimeout(() => navigate("/chatarea"), 2000);
     } else if (data.isVerified === false) {
-      toast.error("Login failed. You need to verify your email.");
+      toast.error(translations.loginToastErrorVerify);
     } else if (response.status === 404) {
-      toast.error("Login failed. Username or password is wrong.");
+      toast.error(translations.loginToastErrorUserOrPw);
     } else {
-      toast.error("Login Failed.");
+      toast.error(translations.loginToastErrorFailed);
     }
   }
 
@@ -58,14 +65,14 @@ export const Login = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          Login
+          {translations.login}
         </h1>
 
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          Email
+          {translations.email}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -75,7 +82,7 @@ export const Login = () => {
             type="email"
             name="email"
             id="email"
-            placeholder="Email"
+            placeholder={translations.email}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -86,7 +93,7 @@ export const Login = () => {
           htmlFor="password"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          Password
+          {translations.registerPw}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -96,7 +103,7 @@ export const Login = () => {
             type={showPassword ? "text" : "password"}
             name="password"
             id="password"
-            placeholder="Password"
+            placeholder={translations.registerPw}
             minLength={6}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
@@ -114,28 +121,32 @@ export const Login = () => {
           onClick={() => navigate("/forgot-pw")}
           className="dark:text-white text-gray-600 text-sm cursor-pointer mb-3 hover:underline"
         >
-          Forgot Password?
+          {translations.loginForgotPw}
         </button>
 
         <button
           type="submit"
           className="cursor-pointer w-full bg-blue-500 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          Login
+          {translations.login}
         </button>
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
         <p className="dark:text-white text-gray-600 text-sm">
-          Not Registered yet?
+          {translations.registerAlreadyRegistered}
         </p>
-        <ButtonNavigate onClick={() => navigate("/register")}>Click here</ButtonNavigate>
+        <ButtonNavigate onClick={() => navigate("/register")}>
+          {translations.registerClickHere}
+        </ButtonNavigate>
       </div>
 
       <div className="flex justify-end items-center gap-2 mt-4">
         <p className="dark:text-white text-gray-600 text-sm">
-          Not verified your account?
+          {translations.loginAlreadyVerified}
         </p>
-        <ButtonNavigate onClick={() => navigate("/register/verify")}>Click here</ButtonNavigate>
+        <ButtonNavigate onClick={() => navigate("/register/verify")}>
+          {translations.registerClickHere}
+        </ButtonNavigate>
       </div>
     </div>
   );

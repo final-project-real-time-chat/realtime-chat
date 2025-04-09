@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getTranslations } from "../utils/languageHelper.js";
+import { fetchUserLanguage } from "../utils/api.js";
 
 import { BackButtonIcon } from "./_AllSVGs";
 import robot from "../assets/robot.png";
@@ -17,13 +18,7 @@ export const AboutUs = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["aboutUs"],
-    queryFn: async () => {
-      const response = await fetch("/api/users/current");
-      if (!response.ok) {
-        throw new Error("Failed to fetch userdata");
-      }
-      return response.json();
-    },
+    queryFn: fetchUserLanguage,
   });
 
   const [translations, setTranslations] = useState(

@@ -319,7 +319,7 @@ export const ChatArea = () => {
                       {chatroom.timestamps &&
                         chatroom.timestamps.length > 0 && (
                           <span className="flex justify-end dark:text-gray-400 text-gray-700 text-xs text-nowrap">
-                            {formatTimestamp(chatroom.timestamps[0])}
+                            {formatTimestamp(chatroom.timestamps[0], language)}
                           </span>
                         )}
                       {chatroom.unreadMessagesCount > 0 && (

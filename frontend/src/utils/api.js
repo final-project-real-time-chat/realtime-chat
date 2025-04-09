@@ -6,8 +6,6 @@ export const fetchUserLanguage = async () => {
   if (!response.ok) {
     throw new Error("Failed to fetch user language");
   }
-  // const data = await response.json();
-  // return data;
   return response.json();
 };
 

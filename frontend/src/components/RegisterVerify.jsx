@@ -1,16 +1,25 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+
+import { getTranslations } from "../utils/languageHelper.js";
+import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 import robot from "../assets/robot.png";
 import { EmailIcon, KeyIcon } from "./_AllSVGs";
 import { ButtonNavigate } from "./_Button";
 
+const browserLanguage = fetchBrowserLanguage();
+
 export const RegisterVerify = () => {
   const navigate = useNavigate();
+  const [translations, setTranslations] = useState(
+    getTranslations(browserLanguage)
+  );
 
   async function handleVerify(e) {
     e.preventDefault();
-    toast.loading("Waiting...");
+    toast.loading(translations.loading);
 
     const email = e.target.email.value.toLowerCase().trim();
     const key = e.target.key.value.trim();
@@ -26,14 +35,14 @@ export const RegisterVerify = () => {
     toast.dismiss();
 
     if (user.isVerified) {
-      toast.success("Verified Successfully.");
+      toast.success(translations.verifyToastSuccess);
       setTimeout(() => navigate("/"), 2000);
     } else if (response.status === 400) {
-      toast.error("Verification Failed. Your email is already verified");
+      toast.error(translations.verifyToastErrorAlreadyVerified);
     } else if (response.status === 409) {
-      toast.error("Verification Failed. Key and email doesn't match");
+      toast.error(translations.verifyToastErrorNoMatch);
     } else {
-      toast.error("Verification Failed. Internal Server Error");
+      toast.error(translations.verifyToastErrorServer);
     }
   }
 
@@ -50,18 +59,17 @@ export const RegisterVerify = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          Verify your email
+          {translations.verifyTitel}
         </h1>
         <p className="dark:text-white text-gray-600 text-center mb-4">
-          You will receive an email with a 6-digit code, please use it to verify
-          your email address
+          {translations.verfiyDescription}
         </p>
 
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          Email
+          {translations.email}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -71,7 +79,7 @@ export const RegisterVerify = () => {
             type="email"
             name="email"
             id="email"
-            placeholder="Email"
+            placeholder={translations.registerEmailPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -82,7 +90,7 @@ export const RegisterVerify = () => {
           htmlFor="key"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          Verification Key
+          {translations.verifyKey}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -104,15 +112,17 @@ export const RegisterVerify = () => {
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          Verify your account
+          {translations.verifiySubmit}
         </button>
       </form>
 
       <div className="flex items-center gap-2 mt-4">
-        <p className="dark:text-white text-gray-600 text-sm">Back to login?</p>
-        <ButtonNavigate onClick={() => navigate("/")}>
-          Click here
-        </ButtonNavigate>
+        <p className="dark:text-white text-gray-600 text-sm">
+          {translations.verifyBackToLogin}
+          <ButtonNavigate onClick={() => navigate("/")}>
+            {translations.registerClickHere}
+          </ButtonNavigate>
+        </p>
       </div>
     </div>
   );

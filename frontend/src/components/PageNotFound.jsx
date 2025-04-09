@@ -1,11 +1,20 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { getTranslations } from "../utils/languageHelper.js";
+import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 import "./PageNotFound.css";
 import robot from "../assets/robot.png";
 import { BackButtonIcon } from "./_AllSVGs";
 
+const browserLanguage = fetchBrowserLanguage();
+
 export function PageNotFound() {
   const navigate = useNavigate();
+  const [translations, setTranslations] = useState(
+    getTranslations(browserLanguage)
+  );
 
   return (
     <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
@@ -55,7 +64,9 @@ export function PageNotFound() {
               <div className="screen_out">
                 <div className="screen_out1">
                   <div className="screen">
-                    <span className="notfound_text">NOT FOUND</span>
+                    <span className="notfound_text">
+                      {translations.pageNotFound}
+                    </span>
                   </div>
                 </div>
               </div>

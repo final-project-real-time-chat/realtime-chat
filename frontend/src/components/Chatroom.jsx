@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import { getTranslations } from "../utils/languageHelper.js";
+import { fetchUserLanguage } from "../utils/api.js";
 
 import EmojiPicker from "emoji-picker-react";
 
@@ -63,24 +64,19 @@ export const Chatroom = () => {
   const { data: formatTimestamps, isLoading: formatTimestampsIsLoading } =
     useQuery({
       queryKey: ["formatTimestamps"],
-      queryFn: async () => {
-        const response = await fetch("/api/users/current");
-        if (!response.ok) {
-          throw new Error("Failed to fetch userdata");
-        }
-        return response.json();
-      },
+      queryFn: fetchUserLanguage,
     });
 
+  const language = formatTimestamps?.language;
   const [translations, setTranslations] = useState(
-    getTranslations(formatTimestamps?.language || "en")
+    getTranslations(language || "en")
   );
 
   useEffect(() => {
-    if (formatTimestamps?.language) {
-      setTranslations(getTranslations(formatTimestamps.language));
+    if (language) {
+      setTranslations(getTranslations(language));
     }
-  }, [formatTimestamps]);
+  }, [language]);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
@@ -515,8 +511,8 @@ export const Chatroom = () => {
               )}
               <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
                 {message.createdAt !== message.updatedAt
-                  ? `( ${translations.existChatroomFormatTimestamp} ) ${formatTimestamp(message.createdAt)}`
-                  : `${formatTimestamp(message.createdAt)}`}
+                  ? `( ${translations.existChatroomFormatTimestamp} ) ${formatTimestamp(message.createdAt, language)}`
+                  : `${formatTimestamp(message.createdAt, language)}`}
               </span>
               {message.sender.username === currentUsername && (
                 <div className="relative">

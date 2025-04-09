@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 import EmojiPicker from "emoji-picker-react";
 import { getTranslations } from "../utils/languageHelper.js";
+import { fetchUserLanguage } from "../utils/api.js";
 
 import robot from "../assets/robot.png";
 import Emojis from "../assets/add_reaction.svg";
@@ -21,13 +22,7 @@ export const NewChatroom = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["newChatroom"],
-    queryFn: async () => {
-      const response = await fetch("/api/users/current");
-      if (!response.ok) {
-        throw new Error("Failed to fetch userdata");
-      }
-      return response.json();
-    },
+    queryFn: fetchUserLanguage,
   });
 
   const [translations, setTranslations] = useState(

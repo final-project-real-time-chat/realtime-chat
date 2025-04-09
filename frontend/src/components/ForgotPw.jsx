@@ -1,18 +1,27 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+
+import { getTranslations } from "../utils/languageHelper.js";
+import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 import robot from "../assets/robot.png";
 import { EmailIcon } from "./_AllSVGs";
 import { ButtonNavigate } from "./_Button";
 
+const browserLanguage = fetchBrowserLanguage();
+
 export const ForgotPw = () => {
   const navigate = useNavigate();
+  const [translations, setTranslations] = useState(
+    getTranslations(browserLanguage)
+  );
 
   async function handleResetPw(e) {
     e.preventDefault();
     const email = e.target.email.value.toLowerCase().trim();
 
-    toast.loading("Waiting...");
+    toast.loading(translations.loginWaiting);
 
     const response = await fetch("/api/users/forgot-pw", {
       method: "PATCH",
@@ -25,14 +34,14 @@ export const ForgotPw = () => {
     toast.dismiss();
 
     if (response.ok) {
-      toast.success("email sent with new password");
+      toast.success(translations.forgotPwToastSuccess);
       setTimeout(() => navigate("/new-pw"), 2000);
     } else if (response.status === 404) {
-      toast.error("no user found with this email");
+      toast.error(translations.forgotPwToastErrorNotFound);
     } else if (response.status === 401) {
-      toast.error("Key is not correct, please try again");
+      toast.error(translations.forgotPwToastErrorKeyNotCorrect);
     } else {
-      toast.error("progress failed.");
+      toast.error(translations.forgotPwToastError);
     }
   }
 
@@ -48,13 +57,13 @@ export const ForgotPw = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          Reset your Password
+          {translations.forgotPwResetPw}
         </h1>
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          Email
+          {translations.email}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -64,7 +73,7 @@ export const ForgotPw = () => {
             type="email"
             name="email"
             id="email"
-            placeholder="Email"
+            placeholder={translations.email}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -74,14 +83,16 @@ export const ForgotPw = () => {
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
         >
-          Send Email
+          {translations.forgotPwSendEmail}
         </button>
         <Toaster />
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="dark:text-white text-gray-600 text-sm">Back to Login</p>
+        <p className="dark:text-white text-gray-600 text-sm">
+          {translations.verifyBackToLogin}
+        </p>
         <ButtonNavigate onClick={() => navigate("/")}>
-          Click here
+          {translations.registerClickHere}
         </ButtonNavigate>
       </div>
     </div>
