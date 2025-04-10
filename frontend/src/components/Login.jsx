@@ -132,7 +132,7 @@ export const Login = () => {
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
         <Link
-          to="/"
+          to="/register"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
           {translations.loginNotYetRegistered}
@@ -141,7 +141,7 @@ export const Login = () => {
 
       <div className="flex justify-end items-center gap-2 mt-4">
         <Link
-          to="/"
+          to="/register/verify"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
           {translations.loginNotYetVerified}
