@@ -87,7 +87,7 @@
   "verifyToastErrorServer": "Verifizierung fehlgeschlagen. Interner Serverfehler",
   "verifyTitel": "Verifiziere deine E-Mail",
   "verfiyDescription": "Du bekommst einen 6-stelligen Verifizierungscode per Mail, bitte nutze diesen, um dich zu verifizieren",
-  "verifyKey": "Verifizierungscode",
+  "verifyKey": "Wiederherstellungscode",
   "verifiySubmit": "Verifiziere dein Nutzerkonto",
   "verifyBackToLogin": "Zurück zum Login? ",
   "loginWaiting": "Warten...",
@@ -97,7 +97,8 @@
   "loginToastErrorFailed": "Anmeldung fehlgeschlagen.",
   "login": "Anmelden",
   "loginForgotPw": "Passwort vergessen?",
-  "loginAlreadyVerified": "Bereits verifiziert?",
+  "loginNotYetRegistered": "Noch nicht registriert?",
+  "loginNotYetVerified": "Noch nicht verifiziert?",
   "gdprHeader": "Datenschutzerklärung",
   "gdprDataController": "1. Verantwortliche Stelle",
   "gdprDataControllerDescription": "Diese Real-Time-Chat-App ist ein Ausbildungsprojekt, das zu Lernzwecken entwickelt wurde. Verantwortlich für die Datenverarbeitung im Rahmen dieser App sind die Entwickler*innen des Ausbildungsprojekts.",
@@ -134,7 +135,7 @@
   "forgotPwSendEmail": "E-Mail senden",
   "newPwToastSuccessPwChange": "Passwort erfolgreich geändert!",
   "newPwNewPw": "Neues Passwort",
-  "newPwPlaceholder": "Gib dein neues Passwort ein",
+  "newPwPlaceholder": "Neues Passwort",
   "newPwSetNewPw": "Neues Passwort festlegen",
   "pageNotFound": "NICHT GEFUNDEN"
 }

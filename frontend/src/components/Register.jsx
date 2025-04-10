@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 import robot from "../assets/robot.png";
-import { ButtonNavigate } from "./_Button";
 import {
   EmailIcon,
   EyeClosedIcon,
@@ -165,12 +164,12 @@ export const Register = () => {
       </form>
 
       <div className="flex items-center gap-2 mt-4">
-        <p className="dark:text-white text-gray-600 text-sm">
+        <Link
+          to="/"
+          className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
+        >
           {translations.registerAlreadyRegistered}
-        </p>
-        <ButtonNavigate onClick={() => navigate("/")}>
-          {translations.registerClickHere}
-        </ButtonNavigate>
+        </Link>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 import { getTranslations } from "../utils/languageHelper.js";
@@ -12,7 +12,6 @@ import {
   EyeOpenedIcon,
   PasswordIcon,
 } from "./_AllSVGs";
-import { ButtonNavigate } from "./_Button";
 
 const browserLanguage = fetchBrowserLanguage();
 
@@ -132,21 +131,21 @@ export const Login = () => {
         </button>
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="dark:text-white text-gray-600 text-sm">
-          {translations.registerAlreadyRegistered}
-        </p>
-        <ButtonNavigate onClick={() => navigate("/register")}>
-          {translations.registerClickHere}
-        </ButtonNavigate>
+        <Link
+          to="/"
+          className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
+        >
+          {translations.loginNotYetRegistered}
+        </Link>
       </div>
 
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="dark:text-white text-gray-600 text-sm">
-          {translations.loginAlreadyVerified}
-        </p>
-        <ButtonNavigate onClick={() => navigate("/register/verify")}>
-          {translations.registerClickHere}
-        </ButtonNavigate>
+        <Link
+          to="/"
+          className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
+        >
+          {translations.loginNotYetVerified}
+        </Link>
       </div>
     </div>
   );

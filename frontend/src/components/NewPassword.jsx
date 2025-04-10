@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 import { getTranslations } from "../utils/languageHelper.js";
@@ -13,7 +13,6 @@ import {
   KeyIcon,
   PasswordIcon,
 } from "./_AllSVGs";
-import { ButtonNavigate } from "./_Button";
 
 const browserLanguage = fetchBrowserLanguage();
 
@@ -48,10 +47,15 @@ export const NewPassword = () => {
     } else if (response.status === 404) {
       setTimeout(
         () => toast.error(translations.forgotPwToastErrorNotFound),
-        1500
+        1300
+      );
+    } else if (response.status === 401) {
+      setTimeout(
+        () => toast.error(translations.forgotPwToastErrorKeyNotCorrect),
+        1300
       );
     } else {
-      setTimeout(() => toast.error(translations.forgotPwToastError), 1500);
+      setTimeout(() => toast.error(translations.forgotPwToastError), 1300);
     }
   }
 
@@ -103,9 +107,9 @@ export const NewPassword = () => {
             type="text"
             name="key"
             id="key"
-            placeholder="Enter your key"
-            minLength={6}
-            maxLength={6}
+            placeholder={translations.verifyKey}
+            minLength={8}
+            maxLength={8}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
           />
@@ -146,12 +150,12 @@ export const NewPassword = () => {
         <Toaster />
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
-        <p className="dark:text-white text-gray-600 text-sm">
+        <Link
+          to="/"
+          className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
+        >
           {translations.verifyBackToLogin}
-        </p>
-        <ButtonNavigate onClick={() => navigate("/")}>
-          {translations.registerClickHere}
-        </ButtonNavigate>
+        </Link>
       </div>
     </div>
   );
