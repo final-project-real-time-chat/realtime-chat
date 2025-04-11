@@ -1,12 +1,11 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+dotenv.config();
 import nodemailer from "nodemailer";
 
 import User from "../models/userSchema.js";
 import Message from "../models/messageSchema.js";
-
-dotenv.config();
 
 const router = express.Router();
 
@@ -271,16 +270,8 @@ export default (io) => {
     }
   });
 
+  const baseUrl = process.env.HELLO_WORD_URL;
   const sendNewPw = async (email, key) => {
-    const baseUrl = process.env.HELLO_WORD_URL;
-    console.log("TYPEOF:", baseUrl);
-    console.log("Base URL inside sendNewPw:", baseUrl);
-
-    // if (!baseUrl) {
-    //   console.error("Base URL is undefined");
-    //   return;
-    // }
-
     const resetPw = {
       from: process.env.EMAIL_USER,
       to: email,
