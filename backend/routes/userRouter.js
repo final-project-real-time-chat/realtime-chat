@@ -270,8 +270,10 @@ export default (io) => {
     }
   });
 
-  const baseUrl = process.env.HELLO_WORD_URL;
+  // const baseUrl = process.env.HELLO_WORD_URL;
   const sendNewPw = async (email, key) => {
+    const baseUrl = "https://hello-word.khambazarov.dev"
+    
     const resetPw = {
       from: process.env.EMAIL_USER,
       to: email,
