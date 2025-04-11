@@ -276,10 +276,10 @@ export default (io) => {
     console.log("TYPEOF:", baseUrl);
     console.log("Base URL inside sendNewPw:", baseUrl);
 
-    if (!baseUrl) {
-      console.error("Base URL is undefined");
-      return;
-    }
+    // if (!baseUrl) {
+    //   console.error("Base URL is undefined");
+    //   return;
+    // }
 
     const resetPw = {
       from: process.env.EMAIL_USER,
