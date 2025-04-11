@@ -3,7 +3,7 @@ import { fetchUserLanguage } from "../utils/api.js";
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
-export const GDPR = () => {
+export const Privacy = () => {
   const [loading, setLoading] = useState(true);
   const [translations, setTranslations] = useState({});
 
@@ -26,7 +26,9 @@ export const GDPR = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-white text-center">{translations.loading}</p>;
+    return (
+      <p className="text-white text-center">{translations.privacy?.loading}</p>
+    );
   }
 
   return (
@@ -34,23 +36,23 @@ export const GDPR = () => {
       <div className="xl:w-[50%] w-[90%]">
         <header>
           <h1 className="text-3xl font-semibold mb-8 underline text-center">
-            {translations.gdprHeader}
+            {translations.privacy.title}
           </h1>
         </header>
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprDataController}
+            {translations.privacy.dataController}
           </h2>
-          <p>{translations.gdprDataControllerDescription}</p>
+          <p>{translations.privacy.dataDescription}</p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprDataTypes}
+            {translations.privacy.dataTypes}
           </h2>
-          <p className="mb-4">{translations.gdprDataTypesDescription}</p>
+          <p className="mb-4">{translations.privacy.dataTypesDescription}</p>
           <ul className="list-disc list-inside space-y-2">
-            {translations.gdprDataTypesList.map((item, index) => (
+            {translations.privacy.dataTypesList.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
@@ -58,25 +60,25 @@ export const GDPR = () => {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprPurpose}
+            {translations.privacy.purpose}
           </h2>
-          <p>{translations.gdprPurposeDescription}</p>
+          <p>{translations.privacy.purposeDescription}</p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprSecurity}
+            {translations.privacy.security}
           </h2>
-          <p>{translations.gdprSecurityDescription}</p>
+          <p>{translations.privacy.securityDescription}</p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprUserRights}
+            {translations.privacy.userRights}
           </h2>
-          <p className="mb-4">{translations.gdprUserRightsDescription}</p>
+          <p className="mb-4">{translations.privacy.userRightsDescription}</p>
           <ul className="list-disc list-inside space-y-2">
-            {translations.gdprUserRightsList.map((item, index) => (
+            {translations.privacy.userRightsList.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
@@ -84,21 +86,21 @@ export const GDPR = () => {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprDisclaimer}
+            {translations.privacy.disclaimer}
           </h2>
-          <p>{translations.gdprDisclaimerDescription}</p>
+          <p>{translations.privacy.disclaimerDescription}</p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
-            {translations.gdprContact}
+            {translations.privacy.contact}
           </h2>
-          <p>{translations.gdprContactDescription}</p>
+          <p>{translations.privacy.contactDescription}</p>
         </section>
 
         <footer className="text-center my-8">
           <p>
-            <strong>{translations.gdprLastUpdated}</strong>
+            <strong>{translations.privacy.lastUpdated}</strong>
           </p>
         </footer>
       </div>

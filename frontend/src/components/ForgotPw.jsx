@@ -20,7 +20,7 @@ export const ForgotPw = () => {
     e.preventDefault();
     const email = e.target.email.value.toLowerCase().trim();
 
-    toast.loading(translations.loginWaiting);
+    toast.loading(translations.toast.forgotPw.waiting);
 
     const response = await fetch("/api/users/forgot-pw", {
       method: "PATCH",
@@ -33,14 +33,14 @@ export const ForgotPw = () => {
     toast.dismiss();
 
     if (response.ok) {
-      toast.success(translations.forgotPwToastSuccess);
+      toast.success(translations.toast.forgotPw.success);
       setTimeout(() => navigate("/new-pw"), 2000);
     } else if (response.status === 404) {
-      toast.error(translations.forgotPwToastErrorNotFound);
+      toast.error(translations.toast.forgotPw.errorNotFound);
     } else if (response.status === 401) {
-      toast.error(translations.forgotPwToastErrorKeyNotCorrect);
+      toast.error(translations.toast.forgotPw.errorKeyNotCorrect);
     } else {
-      toast.error(translations.forgotPwToastError);
+      toast.error(translations.toast.forgotPw.errorFailed);
     }
   }
 
@@ -56,13 +56,13 @@ export const ForgotPw = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          {translations.forgotPwResetPw}
+          {translations.forgotPw.title}
         </h1>
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.email}
+          {translations.forgotPw.emailTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -72,7 +72,7 @@ export const ForgotPw = () => {
             type="email"
             name="email"
             id="email"
-            placeholder={translations.email}
+            placeholder={translations.forgotPw.emailPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -82,7 +82,7 @@ export const ForgotPw = () => {
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
         >
-          {translations.forgotPwSendEmail}
+          {translations.forgotPw.sendEmailBtn}
         </button>
         <Toaster />
       </form>
@@ -91,7 +91,7 @@ export const ForgotPw = () => {
           to="/"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
-          {translations.verifyBackToLogin}
+          {translations.forgotPw.backToLogin}
         </Link>
       </div>
     </div>

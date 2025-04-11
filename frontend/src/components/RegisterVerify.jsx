@@ -18,7 +18,7 @@ export const RegisterVerify = () => {
 
   async function handleVerify(e) {
     e.preventDefault();
-    toast.loading(translations.loading);
+    toast.loading(translations.toast.verify.loading);
 
     const email = e.target.email.value.toLowerCase().trim();
     const key = e.target.key.value.trim();
@@ -34,14 +34,14 @@ export const RegisterVerify = () => {
     toast.dismiss();
 
     if (user.isVerified) {
-      toast.success(translations.verifyToastSuccess);
+      toast.success(translations.toast.verify.success);
       setTimeout(() => navigate("/"), 2000);
     } else if (response.status === 400) {
-      toast.error(translations.verifyToastErrorAlreadyVerified);
+      toast.error(translations.toast.verify.errorAlreadyVerified);
     } else if (response.status === 409) {
-      toast.error(translations.verifyToastErrorNoMatch);
+      toast.error(translations.toast.verify.errorNoMatch);
     } else {
-      toast.error(translations.verifyToastErrorServer);
+      toast.error(translations.toast.verify.errorServer);
     }
   }
 
@@ -58,17 +58,17 @@ export const RegisterVerify = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          {translations.verifyTitel}
+          {translations.verify.titel}
         </h1>
         <p className="dark:text-white text-gray-600 text-center mb-4">
-          {translations.verfiyDescription}
+          {translations.verify.description}
         </p>
 
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.email}
+          {translations.verify.emailTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -78,7 +78,7 @@ export const RegisterVerify = () => {
             type="email"
             name="email"
             id="email"
-            placeholder={translations.registerEmailPlaceholder}
+            placeholder={translations.verify.emailPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -89,7 +89,7 @@ export const RegisterVerify = () => {
           htmlFor="key"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.verifyKey}
+          {translations.verify.key}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -111,7 +111,7 @@ export const RegisterVerify = () => {
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          {translations.verifiySubmit}
+          {translations.verify.submitBtn}
         </button>
       </form>
 
@@ -120,7 +120,7 @@ export const RegisterVerify = () => {
           to="/"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
-          {translations.verifyBackToLogin}
+          {translations.verify.backToLogin}
         </Link>
       </div>
     </div>

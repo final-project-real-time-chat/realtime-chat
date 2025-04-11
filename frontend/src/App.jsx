@@ -18,7 +18,7 @@ import { NewChatroom } from "./components/NewChatroom.jsx";
 import { PageNotFound } from "./components/PageNotFound.jsx";
 
 import { PreventZoom } from "./utils/PreventZoom.js";
-import { GDPR } from "./components/GDPR.jsx";
+import { Privacy } from "./components/Privacy.jsx";
 
 function App() {
   return (
@@ -31,7 +31,7 @@ function App() {
           <Route path="/new-pw" element={<NewPassword />} />
 
           <Route path="/register" element={<Register />} />
-          <Route path="/gdpr" element={<GDPR />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/register/verify" element={<RegisterVerify />} />
 
           <Route path="/settings" element={<Settings />} />

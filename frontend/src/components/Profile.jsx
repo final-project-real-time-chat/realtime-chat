@@ -35,12 +35,12 @@ export const Profile = () => {
 
   const userRegisteredAt = dateOfRegistration
     ? formatTimestamp(dateOfRegistration, language)
-    : translations.dateNotAvailable || "Date not available";
+    : translations.profile.dateNotAvailable || "Date not available";
 
   if (isProfileLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{translations.loading || "Loading..."}</p>
+        <p>{translations.profile.loading || "Loading..."}</p>
       </div>
     );
   }
@@ -69,13 +69,13 @@ export const Profile = () => {
           alt=""
           className="m-auto mb-4"
         />
-        <p className="mx-auto font-bold">{translations.profileUsername}</p>
+        <p className="mx-auto font-bold">{translations.profile.username}</p>
         <p className="mx-auto pb-3">{username}</p>
-        <p className="mx-auto font-bold">{translations.email || "Email"}:</p>
+        <p className="mx-auto font-bold">{translations.profile.email}:</p>
         <p className="mx-auto pb-3">{usermail}</p>
 
         <p className="mx-auto font-bold">
-          {translations.registered || "Registriert"}:
+          {translations.profile.registered || "Registriert"}:
         </p>
         <p className="mx-auto pb-8">{userRegisteredAt}</p>
       </main>

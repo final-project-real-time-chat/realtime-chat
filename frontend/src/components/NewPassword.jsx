@@ -29,7 +29,7 @@ export const NewPassword = () => {
     const key = e.target.key.value.trim();
     const newPw = e.target.newPw.value.trim();
 
-    toast.loading(translations.loginWaiting);
+    toast.loading(translations.toast.newPw.waiting);
 
     const response = await fetch("/api/users/new-pw", {
       method: "PATCH",
@@ -42,20 +42,20 @@ export const NewPassword = () => {
     setTimeout(() => toast.dismiss(), 1000);
 
     if (response.ok) {
-      toast.success(translations.newPwToastSuccessPwChange);
+      toast.success(translations.toast.newPw.success);
       setTimeout(() => navigate("/"), 2000);
     } else if (response.status === 404) {
       setTimeout(
-        () => toast.error(translations.forgotPwToastErrorNotFound),
+        () => toast.error(translations.toast.newPw.errorNotFound),
         1300
       );
     } else if (response.status === 401) {
       setTimeout(
-        () => toast.error(translations.forgotPwToastErrorKeyNotCorrect),
+        () => toast.error(translations.toast.newPw.errorKeyNotCorrect),
         1300
       );
     } else {
-      setTimeout(() => toast.error(translations.forgotPwToastError), 1300);
+      setTimeout(() => toast.error(translations.toast.newPw.error), 1300);
     }
   }
 
@@ -71,13 +71,13 @@ export const NewPassword = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
-          {translations.forgotPwResetPw}
+          {translations.newPw.title}
         </h1>
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.email}
+          {translations.newPw.emailTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -87,7 +87,7 @@ export const NewPassword = () => {
             type="email"
             name="email"
             id="email"
-            placeholder={translations.email}
+            placeholder={translations.newPw.emailPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -97,7 +97,7 @@ export const NewPassword = () => {
           htmlFor="key"
           className="block text-gray-600 dark:text-gray-300 font-semibold"
         >
-          {translations.verifyKey}
+          {translations.newPw.resetKeyTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -107,7 +107,7 @@ export const NewPassword = () => {
             type="text"
             name="key"
             id="key"
-            placeholder={translations.verifyKey}
+            placeholder={translations.newPw.resetKeyPlaceholder}
             minLength={8}
             maxLength={8}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
@@ -118,7 +118,7 @@ export const NewPassword = () => {
           htmlFor="newPw"
           className="block text-gray-600 dark:text-gray-300 font-semibold"
         >
-          {translations.newPwNewPw}
+          {translations.newPw.pwTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -128,7 +128,7 @@ export const NewPassword = () => {
             type={showPassword ? "text" : "password"}
             name="newPw"
             id="newPw"
-            placeholder={translations.newPwPlaceholder}
+            placeholder={translations.newPw.pwPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             minLength={6}
@@ -145,7 +145,7 @@ export const NewPassword = () => {
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
         >
-          {translations.newPwSetNewPw}
+          {translations.newPw.setBtn}
         </button>
         <Toaster />
       </form>
@@ -154,7 +154,7 @@ export const NewPassword = () => {
           to="/"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
-          {translations.verifyBackToLogin}
+          {translations.newPw.backToLogin}
         </Link>
       </div>
     </div>

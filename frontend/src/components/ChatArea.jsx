@@ -203,39 +203,39 @@ export const ChatArea = () => {
                 className="hover:bg-gray-600 cursor-pointer  text-white font-extrabold duration-300  px-3 py-1 md:px-8"
                 onClick={() => navigate(`/profile`)}
               >
-                {translations.profile}
+                {translations.menu.profile}
               </li>
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white  font-extrabold  duration-300  px-3 py-1 md:px-8"
                 onClick={() => navigate(`/settings`)}
               >
-                {translations.settings}
+                {translations.menu.settings}
               </li>
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
                 onClick={() => navigate(`/about-us`)}
               >
-                {translations.aboutUs}
+                {translations.menu.aboutUs}
               </li>
               <li
                 className="hover:bg-gray-600 cursor-pointer text-white 
                 duration-300 text-xs  px-3 py-1 md:px-8 text-nowrap"
               >
                 <a
-                  href="/gdpr"
+                  href="/privacy"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline tracking-widest"
                 >
-                  {translations.privacyPolicy}
+                  {translations.menu.privacy}
                 </a>
               </li>
               <li
                 className="hover:bg-gray-600 rounded-bl-2xl cursor-pointer text-red-600 font-extrabold  duration-300 px-3 py-1 md:px-8 outline-none"
                 onClick={() => logoutMutation.mutate()}
               >
-                {translations.logout}
+                {translations.menu.logout}
               </li>
             </ul>
           )}
@@ -243,9 +243,9 @@ export const ChatArea = () => {
       </header>
       <main className="min-h-screen">
         {isLoading ? (
-          <p>{translations.loading}</p>
+          <p>{translations.chatArea.loading}</p>
         ) : chatroomsError ? (
-          <p>{translations.errorLoadingChatrooms}</p>
+          <p>{translations.chatArea.errorLoadingChatrooms}</p>
         ) : (
           <>
             <ul>
@@ -269,11 +269,11 @@ export const ChatArea = () => {
                     <div className="flex flex-col pl-4">
                       <span className="font-bold">
                         {chatroom.usernames.join(", ") ??
-                          translations.noUsername}
+                          translations.chatArea.noUsername}
                       </span>
                       {chatroom.isDeletedAccount ? (
                         <span className="text-xs xl:text-xl text-red-500">
-                          {translations.deletedAccount}
+                          {translations.chatArea.deletedAccount}
                         </span>
                       ) : chatroom.lastMessage ? (
                         <>
@@ -285,7 +285,7 @@ export const ChatArea = () => {
                               </span>
                               {isImageUrl(chatroom.lastMessage.content) ? (
                                 <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
-                                  {translations.sentImage}
+                                  {translations.chatArea.sentImage}
                                 </span>
                               ) : (
                                 <span className="text-xs xl:text-xl text-nowrap">
@@ -298,7 +298,7 @@ export const ChatArea = () => {
                             </div>
                           ) : isImageUrl(chatroom.lastMessage.content) ? (
                             <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
-                              {translations.sentImage}
+                              {translations.chatArea.sentImage}
                             </span>
                           ) : (
                             <span className="text-xs xl:text-xl text-nowrap">
@@ -311,7 +311,7 @@ export const ChatArea = () => {
                         </>
                       ) : (
                         <span className="text-xs xl:text-xl text-gray-500">
-                          {translations.noMessages}
+                          {translations.chatArea.noMessages}
                         </span>
                       )}
                     </div>

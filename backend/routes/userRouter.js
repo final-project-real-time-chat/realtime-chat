@@ -272,15 +272,21 @@ export default (io) => {
   });
 
   const sendNewPw = async (email, key) => {
-    const baseUrl = process.env.NEW_PW;
+    const baseUrl = process.env.HELLO_WORD_URL;
 
     const resetPw = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Set new Password",
-      text: `Please give this key to verifcate: ${key}.
-    You can click this Link to change your Password. 
-    ${baseUrl}/new-pw`,
+      //   text: `Please give this key to verifcate: ${key}.
+      // You can click this Link to change your Password.
+      // ${baseUrl}/new-pw`,
+      html: `Please give this key to verify: <strong>${key}</strong>.
+             <br>
+             You can click this link to change your password: 
+             <a href="${baseUrl}/new-pw" target="_blank">
+                ${baseUrl}/new-pw
+             </a>`,
     };
 
     try {

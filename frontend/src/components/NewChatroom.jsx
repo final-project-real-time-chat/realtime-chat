@@ -117,7 +117,7 @@ export const NewChatroom = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{translations.loading || "Loading..."}</p>
+        <p>{translations.newChatroom.loading || "Loading..."}</p>
       </div>
     );
   }
@@ -143,9 +143,9 @@ export const NewChatroom = () => {
       </header>
       <div className="relative flex flex-col h-full flex-grow">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap text-2xl text-center">
-          <h2>{translations.newChatroomFirstMessage}</h2>
+          <h2>{translations.newChatroom.firstMessage}</h2>
           <h2>
-            {translations.newChatroomTo} {username}
+            {translations.newChatroom.to} {username}
           </h2>
         </div>
       </div>

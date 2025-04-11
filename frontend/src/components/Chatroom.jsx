@@ -107,7 +107,7 @@ export const Chatroom = () => {
       return response.json();
     },
     onError: (error) => {
-      toast.error(translations.existChatroomTaostError);
+      toast.error(translations.toast.existChatroom.errorServer);
       console.error(error.message);
     },
   });
@@ -240,7 +240,7 @@ export const Chatroom = () => {
     if (partnerName === "deletedUser" || partnerName === undefined) {
       e.target.textarea.value = "";
       toast.dismiss();
-      toast.error(translations.existChatroomTaostErrorDeletedUser, {
+      toast.error(translations.toast.existChatroom.errorDeletedUser, {
         position: "bottom-center",
       });
       return;
@@ -442,7 +442,7 @@ export const Chatroom = () => {
   if (formatTimestampsIsLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{translations.loading || "Loading..."}</p>
+        <p>{translations.chatroom.loading || "Loading..."}</p>
       </div>
     );
   }
@@ -484,8 +484,8 @@ export const Chatroom = () => {
             className="cursor-pointer dark:bg-white/10 bg-gray-700 shadow-lg shadow-blue-900/30 backdrop-blur-[5.5px] text-xl rounded-[10px] border border-white/20 text-amber-400 sticky top-[50%] mx-auto px-8 py-1 font-bold dark:hover:bg-white/20 hover:bg-gray-600 transition-colors animate-bounce"
           >
             {unreadMessagesCount === 1
-              ? `↓ ${unreadMessagesCount} ${translations.existChatroomunreadMessage}`
-              : `↓ ${unreadMessagesCount} ${translations.existChatroomunreadMessages}`}
+              ? `↓ ${unreadMessagesCount} ${translations.chatroom.unreadMessage}`
+              : `↓ ${unreadMessagesCount} ${translations.chatroom.unreadMessages}`}
           </button>
         )}
         {Array.isArray(chatroomMessages) &&
@@ -511,7 +511,7 @@ export const Chatroom = () => {
               )}
               <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
                 {message.createdAt !== message.updatedAt
-                  ? `( ${translations.existChatroomFormatTimestamp} ) ${formatTimestamp(message.createdAt, language)}`
+                  ? `( ${translations.chatroom.timestampUpdateText} ) ${formatTimestamp(message.createdAt, language)}`
                   : `${formatTimestamp(message.createdAt, language)}`}
               </span>
               {message.sender.username === currentUsername && (

@@ -48,12 +48,12 @@ export const Register = () => {
 
     if (response.ok) {
       await response.json();
-      toast.success(translations.registerToastSuccess);
+      toast.success(translations.toast.register.success);
       setTimeout(() => navigate("/register/verify"), 2000);
     } else if (response.status === 409) {
-      toast.error(translations.registerToastErrorTaken);
+      toast.error(translations.toast.register.errorAlreadyTaken);
     } else {
-      toast.error(translations.registerToastErrorServer);
+      toast.error(translations.toast.register.errorServer);
     }
   }
 
@@ -69,14 +69,14 @@ export const Register = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          {translations.register}
+          {translations.register.title}
         </h1>
 
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.email}
+          {translations.register.emailTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -87,7 +87,7 @@ export const Register = () => {
             type="email"
             name="email"
             id="email"
-            placeholder={translations.registerEmailPlaceholder}
+            placeholder={translations.register.emailPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -98,7 +98,7 @@ export const Register = () => {
           htmlFor="username"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.profileUsername}
+          {translations.register.usernameTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -109,7 +109,7 @@ export const Register = () => {
             type="text"
             name="username"
             id="username"
-            placeholder={translations.existChatroomPlaceholder}
+            placeholder={translations.register.usernamePlaceholder}
             minLength={2}
             maxLength={20}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
@@ -121,7 +121,7 @@ export const Register = () => {
           htmlFor="password"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.registerPw}
+          {translations.register.pwTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -132,7 +132,7 @@ export const Register = () => {
             type={showPassword ? "text" : "password"}
             name="password"
             id="password"
-            placeholder={translations.registerPwPlaceholder}
+            placeholder={translations.register.pwPlaceholder}
             minLength={6}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
@@ -148,18 +148,22 @@ export const Register = () => {
         <div className="flex gap-2 mb-3">
           <input type="checkbox" required />
           <p>
-            {translations.registerHaveRead}
-            <a href="/gdpr" target="_blank" className="text-blue-500 underline">
-              {translations.registerGdpr}
+            {translations.register.haveRead}
+            <a
+              href="/privacy"
+              target="_blank"
+              className="text-blue-500 underline"
+            >
+              {translations.register.privacy}
             </a>
-            {translations.registerGermanGdpr}
+            {translations.register.onlyGermanPrivacy}
           </p>
         </div>
         <button
           type="submit"
           className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          {translations.registerSubmit}
+          {translations.register.submitBtn}
         </button>
       </form>
 
@@ -168,7 +172,7 @@ export const Register = () => {
           to="/"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
-          {translations.registerAlreadyRegistered}
+          {translations.register.alreadyRegistered}
         </Link>
       </div>
     </div>

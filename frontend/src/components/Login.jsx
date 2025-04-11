@@ -27,7 +27,7 @@ export const Login = () => {
     const email = e.target.email.value.toLowerCase().trim();
     const password = e.target.password.value.trim();
 
-    toast.loading("Waiting...");
+    toast.loading(translations.toast.login.waiting);
 
     const response = await fetch("/api/users/login", {
       method: "POST",
@@ -41,14 +41,14 @@ export const Login = () => {
     toast.dismiss();
 
     if (response.ok && data.isVerified === true) {
-      toast.success(translations.loginToastSuccess);
+      toast.success(translations.toast.login.success);
       setTimeout(() => navigate("/chatarea"), 2000);
     } else if (data.isVerified === false) {
-      toast.error(translations.loginToastErrorVerify);
+      toast.error(translations.toast.login.errorLoginVerify);
     } else if (response.status === 404) {
-      toast.error(translations.loginToastErrorUserOrPw);
+      toast.error(translations.toast.login.errorUsernameOrPw);
     } else {
-      toast.error(translations.loginToastErrorFailed);
+      toast.error(translations.toast.login.errorFailedLogin);
     }
   }
 
@@ -64,14 +64,14 @@ export const Login = () => {
         className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          {translations.login}
+          {translations.login.title}
         </h1>
 
         <label
           htmlFor="email"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.email}
+          {translations.login.email}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -81,7 +81,7 @@ export const Login = () => {
             type="email"
             name="email"
             id="email"
-            placeholder={translations.email}
+            placeholder={translations.login.emailPlaceholder}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
             autoFocus
@@ -92,7 +92,7 @@ export const Login = () => {
           htmlFor="password"
           className="block dark:text-gray-300 text-gray-600 font-semibold"
         >
-          {translations.registerPw}
+          {translations.login.pwTitle}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -102,7 +102,7 @@ export const Login = () => {
             type={showPassword ? "text" : "password"}
             name="password"
             id="password"
-            placeholder={translations.registerPw}
+            placeholder={translations.login.pwPlaceholder}
             minLength={6}
             className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
@@ -120,14 +120,14 @@ export const Login = () => {
           onClick={() => navigate("/forgot-pw")}
           className="dark:text-white text-gray-600 text-sm cursor-pointer mb-3 hover:underline"
         >
-          {translations.loginForgotPw}
+          {translations.login.forgotPw}
         </button>
 
         <button
           type="submit"
           className="cursor-pointer w-full bg-blue-500 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          {translations.login}
+          {translations.login.loginBtn}
         </button>
       </form>
       <div className="flex justify-end items-center gap-2 mt-4">
@@ -135,7 +135,7 @@ export const Login = () => {
           to="/register"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
-          {translations.loginNotYetRegistered}
+          {translations.login.notYetRegistered}
         </Link>
       </div>
 
@@ -144,7 +144,7 @@ export const Login = () => {
           to="/register/verify"
           className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
         >
-          {translations.loginNotYetVerified}
+          {translations.login.notYetVerified}
         </Link>
       </div>
     </div>

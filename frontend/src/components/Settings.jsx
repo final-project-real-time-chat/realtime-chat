@@ -78,11 +78,11 @@ export const Settings = () => {
     },
     onSuccess: (data) => {
       setVolume(data.volume || "middle");
-      toast.success(translations.toastSuccess);
+      toast.success(translations.toast.settings.successUpdate);
       queryClient.invalidateQueries(["userSettings"]);
     },
     onError: () => {
-      toast.error(translations.toastError);
+      toast.error(translations.toast.settings.errorFailedChange);
     },
   });
 
@@ -96,10 +96,14 @@ export const Settings = () => {
       setLanguage(data.language || "en");
       setTranslations(getTranslations(data.language || "en"));
       queryClient.invalidateQueries(["userSettings"]);
-      toast.success(getTranslations(data.language || "en").toastSuccess);
+      toast.success(
+        getTranslations(data.language || "en").toast.settings.successUpdate
+      );
     },
     onError: (data) => {
-      toast.error(getTranslations(data.language || "en").toastError);
+      toast.error(
+        getTranslations(data.language || "en").toast.settings.errorFailedChange
+      );
     },
   });
 
@@ -120,10 +124,10 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      toast.success(translations.toastSuccess);
+      toast.success(translations.toast.settings.successUpdate);
     },
     onError: () => {
-      toast.error(translations.toastError);
+      toast.error(translations.toast.settings.errorFailedChange);
     },
   });
 
@@ -136,12 +140,12 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      toast.success(translations.toastSuccessDelete);
+      toast.success(translations.toast.settings.successAccountDelete);
       setShow(false);
       navigate("/");
     },
     onError: () => {
-      toast.error(translations.toastErrorDelete);
+      toast.error(translations.toast.settings.errorAccountDelete);
     },
   });
 
@@ -151,7 +155,9 @@ export const Settings = () => {
     language === null ||
     translations === null
   ) {
-    return <p>Loading settings...</p>;
+    return (
+      <p>{translations.settings.loadingSettings || "Loading settings..."}</p>
+    );
   }
 
   return (
@@ -173,11 +179,13 @@ export const Settings = () => {
         </button>
       </header>
       <main>
-        <h1 className="text-center text-4xl mt-5">{translations.settings}</h1>
+        <h1 className="text-center text-4xl mt-5">
+          {translations.settings.selectLangTitle}
+        </h1>
         <form className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>
             <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
-              {translations.selectLanguage}
+              {translations.settings.lang[language]}
             </h1>
             <div className="flex justify-evenly">
               <div className="flex gap-2 text-center">
@@ -190,7 +198,7 @@ export const Settings = () => {
                   onChange={(e) => handleLanguageSelection(e.target.value)}
                 />
                 <label htmlFor="en">
-                  {translations.languages.en} <UkFlag />
+                  {translations.settings.lang.en} <UkFlag />
                 </label>
               </div>
               <div className="flex gap-2 text-center">
@@ -203,7 +211,7 @@ export const Settings = () => {
                   onChange={(e) => handleLanguageSelection(e.target.value)}
                 />
                 <label htmlFor="de">
-                  {translations.languages.de} <GermanFlag />
+                  {translations.settings.lang.de} <GermanFlag />
                 </label>
               </div>
             </div>
@@ -212,7 +220,7 @@ export const Settings = () => {
         <form className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>
             <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white text-nowrap">
-              {translations.audioVolume}
+              {translations.settings.volumeTitle}
             </h1>
             <div className="flex justify-evenly">
               <div className="flex flex-col items-center">
@@ -224,7 +232,9 @@ export const Settings = () => {
                   checked={volume === "silent"}
                   onChange={(e) => handleVolumeChange(e.target.value)}
                 />
-                <label htmlFor="silent">{translations.silent}</label>
+                <label htmlFor="silent">
+                  {translations.settings.volume.silent}
+                </label>
               </div>
               <div className="flex flex-col items-center">
                 <input
@@ -235,7 +245,9 @@ export const Settings = () => {
                   checked={volume === "middle"}
                   onChange={(e) => handleVolumeChange(e.target.value)}
                 />
-                <label htmlFor="middle">{translations.middle}</label>
+                <label htmlFor="middle">
+                  {translations.settings.volume.middle}
+                </label>
               </div>
               <div className="flex flex-col items-center">
                 <input
@@ -246,7 +258,9 @@ export const Settings = () => {
                   checked={volume === "full"}
                   onChange={(e) => handleVolumeChange(e.target.value)}
                 />
-                <label htmlFor="full">{translations.full}</label>
+                <label htmlFor="full">
+                  {translations.settings.volume.loud}
+                </label>
               </div>
             </div>
           </div>
@@ -256,13 +270,13 @@ export const Settings = () => {
           className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
         >
           <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
-            {translations.changePassword}
+            {translations.settings.changePwTitle}
           </h1>
           <label
             htmlFor="oldPassword"
             className="block text-gray-600 dark:text-gray-300 font-semibold text-nowrap"
           >
-            {translations.currentPassword}
+            {translations.settings.currentPwTitle}
           </label>
           <div className="relative mb-4">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -273,7 +287,7 @@ export const Settings = () => {
               type={showPassword ? "text" : "password"}
               name="oldPassword"
               id="oldPassword"
-              placeholder={translations.currentPassword}
+              placeholder={translations.settings.currentPwPlaceholder}
               minLength={6}
               className="bg-white/10 text-gray-500 dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
@@ -291,7 +305,7 @@ export const Settings = () => {
             htmlFor="newPassword"
             className="block text-gray-600 dark:text-gray-300 font-semibold text-nowrap"
           >
-            {translations.newPassword}
+            {translations.settings.newPwTitle}
           </label>
           <div className="relative mb-4">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -302,7 +316,7 @@ export const Settings = () => {
               type={showPassword ? "text" : "password"}
               name="newPassword"
               id="newPassword"
-              placeholder={translations.newPassword}
+              placeholder={translations.settings.newPwPlaceholder}
               minLength={6}
               className="bg-white/10 text-gray-500 dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               required
@@ -319,20 +333,20 @@ export const Settings = () => {
             type="submit"
             className="mt-5 cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700 text-nowrap"
           >
-            {translations.changePassword}
+            {translations.settings.changePwBtn}
           </button>
         </form>
         <form className="mt-[7%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6">
           <div>
             <h1 className="text-2xl font-bold text-center mb-4 text-red-600 text-nowrap">
-              {translations.deleteAccount}
+              {translations.settings.deleteAccountTitle}
             </h1>
             <button
               type="button"
               onClick={() => setShow(true)}
               className="cursor-pointer w-full bg-red-600 text-white p-2 rounded-lg font-bold hover:bg-red-700"
             >
-              {translations.deleteBtn}
+              {translations.settings.deleteBtn}
             </button>
           </div>
         </form>
@@ -341,18 +355,20 @@ export const Settings = () => {
 
       {show && (
         <div className="min-w-80 fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg flex flex-col gap-2 text-center xl:top-25">
-          <span className="text-nowrap">{translations.deleteAccount}?</span>
+          <span className="text-nowrap">
+            {translations.settings.prompt.title}?
+          </span>
           <button
             onClick={() => deleteAccountMutation.mutate()}
             className="bg-gray-200 hover:bg-gray-50 text-red-600 px-2 py-1 rounded duration-300"
           >
-            {translations.deleteBtn}
+            {translations.settings.prompt.deleteBtn}
           </button>
           <button
             onClick={() => setShow(false)}
             className="bg-gray-900 hover:bg-gray-800 px-2 py-1 rounded text-white"
           >
-            {translations.cancelBtn}
+            {translations.settings.prompt.cancelBtn}
           </button>
         </div>
       )}

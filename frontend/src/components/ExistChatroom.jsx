@@ -42,21 +42,21 @@ export const ExistChatroom = (e) => {
 
       if (response.status === 404) {
         toast.dismiss();
-        toast.error(translations.existChatroomNotFound);
+        toast.error(translations.existChatroom.errorUserNotFound);
 
         throw new Error("Failed to create chatroom");
       }
 
       if (response.status === 401) {
         toast.dismiss();
-        toast.error(translations.existChatroomYourself);
+        toast.error(translations.existChatroom.errorSearchYourself);
 
         throw new Error("Failed to create chatroom");
       }
 
       if (!response.ok) {
         toast.dismiss();
-        toast.error(translations.existChatroomFailedToFind);
+        toast.error(translations.existChatroom.errorFailedToFind);
 
         throw new Error("Failed to create chatroom");
       }
@@ -70,7 +70,7 @@ export const ExistChatroom = (e) => {
         navigate(`/chatarea/chats/${data.chatroom}`);
         toast.dismiss();
         toast.success(
-          `${translations.existChatroomAlreadyChatted} ${partnerNameRef.current.value}`
+          `${translations.existChatroom.alreadyChatted} ${partnerNameRef.current.value}`
         );
         return;
       } else {
@@ -88,7 +88,7 @@ export const ExistChatroom = (e) => {
     const username = e.target.username.value.trim();
     if (username === "") {
       toast.dismiss();
-      toast.error(translations.existChatroomNameRequired);
+      toast.error(translations.existChatroom.errorNameRequired);
       return;
     }
     existChatroomMutation.mutate(username);
@@ -97,7 +97,7 @@ export const ExistChatroom = (e) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{translations.loading || "Loading..."}</p>
+        <p>{translations.existChatroom.loading}</p>
       </div>
     );
   }
@@ -125,14 +125,14 @@ export const ExistChatroom = (e) => {
         className="mt-[10%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
       >
         <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
-          {translations.existChatroomSearchUser}
+          {translations.existChatroom.searchUserTitle}
         </h1>
 
         <label
           htmlFor="username"
           className="block text-black dark:text-gray-300 font-semibold"
         >
-          {translations.profileUsername}
+          {translations.profile.username}
         </label>
         <div className="relative mb-4">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -143,7 +143,7 @@ export const ExistChatroom = (e) => {
             type="text"
             name="username"
             id="username"
-            placeholder={translations.existChatroomPlaceholder}
+            placeholder={translations.existChatroom.placeholder}
             minLength={2}
             className="bg-white/10 text-black dark:text-white border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             required
@@ -156,7 +156,7 @@ export const ExistChatroom = (e) => {
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
         >
-          {translations.existChatroomCreate}
+          {translations.existChatroom.createChatroomBtn}
         </button>
         <Toaster />
       </form>
