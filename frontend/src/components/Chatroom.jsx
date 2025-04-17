@@ -228,58 +228,58 @@ export const Chatroom = () => {
     },
   });
 
-const getMimeType = (extension) => {
-  if (typeof extension !== "string") {
-    console.error("Ungültige Dateiendung:", extension);
-    return "audio/webm";
-  }
-  
-  const mimeTypes = {
-    ".webm": "audio/webm",
-    ".mp3": "audio/mpeg",
-    ".mp4": "audio/mp4",
-    ".wav": "audio/wav",
-    ".aac": "audio/aac",
+  const getMimeType = (extension) => {
+    if (typeof extension !== "string") {
+      console.error("Ungültige Dateiendung:", extension);
+      return "audio/webm";
+    }
+
+    const mimeTypes = {
+      ".webm": "audio/webm",
+      ".mp3": "audio/mpeg",
+      ".mp4": "audio/mp4",
+      ".wav": "audio/wav",
+      ".aac": "audio/aac",
+    };
+
+    const extensionLower = extension.toLowerCase();
+    return mimeTypes[extensionLower] || "audio/webm";
   };
 
-  const extensionLower = extension.toLowerCase();
-  return mimeTypes[extensionLower] || "audio/webm";
-};
+  const startRecording = async (extension = ".webm") => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: getMimeType(extension),
+      });
+      mediaRecorderRef.current = mediaRecorder;
 
- const startRecording = async (extension = ".webm") => {
-   try {
-     const stream = await navigator.mediaDevices.getUserMedia({
-       audio: true,
-     });
-     const mediaRecorder = new MediaRecorder(stream, {
-       mimeType: getMimeType(extension),
-     });
-     mediaRecorderRef.current = mediaRecorder;
+      const audioChunks = [];
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
 
-     const audioChunks = [];
-     mediaRecorder.ondataavailable = (event) => {
-       audioChunks.push(event.data);
-     };
+      mediaRecorder.onstop = () => {
+        const mimeType = getMimeType(extension);
+        const audioBlob = new Blob(audioChunks, { type: mimeType });
+        if (audioBlob.size > 0) {
+          setAudioBlob(audioBlob);
+          handleAudioUpload(audioBlob);
+        } else {
+          console.error("AudioBlob ist leer. Aufnahme fehlgeschlagen.");
+          toast.error("Audioaufnahme fehlgeschlagen.");
+        }
+      };
 
-     mediaRecorder.onstop = () => {
-       const mimeType = getMimeType(extension);
-       const audioBlob = new Blob(audioChunks, { type: mimeType });
-       if (audioBlob.size > 0) {
-         setAudioBlob(audioBlob);
-         handleAudioUpload(audioBlob);
-       } else {
-         console.error("AudioBlob ist leer. Aufnahme fehlgeschlagen.");
-         toast.error("Audioaufnahme fehlgeschlagen.");
-       }
-     };
-
-     mediaRecorder.start();
-     setIsRecording(true);
-   } catch (error) {
-     console.error("Mikrofonzugriff fehlgeschlagen:", error);
-     toast.error(translations.toast.chatroom.audioNotSupported);
-   }
- };
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Mikrofonzugriff fehlgeschlagen:", error);
+      toast.error(translations.toast.chatroom.audioNotSupported);
+    }
+  };
 
   const stopRecording = async () => {
     if (mediaRecorderRef.current) {
@@ -723,7 +723,9 @@ const getMimeType = (extension) => {
             type="button"
             onClick={isRecording ? stopRecording : startRecording}
             className={`material-symbols-outlined absolute right-16 flex items-center cursor-pointer ${
-              isRecording ? "text-red-500 animate-pulse" : "text-white"
+              isRecording
+                ? "text-red-500 animate-pulse"
+                : "dark:text-white text-gray-700"
             }`}
           >
             {isRecording ? "settings_voice" : "mic"}
