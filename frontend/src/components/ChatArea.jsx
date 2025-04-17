@@ -162,9 +162,12 @@ export const ChatArea = () => {
     );
   }
 
+  const audioExtensions = [".webm", ".mp3", ".mp4", ".wav", ".aac"];
+
   function isAudioUrl(url) {
     return (
-      url.startsWith("https://res.cloudinary.com/") && url.endsWith(".webm")
+      url.startsWith("https://res.cloudinary.com/") &&
+      audioExtensions.some((extension) => url.endsWith(extension))
     );
   }
 
