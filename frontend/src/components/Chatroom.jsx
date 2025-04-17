@@ -228,53 +228,58 @@ export const Chatroom = () => {
     },
   });
 
-  const getMimeType = (url) => {
-    const mimeTypes = {
-      ".webm": "audio/webm",
-      ".mp3": "audio/mpeg",
-      ".mp4": "audio/mp4",
-      ".wav": "audio/wav",
-      ".aac": "audio/aac",
-    };
-
-    const extension = url.slice(url.lastIndexOf("."));
-    return mimeTypes[extension] || "audio/mpeg"; // Fallback zu MP3
+const getMimeType = (extension) => {
+  if (typeof extension !== "string") {
+    console.error("Ungültige Dateiendung:", extension);
+    return "audio/webm";
+  }
+  
+  const mimeTypes = {
+    ".webm": "audio/webm",
+    ".mp3": "audio/mpeg",
+    ".mp4": "audio/mp4",
+    ".wav": "audio/wav",
+    ".aac": "audio/aac",
   };
 
-  const startRecording = async (extension = ".mp3") => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: getMimeType(extension),
-      });
-      mediaRecorderRef.current = mediaRecorder;
+  const extensionLower = extension.toLowerCase();
+  return mimeTypes[extensionLower] || "audio/webm";
+};
 
-      const audioChunks = [];
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunks.push(event.data);
-      };
+ const startRecording = async (extension = ".webm") => {
+   try {
+     const stream = await navigator.mediaDevices.getUserMedia({
+       audio: true,
+     });
+     const mediaRecorder = new MediaRecorder(stream, {
+       mimeType: getMimeType(extension),
+     });
+     mediaRecorderRef.current = mediaRecorder;
 
-      mediaRecorder.onstop = () => {
-        const mimeType = getMimeType(extension);
-        const audioBlob = new Blob(audioChunks, { type: mimeType });
-        if (audioBlob.size > 0) {
-          setAudioBlob(audioBlob);
-          handleAudioUpload(audioBlob);
-        } else {
-          console.error("AudioBlob ist leer. Aufnahme fehlgeschlagen.");
-          toast.error("Audioaufnahme fehlgeschlagen.");
-        }
-      };
+     const audioChunks = [];
+     mediaRecorder.ondataavailable = (event) => {
+       audioChunks.push(event.data);
+     };
 
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error("Mikrofonzugriff fehlgeschlagen:", error);
-      toast.error(translations.toast.chatroom.audioNotSupported);
-    }
-  };
+     mediaRecorder.onstop = () => {
+       const mimeType = getMimeType(extension);
+       const audioBlob = new Blob(audioChunks, { type: mimeType });
+       if (audioBlob.size > 0) {
+         setAudioBlob(audioBlob);
+         handleAudioUpload(audioBlob);
+       } else {
+         console.error("AudioBlob ist leer. Aufnahme fehlgeschlagen.");
+         toast.error("Audioaufnahme fehlgeschlagen.");
+       }
+     };
+
+     mediaRecorder.start();
+     setIsRecording(true);
+   } catch (error) {
+     console.error("Mikrofonzugriff fehlgeschlagen:", error);
+     toast.error(translations.toast.chatroom.audioNotSupported);
+   }
+ };
 
   const stopRecording = async () => {
     if (mediaRecorderRef.current) {
