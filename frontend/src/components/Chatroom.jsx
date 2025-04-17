@@ -228,12 +228,27 @@ export const Chatroom = () => {
     },
   });
 
-  const startRecording = async () => {
+  const getMimeType = (url) => {
+    const mimeTypes = {
+      ".webm": "audio/webm",
+      ".mp3": "audio/mpeg",
+      ".mp4": "audio/mp4",
+      ".wav": "audio/wav",
+      ".aac": "audio/aac",
+    };
+
+    const extension = url.slice(url.lastIndexOf("."));
+    return mimeTypes[extension] || "audio/mpeg"; // Fallback zu MP3
+  };
+
+  const startRecording = async (extension = ".mp3") => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      const mediaRecorder = new MediaRecorder(stream);
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: getMimeType(extension),
+      });
       mediaRecorderRef.current = mediaRecorder;
 
       const audioChunks = [];
@@ -242,7 +257,8 @@ export const Chatroom = () => {
       };
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        const mimeType = getMimeType(extension);
+        const audioBlob = new Blob(audioChunks, { type: mimeType });
         if (audioBlob.size > 0) {
           setAudioBlob(audioBlob);
           handleAudioUpload(audioBlob);
@@ -316,9 +332,12 @@ export const Chatroom = () => {
     );
   }
 
+  const audioExtensions = [".webm", ".mp3", ".mp4", ".wav", ".aac"];
+
   function isAudioUrl(url) {
     return (
-      url.startsWith("https://res.cloudinary.com/") && url.endsWith("webm")
+      url.startsWith("https://res.cloudinary.com/") &&
+      audioExtensions.some((extension) => url.endsWith(extension))
     );
   }
 
@@ -586,11 +605,11 @@ export const Chatroom = () => {
                   message.sender.username === currentUsername
                   ? "ml-auto"
                   : isAudioUrl(message.content) &&
-                  message.sender.username !== currentUsername
-                  ? ""
-                  : message.sender.username === currentUsername
-                    ? "border-2 border-blue-400  bg-blue-50 rounded-br-none ml-auto"
-                    : "border-2 border-amber-400  bg-amber-50 rounded-bl-none"
+                      message.sender.username !== currentUsername
+                    ? ""
+                    : message.sender.username === currentUsername
+                      ? "border-2 border-blue-400  bg-blue-50 rounded-br-none ml-auto"
+                      : "border-2 border-amber-400  bg-amber-50 rounded-bl-none"
               )}
               key={message._id}
               ref={
@@ -599,7 +618,10 @@ export const Chatroom = () => {
             >
               {isAudioUrl(message.content) ? (
                 <audio controls className="border-0">
-                  <source src={message.content} type="audio/webm" />
+                  <source
+                    src={message.content}
+                    type={getMimeType(message.content)}
+                  />
                   Your browser does not support the audio element.
                 </audio>
               ) : isImageUrl(message.content) ? (
