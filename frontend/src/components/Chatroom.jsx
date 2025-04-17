@@ -54,11 +54,17 @@ export const Chatroom = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [textareaHeight, setTextareaHeight] = useState(40);
   const [image, setImage] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [nearBottom, setNearBottom] = useState(true);
+
+  const mediaRecorderRef = useRef(null);
+  const textareaRef = useRef(null);
+  const lastMessageRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   const navigate = useNavigate();
-  const textareaRef = useRef(null);
   const { id } = useParams();
-
   const queryClient = useQueryClient();
 
   const { data: formatTimestamps, isLoading: formatTimestampsIsLoading } =
@@ -66,6 +72,14 @@ export const Chatroom = () => {
       queryKey: ["formatTimestamps"],
       queryFn: fetchUserLanguage,
     });
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["chatroom", id],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatrooms/chats/${id}`);
+      return response.json();
+    },
+  });
 
   const language = formatTimestamps?.language;
   const [translations, setTranslations] = useState(
@@ -78,16 +92,7 @@ export const Chatroom = () => {
     }
   }, [language]);
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["chatroom", id],
-    queryFn: async () => {
-      const response = await fetch(`/api/chatrooms/chats/${id}`);
-      return response.json();
-    },
-  });
-
   const volume = data?.volume;
-
   audioSend.volume = volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
   audioReceive.volume = volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
 
@@ -136,9 +141,29 @@ export const Chatroom = () => {
     },
   });
 
+  const uploadAudioMutation = useMutation({
+    mutationFn: async (formData) => {
+      const response = await fetch(`/api/upload/audio`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to upload audio");
+      }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      sendMessageMutation.mutate(data.url);
+      setAudioBlob(null);
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
   const uploadImageMutation = useMutation({
     mutationFn: async (formData) => {
-      const response = await fetch(`/api/images/upload`, {
+      const response = await fetch(`/api/upload/image`, {
         method: "POST",
         body: formData,
       });
@@ -155,32 +180,6 @@ export const Chatroom = () => {
       console.error(error.message);
     },
   });
-
-  function handleImageChange(e) {
-    const selectedImage = e.target.files[0];
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append("image", selectedImage);
-      uploadImageMutation.mutate(formData);
-    }
-  }
-
-  const imageExtensions = [
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".svg",
-    ".gif",
-    ".bmp",
-    ".webp",
-  ];
-
-  function isImageUrl(url) {
-    return (
-      url.startsWith("https://res.cloudinary.com/") &&
-      imageExtensions.some((extension) => url.endsWith(extension))
-    );
-  }
 
   const editMessageMutation = useMutation({
     mutationFn: async ({ messageId, content }) => {
@@ -228,6 +227,100 @@ export const Chatroom = () => {
       console.error(error.message);
     },
   });
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      const audioChunks = [];
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        if (audioBlob.size > 0) {
+          setAudioBlob(audioBlob);
+          handleAudioUpload(audioBlob);
+        } else {
+          console.error("AudioBlob ist leer. Aufnahme fehlgeschlagen.");
+          toast.error("Audioaufnahme fehlgeschlagen.");
+        }
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Mikrofonzugriff fehlgeschlagen:", error);
+      toast.error(translations.toast.chatroom.audioNotSupported);
+    }
+  };
+
+  const stopRecording = async () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    } else {
+      console.error("MediaRecorder ist nicht initialisiert.");
+    }
+  };
+
+  const handleAudioUpload = (audioBlob) => {
+    if (!audioBlob) {
+      console.error("Kein AudioBlob vorhanden. Aufnahme fehlgeschlagen.");
+      toast.error("Keine gültige Audiodatei gefunden.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("audio", audioBlob);
+
+    uploadAudioMutation.mutate(formData, {
+      onSuccess: () => {
+        setAudioBlob(null);
+      },
+      onError: (error) => {
+        console.error("Fehler beim Hochladen der Audiodatei:", error);
+        toast.error("Fehler beim Hochladen der Audiodatei.");
+      },
+    });
+  };
+
+  function handleImageChange(e) {
+    const selectedImage = e.target.files[0];
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("image", selectedImage);
+      uploadImageMutation.mutate(formData);
+    }
+  }
+
+  const imageExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".svg",
+    ".gif",
+    ".bmp",
+    ".webp",
+  ];
+
+  function isImageUrl(url) {
+    return (
+      url.startsWith("https://res.cloudinary.com/") &&
+      imageExtensions.some((extension) => url.endsWith(extension))
+    );
+  }
+
+  function isAudioUrl(url) {
+    return (
+      url.startsWith("https://res.cloudinary.com/") && url.endsWith("webm")
+    );
+  }
 
   function handleSendMessage(e) {
     e.preventDefault();
@@ -282,10 +375,6 @@ export const Chatroom = () => {
     textarea.style.height = `${newHeight}px`;
     setTextareaHeight(newHeight);
   }
-
-  const lastMessageRef = useRef(null);
-  const messagesEndRef = useRef(null);
-  const [nearBottom, setNearBottom] = useState(true);
 
   const latestMessageId =
     chatroomMessages?.length > 0 ? chatroomMessages.at(-1)._id : null;
@@ -492,17 +581,28 @@ export const Chatroom = () => {
           chatroomMessages.map((message, index) => (
             <div
               className={cn(
-                "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%] dark:text-gray-100 text-gray-900 border-2 dark:bg-transparent",
-                message.sender.username === currentUsername
-                  ? "border-blue-400  bg-blue-50 rounded-br-none ml-auto"
-                  : "border-amber-400  bg-amber-50 rounded-bl-none"
+                "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%] dark:text-gray-100 text-gray-900  dark:bg-transparent",
+                isAudioUrl(message.content) &&
+                  message.sender.username === currentUsername
+                  ? "ml-auto"
+                  : isAudioUrl(message.content) &&
+                  message.sender.username !== currentUsername
+                  ? ""
+                  : message.sender.username === currentUsername
+                    ? "border-2 border-blue-400  bg-blue-50 rounded-br-none ml-auto"
+                    : "border-2 border-amber-400  bg-amber-50 rounded-bl-none"
               )}
               key={message._id}
               ref={
                 index === chatroomMessages.length - 1 ? lastMessageRef : null
               }
             >
-              {isImageUrl(message.content) ? (
+              {isAudioUrl(message.content) ? (
+                <audio controls className="border-0">
+                  <source src={message.content} type="audio/webm" />
+                  Your browser does not support the audio element.
+                </audio>
+              ) : isImageUrl(message.content) ? (
                 <img src={message.content} alt="uploaded" />
               ) : (
                 <p className="break-words whitespace-pre-line min-w-40">
@@ -520,7 +620,8 @@ export const Chatroom = () => {
                     onClick={() => handleEditMessage(message)}
                     className="absolute -left-3 top-1 dark:text-gray-400 text-gray-700"
                   >
-                    {!isImageUrl(message.content) && <EditMessageIcon />}
+                    {!isImageUrl(message.content) &&
+                      !isAudioUrl(message.content) && <EditMessageIcon />}
                   </button>
                   <button
                     onClick={() => handleDeleteMessage(message)}
@@ -590,6 +691,16 @@ export const Chatroom = () => {
             className="[scrollbar-width:thin] resize-none min-h-8 block mx-3 p-2 w-full text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Hello, Word! …"
           />
+
+          <button
+            type="button"
+            onClick={isRecording ? stopRecording : startRecording}
+            className={`material-symbols-outlined absolute right-16 flex items-center cursor-pointer ${
+              isRecording ? "text-red-500 animate-pulse" : "text-white"
+            }`}
+          >
+            {isRecording ? "settings_voice" : "mic"}
+          </button>
 
           <button
             type="submit"

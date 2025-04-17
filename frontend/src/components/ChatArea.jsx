@@ -162,6 +162,12 @@ export const ChatArea = () => {
     );
   }
 
+  function isAudioUrl(url) {
+    return (
+      url.startsWith("https://res.cloudinary.com/") && url.endsWith(".webm")
+    );
+  }
+
   return (
     <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
       <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25">
@@ -287,6 +293,10 @@ export const ChatArea = () => {
                                 <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
                                   {translations.chatArea.sentImage}
                                 </span>
+                              ) : isAudioUrl(chatroom.lastMessage.content) ? (
+                                <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                                  {translations.chatArea.sentAudioMessage}
+                                </span>
                               ) : (
                                 <span className="text-xs xl:text-xl text-nowrap">
                                   {truncateText(
@@ -299,6 +309,10 @@ export const ChatArea = () => {
                           ) : isImageUrl(chatroom.lastMessage.content) ? (
                             <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
                               {translations.chatArea.sentImage}
+                            </span>
+                          ) : isAudioUrl(chatroom.lastMessage.content) ? (
+                            <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                              {translations.chatArea.sentAudioMessage}
                             </span>
                           ) : (
                             <span className="text-xs xl:text-xl text-nowrap">

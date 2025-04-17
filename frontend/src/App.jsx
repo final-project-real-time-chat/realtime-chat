@@ -19,6 +19,7 @@ import { PageNotFound } from "./components/PageNotFound.jsx";
 
 import { PreventZoom } from "./utils/PreventZoom.js";
 import { Privacy } from "./components/Privacy.jsx";
+import { devToolText } from "./utils/devToolText.js";
 
 function App() {
   return (
@@ -54,3 +55,5 @@ function App() {
 }
 
 export default App;
+
+console.log("%c %s", devToolText, "Hello, Word!");

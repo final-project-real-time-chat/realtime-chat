@@ -100,11 +100,11 @@
 
   "toast": {
     "settings": {
-    "loading": "Lädt...",
-    "successUpdate": "Erfolgreich geändert!",
-    "successAccountDelete": "Nutzerkonto gelöscht!",
-    "errorAccountDelete": "Fehler beim Löschen, erneut versuchen!",
-    "errorFailedChange": "Fehler bei Änderung aufgetreten!"
+      "loading": "Lädt...",
+      "successUpdate": "Erfolgreich geändert!",
+      "successAccountDelete": "Nutzerkonto gelöscht!",
+      "errorAccountDelete": "Fehler beim Löschen, erneut versuchen!",
+      "errorFailedChange": "Fehler bei Änderung aufgetreten!"
     },
     "register": {
       "success": "Erfolgreich registriert!",
@@ -147,6 +147,9 @@
       "errorNameRequired": "Du musst einen Benutzernamen eingeben.",
       "errorDeletedUser": "Du kannst keine Nachrichten an einen gelöschten Benutzer senden!",
       "errorServer": "Interner Serverfehler!"
+    },
+    "chatroom": {
+      "audioNotSupported": "Audioaufnahme wird auf diesem Gerät nicht unterstützt."
     }
   },
 
@@ -223,6 +226,7 @@
   "chatArea": {
     "loading": "Lädt...",
     "sentImage": "Bild gesendet",
+    "sentAudioMessage": "Audionachricht gesendet",
     "noUsername": "Kein Benutzername",
     "deletedAccount": "Gelöschtes Konto",
     "noMessages": "Keine Nachrichten",
@@ -233,7 +237,7 @@
     "loading": "Lädt...",
     "unreadMessage": "Nachricht. Tippen, um zu sehen. ↓",
     "unreadMessages": "Nachrichten. Tippen, um zu sehen. ↓",
-    "timestampUpdateText": "(Bearbeitet)",
+    "timestampUpdateText": "Bearbeitet",
     "failedToFindUser": "Fehler beim Finden des Benutzernamens"
   },
 

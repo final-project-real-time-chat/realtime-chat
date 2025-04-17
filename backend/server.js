@@ -98,7 +98,7 @@ app.use(
 app.use("/api/users", userRouter(io));
 app.use("/api/messages", messageRouter(io));
 app.use("/api/chatrooms", chatroomRouter(io));
-app.use("/api/images", uploadRouter);
+app.use("/api/upload", uploadRouter);
 
 const baseUrl = process.env.BASE_URL;
 const port = parseInt(process.env.PORT) || 3030;

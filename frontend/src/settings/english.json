@@ -147,6 +147,9 @@
       "errorNameRequired": "you have to type a username.",
       "errorDeletedUser": "You cannot send messages to a deleted user!",
       "errorServer": "Internal Server Error!"
+    },
+    "chatroom": {
+      "audioNotSupported": "Audio recording is not supported on this device."
     }
   },
 
@@ -223,6 +226,7 @@
   "chatArea": {
     "loading": "Loading...",
     "sentImage": "Sent image",
+    "sentAudioMessage": "Sent audio message",
     "noUsername": "No Username",
     "deletedAccount": "Deleted account",
     "noMessages": "No messages",
@@ -233,7 +237,7 @@
     "loading": "Loading...",
     "unreadMessage": "message. Tap to see. ↓",
     "unreadMessages": "messages. Tap to see. ↓",
-    "timestampUpdateText": "(Updated)",
+    "timestampUpdateText": "Updated",
     "failedToFindUser": "Failed to find the user."
   },
 
